@@ -18,6 +18,7 @@ import Breadcrumbs from './components/common/Breadcrumbs/Breadcrumbs';
 import Pagination from './components/common/Pagination/Pagination';
 import Menu from './components/common/Menu/Menu';
 import Card from './components/common/Card/Card';
+import { Accordion, AccordionItem } from './components/common/Accordion/Accordion';
 import './App.css';
 
 function App() {
@@ -119,6 +120,16 @@ function App() {
             <p>This is the content of the card.</p>
             <p>More content here.</p>
           </Card>
+        </div>
+        <div style={{ width: '500px', marginTop: '20px' }}>
+          <Accordion>
+            <AccordionItem title="Section 1">
+              <p>Content for accordion section 1.</p>
+            </AccordionItem>
+            <AccordionItem title="Section 2">
+              <p>Content for accordion section 2.</p>
+            </AccordionItem>
+          </Accordion>
         </div>
       </div>
     </Layout>

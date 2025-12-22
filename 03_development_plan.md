@@ -45,7 +45,7 @@
 - [x] Menu
 
 ### Information Display
-- [ ] Card
+- [x] Card
 - [ ] Accordion
 - [ ] Tooltip
 - [ ] Modal (Dialog)
