@@ -48,7 +48,7 @@
 - [x] Card
 - [x] Accordion
 - [x] Tooltip
-- [ ] Modal (Dialog)
+- [x] Modal (Dialog)
 - [ ] Alert (Notification)
 - [ ] Progress Bar
 - [ ] Spinner (Loader)

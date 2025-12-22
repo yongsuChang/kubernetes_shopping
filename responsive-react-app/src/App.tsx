@@ -21,6 +21,7 @@ import Card from './components/common/Card/Card';
 import { Accordion, AccordionItem } from './components/common/Accordion/Accordion';
 import Tooltip from './components/common/Tooltip/Tooltip';
 import Modal from './components/common/Modal/Modal';
+import Alert from './components/common/Alert/Alert';
 import './App.css';
 
 function App() {
@@ -146,6 +147,12 @@ function App() {
             <p>You can put any React children here.</p>
             <Button onClick={() => setIsModalOpen(false)}>Close Modal</Button>
           </Modal>
+        </div>
+        <div style={{ marginTop: '20px' }}>
+          <Alert message="This is a success alert!" variant="success" onClose={() => console.log('success alert closed')} />
+          <Alert message="This is an error alert!" variant="error" />
+          <Alert message="This is an info alert!" variant="info" />
+          <Alert message="This is a warning alert!" variant="warning" />
         </div>
       </div>
     </Layout>
