@@ -39,7 +39,7 @@
 ### Navigation
 - [x] Navbar
 - [x] Sidebar
-- [ ] Tabs
+- [x] Tabs
 - [ ] Breadcrumbs
 - [ ] Pagination
 - [ ] Menu

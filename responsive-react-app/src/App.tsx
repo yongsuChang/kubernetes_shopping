@@ -14,6 +14,7 @@ import FileUpload from './components/common/FileUpload/FileUpload';
 import Navbar from './components/common/Navbar/Navbar';
 import Sidebar from './components/common/Sidebar/Sidebar';
 import { Tabs, Tab } from './components/common/Tabs/Tabs';
+import Breadcrumbs from './components/common/Breadcrumbs/Breadcrumbs';
 import './App.css';
 
 function App() {
@@ -38,11 +39,20 @@ function App() {
     { label: 'Settings', href: '#' },
   ];
 
+  const breadcrumbItems = [
+    { label: 'Home', href: '#' },
+    { label: 'Category', href: '#' },
+    { label: 'Current Page', href: '#' },
+  ];
+
   return (
     <Layout>
       <Navbar title="My Responsive App" links={navbarLinks} />
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} links={sidebarLinks} />
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '20px' }}>
+      <div style={{ padding: '0 20px' }}>
+        <Breadcrumbs items={breadcrumbItems} />
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '0 20px 20px 20px' }}>
         <Button onClick={() => setIsSidebarOpen(true)}>Open Sidebar</Button>
         <h2>Hello from the new layout!</h2>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
