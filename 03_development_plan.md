@@ -29,7 +29,7 @@
 - [x] Dropdown (Select)
 - [x] Input
 - [x] Labeled Input
-- [ ] Textarea
+- [x] Textarea
 - [ ] Checkbox
 - [ ] Radio Button
 - [ ] Slider

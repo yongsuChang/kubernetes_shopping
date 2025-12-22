@@ -5,6 +5,7 @@ import Dropdown from './components/common/Dropdown/Dropdown';
 import Input from './components/common/Input/Input';
 import LabeledInput from './components/common/LabeledInput/LabeledInput';
 import Textarea from './components/common/Textarea/Textarea';
+import Checkbox from './components/common/Checkbox/Checkbox';
 import './App.css';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Input placeholder="This is an input" />
         <LabeledInput label="This is a labeled input" placeholder="Enter value" />
         <Textarea placeholder="This is a textarea" />
+        <Checkbox label="Check me" />
       </div>
     </Layout>
   );
