@@ -31,7 +31,7 @@
 - [x] Labeled Input
 - [x] Textarea
 - [x] Checkbox
-- [ ] Radio Button
+- [x] Radio Button
 - [ ] Slider
 - [ ] Date Picker
 - [ ] File Upload

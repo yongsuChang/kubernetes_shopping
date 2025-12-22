@@ -7,6 +7,7 @@ import LabeledInput from './components/common/LabeledInput/LabeledInput';
 import Textarea from './components/common/Textarea/Textarea';
 import Checkbox from './components/common/Checkbox/Checkbox';
 import RadioButton from './components/common/RadioButton/RadioButton';
+import Slider from './components/common/Slider/Slider';
 import './App.css';
 
 function App() {
@@ -35,6 +36,9 @@ function App() {
           <RadioButton name="radioGroup" label="Option A" />
           <RadioButton name="radioGroup" label="Option B" defaultChecked />
           <RadioButton name="radioGroup" label="Option C" />
+        </div>
+        <div style={{ width: '300px', padding: '10px 0' }}>
+          <Slider min={0} max={100} step={1} defaultValue={50} />
         </div>
       </div>
     </Layout>
