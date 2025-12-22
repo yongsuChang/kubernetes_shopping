@@ -3,7 +3,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import LabeledInput from '../../components/common/LabeledInput/LabeledInput';
 import Button from '../../components/common/Button/Button';
 import Card from '../../components/common/Card/Card';
-import Dropdown from '../../components/common/Dropdown/Dropdown';
 import { shopClient } from '../../api/client';
 import './Auth.css';
 
@@ -22,8 +21,9 @@ const SignupPage: React.FC = () => {
     try {
       await shopClient.post('/api/v1/auth/signup', formData);
       navigate('/login');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Signup failed');
+    } catch (err) {
+      const axiosError = err as { response?: { data?: { message?: string } } };
+      setError(axiosError.response?.data?.message || 'Signup failed');
     }
   };
 

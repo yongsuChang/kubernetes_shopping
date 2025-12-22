@@ -23,8 +23,9 @@ const LoginPage: React.FC = () => {
       
       if (role === 'ROLE_SUPER_ADMIN') navigate('/admin');
       else navigate('/');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Login failed');
+    } catch (err) {
+      const axiosError = err as { response?: { data?: { message?: string } } };
+      setError(axiosError.response?.data?.message || 'Login failed');
     }
   };
 
