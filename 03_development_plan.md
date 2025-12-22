@@ -56,7 +56,7 @@
 - [x] Badge
 
 ### Layout & Structure
-- [ ] Grid
+- [x] Grid
 - [ ] Container
 - [ ] Header
 - [ ] Footer
