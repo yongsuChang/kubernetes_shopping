@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shop-api
+  namespace: shopping-mall
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: shop-api
+  template:
+    metadata:
+      labels:
+        app: shop-api
+    spec:
+      containers:
+      - name: shop-api
+        image: shopping-shop-api:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8082
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:mysql://mysql-service:3306/shopping_shop?createDatabaseIfNotExist=true"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "root"
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: shopping-secrets
+              key: mysql-root-password
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: shopping-secrets
+              key: jwt-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shop-api-service
+  namespace: shopping-mall
+spec:
+  selector:
+    app: shop-api
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8082
+  type: ClusterIP
