@@ -1,0 +1,28 @@
+.menu-container {
+  position: relative;
+  display: inline-block;
+}
+
+.menu-list {
+  position: absolute;
+  top: 100%; /* Position below the trigger */
+  left: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  list-style: none;
+  padding: 5px 0;
+  margin: 5px 0 0 0;
+  min-width: 150px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.menu-item {
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background-color: #f1f1f1;
+}

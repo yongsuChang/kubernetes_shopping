@@ -16,6 +16,7 @@ import Sidebar from './components/common/Sidebar/Sidebar';
 import { Tabs, Tab } from './components/common/Tabs/Tabs';
 import Breadcrumbs from './components/common/Breadcrumbs/Breadcrumbs';
 import Pagination from './components/common/Pagination/Pagination';
+import Menu from './components/common/Menu/Menu';
 import './App.css';
 
 function App() {
@@ -46,6 +47,12 @@ function App() {
     { label: 'Home', href: '#' },
     { label: 'Category', href: '#' },
     { label: 'Current Page', href: '#' },
+  ];
+
+  const menuItems = [
+    { label: 'Edit', onClick: () => alert('Edit clicked') },
+    { label: 'Delete', onClick: () => alert('Delete clicked') },
+    { label: 'Settings', onClick: () => alert('Settings clicked') },
   ];
 
   const handlePageChange = (page: number) => {
@@ -103,6 +110,9 @@ function App() {
           </Tabs>
         </div>
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        <Menu items={menuItems}>
+          <Button variant="secondary">Open Menu</Button>
+        </Menu>
       </div>
     </Layout>
   );

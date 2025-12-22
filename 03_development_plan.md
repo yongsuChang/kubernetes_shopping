@@ -41,7 +41,7 @@
 - [x] Sidebar
 - [x] Tabs
 - [x] Breadcrumbs
-- [ ] Pagination
+- [x] Pagination
 - [ ] Menu
 
 ### Information Display
