@@ -10,6 +10,7 @@ import RadioButton from './components/common/RadioButton/RadioButton';
 import Slider from './components/common/Slider/Slider';
 import DatePicker from './components/common/DatePicker/DatePicker';
 import FileUpload from './components/common/FileUpload/FileUpload';
+import Navbar from './components/common/Navbar/Navbar';
 import './App.css';
 
 function App() {
@@ -19,10 +20,18 @@ function App() {
     { value: 'option3', label: 'Option 3' },
   ];
 
+  const navbarLinks = [
+    { label: 'Home', href: '#' },
+    { label: 'About', href: '#' },
+    { label: 'Services', href: '#' },
+    { label: 'Contact', href: '#' },
+  ];
+
   return (
     <Layout>
-      <h2>Hello from the new layout!</h2>
+      <Navbar title="My Responsive App" links={navbarLinks} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '20px' }}>
+        <h2>Hello from the new layout!</h2>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           <Button variant="primary">Primary</Button>
           <Button variant="secondary">Secondary</Button>

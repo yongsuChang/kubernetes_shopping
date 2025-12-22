@@ -34,7 +34,7 @@
 - [x] Radio Button
 - [x] Slider
 - [x] Date Picker
-- [ ] File Upload
+- [x] File Upload
 
 ### Navigation
 - [ ] Navbar
