@@ -2,6 +2,7 @@ import Layout from './components/layout/Layout';
 import Button from './components/common/Button/Button';
 import ToggleSwitch from './components/common/ToggleSwitch/ToggleSwitch';
 import Dropdown from './components/common/Dropdown/Dropdown';
+import Input from './components/common/Input/Input';
 import './App.css';
 
 function App() {
@@ -14,12 +15,15 @@ function App() {
   return (
     <Layout>
       <h2>Hello from the new layout!</h2>
-      <div style={{ display: 'flex', gap: '10px', padding: '20px', alignItems: 'center' }}>
-        <Button variant="primary">Primary</Button>
-        <Button variant="secondary">Secondary</Button>
-        <Button variant="danger">Danger</Button>
-        <ToggleSwitch />
-        <Dropdown options={dropdownOptions} />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '20px' }}>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <Button variant="primary">Primary</Button>
+          <Button variant="secondary">Secondary</Button>
+          <Button variant="danger">Danger</Button>
+          <ToggleSwitch />
+          <Dropdown options={dropdownOptions} />
+        </div>
+        <Input placeholder="This is an input" />
       </div>
     </Layout>
   );

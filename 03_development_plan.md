@@ -26,7 +26,7 @@
 ### Form Elements
 - [x] Button
 - [x] Toggle Switch
-- [ ] Dropdown (Select)
+- [x] Dropdown (Select)
 - [ ] Input
 - [ ] Labeled Input
 - [ ] Textarea
