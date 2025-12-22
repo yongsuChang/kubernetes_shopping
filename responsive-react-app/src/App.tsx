@@ -19,6 +19,7 @@ import Pagination from './components/common/Pagination/Pagination';
 import Menu from './components/common/Menu/Menu';
 import Card from './components/common/Card/Card';
 import { Accordion, AccordionItem } from './components/common/Accordion/Accordion';
+import Tooltip from './components/common/Tooltip/Tooltip';
 import './App.css';
 
 function App() {
@@ -130,6 +131,11 @@ function App() {
               <p>Content for accordion section 2.</p>
             </AccordionItem>
           </Accordion>
+        </div>
+        <div style={{ marginTop: '20px' }}>
+          <Tooltip content="This is a helpful tooltip">
+            <span>Hover over me</span>
+          </Tooltip>
         </div>
       </div>
     </Layout>
