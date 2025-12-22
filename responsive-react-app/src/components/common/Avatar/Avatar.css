@@ -3,8 +3,8 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  background-color: #ccc; /* Default background */
-  color: white;
+  background-color: var(--color-gray); /* Default background */
+  color: var(--color-white);
   font-weight: bold;
   overflow: hidden;
 }
@@ -12,25 +12,25 @@
 .avatar-small {
   width: 30px;
   height: 30px;
-  font-size: 14px;
+  font-size: var(--font-size-small);
 }
 
 .avatar-medium {
   width: 50px;
   height: 50px;
-  font-size: 20px;
+  font-size: var(--font-size-large); /* Using large for medium avatar */
 }
 
 .avatar-large {
   width: 80px;
   height: 80px;
-  font-size: 30px;
+  font-size: 30px; /* Keeping 30px for large avatar */
 }
 
 .avatar-initials {
-  background-color: #007bff; /* Background for initials */
+  background-color: var(--color-primary); /* Background for initials */
 }
 
 .avatar-fallback {
-  background-color: #6c757d; /* Background for generic fallback */
+  background-color: var(--color-secondary); /* Background for generic fallback */
 }

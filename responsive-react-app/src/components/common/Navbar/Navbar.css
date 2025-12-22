@@ -2,13 +2,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #333;
-  color: white;
-  padding: 1rem 2rem;
+  background-color: var(--color-dark-gray);
+  color: var(--color-white);
+  padding: var(--spacing-base) var(--spacing-large);
 }
 
 .navbar-brand {
-  font-size: 1.5rem;
+  font-size: var(--font-size-xl);
   font-weight: bold;
 }
 
@@ -17,13 +17,13 @@
   margin: 0;
   padding: 0;
   display: flex;
-  gap: 1.5rem;
+  gap: 1.5rem; /* This can be a variable too if needed */
 }
 
 .navbar-links a {
-  color: white;
+  color: var(--color-white);
   text-decoration: none;
-  font-size: 1.1rem;
+  font-size: 1.1rem; /* This can be a variable too if needed */
 }
 
 .navbar-links a:hover {

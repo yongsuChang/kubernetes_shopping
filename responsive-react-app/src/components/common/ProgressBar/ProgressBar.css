@@ -1,18 +1,18 @@
 .progress-bar-container {
   width: 100%;
-  background-color: #e0e0e0;
-  border-radius: 5px;
+  background-color: #e0e0e0; /* Keeping a specific light gray for contrast */
+  border-radius: var(--border-radius);
   overflow: hidden; /* Ensures the fill doesn't go outside rounded corners */
 }
 
 .progress-bar-fill {
-  height: 25px;
-  background-color: #007bff;
+  height: 25px; /* Keeping specific height */
+  background-color: var(--color-primary);
   text-align: center;
-  color: white;
+  color: var(--color-white);
   line-height: 25px; /* Center text vertically */
   transition: width 0.5s ease-in-out; /* Smooth transition for progress changes */
-  border-radius: 5px; /* Apply to fill as well */
+  border-radius: var(--border-radius); /* Apply to fill as well */
   display: flex;
   justify-content: center;
   align-items: center;

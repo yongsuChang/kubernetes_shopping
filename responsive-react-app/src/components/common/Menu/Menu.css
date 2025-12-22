@@ -7,22 +7,22 @@
   position: absolute;
   top: 100%; /* Position below the trigger */
   left: 0;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray);
+  border-radius: var(--border-radius);
   list-style: none;
-  padding: 5px 0;
-  margin: 5px 0 0 0;
+  padding: var(--spacing-small) 0;
+  margin: var(--spacing-small) 0 0 0;
   min-width: 150px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2); /* Keep rgba for now as there's no direct variable for this specific shadow */
   z-index: 1;
 }
 
 .menu-item {
-  padding: 10px 15px;
+  padding: var(--spacing-base) var(--spacing-medium);
   cursor: pointer;
 }
 
 .menu-item:hover {
-  background-color: #f1f1f1;
+  background-color: var(--color-light-gray);
 }

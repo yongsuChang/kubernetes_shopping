@@ -12,17 +12,17 @@
   -moz-appearance: none;
   width: 20px;
   height: 20px;
-  border: 2px solid #ccc;
+  border: 2px solid var(--color-gray);
   border-radius: 50%;
   outline: none;
   transition: background-color 0.2s, border-color 0.2s;
   position: relative;
-  margin-right: 8px; /* Space between radio button and label */
+  margin-right: var(--spacing-base); /* Space between radio button and label */
 }
 
 .radio-button-input:checked {
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 .radio-button-input:checked::before {
@@ -35,14 +35,14 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: white;
+  background-color: var(--color-white);
 }
 
 .radio-button-input:focus {
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary), 0.25);
 }
 
 .radio-button-label {
-  font-size: 16px;
-  color: #333;
+  font-size: var(--font-size-base);
+  color: var(--color-dark-gray);
 }

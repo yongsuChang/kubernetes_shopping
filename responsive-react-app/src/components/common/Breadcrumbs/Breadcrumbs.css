@@ -1,5 +1,5 @@
 .breadcrumbs {
-  padding: 10px 0;
+  padding: var(--spacing-base) 0;
 }
 
 .breadcrumb-list {
@@ -12,12 +12,12 @@
 .breadcrumb-item {
   display: flex;
   align-items: center;
-  font-size: 14px;
+  font-size: var(--font-size-small);
 }
 
 .breadcrumb-item a {
   text-decoration: none;
-  color: #007bff;
+  color: var(--color-primary);
 }
 
 .breadcrumb-item a:hover {
@@ -25,10 +25,10 @@
 }
 
 .breadcrumb-item span {
-  color: #6c757d;
+  color: var(--color-secondary);
 }
 
 .breadcrumb-separator {
-  margin: 0 8px;
-  color: #6c757d;
+  margin: 0 8px; /* Hardcoded margin for now */
+  color: var(--color-secondary);
 }

@@ -2,15 +2,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #e9ecef;
+  padding: var(--spacing-medium) var(--spacing-large);
+  background-color: var(--color-light-gray);
+  border-bottom: 1px solid #e9ecef; /* Keeping for specific subtle border color */
 }
 
 .custom-header h2 {
   margin: 0;
-  font-size: 1.5rem;
-  color: #343a40;
+  font-size: var(--font-size-xl);
+  color: #343a40; /* Keeping for specific dark gray text color */
 }
 
 .header-content {

@@ -5,7 +5,7 @@
   z-index: 1000; /* Stay on top */
   top: 0;
   left: 0;
-  background-color: #111; /* Black*/
+  background-color: var(--color-black); /* Using black for sidebar background */
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 60px; /* Place content 60px from the top */
   transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
@@ -19,11 +19,11 @@
   position: absolute;
   top: 0;
   right: 25px;
-  font-size: 36px;
+  font-size: var(--font-size-xl); /* Using XL for close button */
   margin-left: 50px;
   background: none;
   border: none;
-  color: white;
+  color: var(--color-white);
   cursor: pointer;
 }
 
@@ -34,14 +34,14 @@
 }
 
 .sidebar-links li a {
-  padding: 8px 8px 8px 32px;
+  padding: 8px 8px 8px 32px; /* Can adjust with spacing variables if more granular control is desired */
   text-decoration: none;
-  font-size: 25px;
-  color: #818181;
+  font-size: 25px; /* Can adjust with font-size variables if more granular control is desired */
+  color: var(--color-secondary); /* Using secondary for inactive links */
   display: block;
   transition: 0.3s;
 }
 
 .sidebar-links li a:hover {
-  color: #f1f1f1;
+  color: var(--color-light-gray); /* Using light gray for hover */
 }

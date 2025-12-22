@@ -1,8 +1,8 @@
 .alert {
-  padding: 15px;
-  margin-bottom: 15px;
-  border: 1px solid transparent;
-  border-radius: 4px;
+  padding: var(--spacing-medium);
+  margin-bottom: var(--spacing-medium);
+  border: 1px solid transparent; /* Border color will be set by variant */
+  border-radius: 4px; /* Keeping 4px for specific component styling */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -15,32 +15,32 @@
 .alert-close {
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.5rem; /* Keeping 1.5rem for visual impact */
   cursor: pointer;
   color: inherit; /* Inherit color from parent for consistency */
 }
 
 /* Variants */
 .alert-success {
-  color: #155724;
-  background-color: #d4edda;
-  border-color: #c3e6cb;
+  color: #155724; /* Specific success text color */
+  background-color: #d4edda; /* Specific success background */
+  border-color: #c3e6cb; /* Specific success border */
 }
 
 .alert-error {
-  color: #721c24;
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
+  color: #721c24; /* Specific error text color */
+  background-color: #f8d7da; /* Specific error background */
+  border-color: #f5c6cb; /* Specific error border */
 }
 
 .alert-info {
-  color: #0c5460;
-  background-color: #d1ecf1;
-  border-color: #bee5eb;
+  color: #0c5460; /* Specific info text color */
+  background-color: #d1ecf1; /* Specific info background */
+  border-color: #bee5eb; /* Specific info border */
 }
 
 .alert-warning {
-  color: #856404;
-  background-color: #fff3cd;
-  border-color: #ffeeba;
+  color: #856404; /* Specific warning text color */
+  background-color: #fff3cd; /* Specific warning background */
+  border-color: #ffeeba; /* Specific warning border */
 }

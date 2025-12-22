@@ -1,7 +1,7 @@
 .file-upload-container {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--spacing-base);
 }
 
 .file-upload-input {
@@ -9,20 +9,20 @@
 }
 
 .file-upload-button {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 15px;
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  padding: var(--spacing-base) var(--spacing-medium);
   border: none;
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
 .file-upload-button:hover {
-  background-color: #0056b3;
+  background-color: var(--color-primary-hover);
 }
 
 .file-upload-name {
-  font-size: 14px;
-  color: #555;
+  font-size: var(--font-size-small);
+  color: var(--color-dark-gray); /* Using a slightly darker gray for file name */
 }

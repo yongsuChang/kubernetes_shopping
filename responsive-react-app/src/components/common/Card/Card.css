@@ -1,30 +1,30 @@
 .card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid var(--border-color);
+  border-radius: 8px; /* Keeping 8px for card specific styling for now */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Keep rgba for now */
   overflow: hidden;
-  background-color: white;
+  background-color: var(--color-white);
 }
 
 .card-header {
-  padding: 15px;
-  border-bottom: 1px solid #eee;
-  background-color: #f8f9fa;
+  padding: var(--spacing-medium);
+  border-bottom: 1px solid #eee; /* This can be another variable if used elsewhere */
+  background-color: var(--color-light-gray);
 }
 
 .card-header h3 {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: var(--font-size-large);
 }
 
 .card-content {
-  padding: 15px;
+  padding: var(--spacing-medium);
 }
 
 .card-footer {
-  padding: 15px;
-  border-top: 1px solid #eee;
-  background-color: #f8f9fa;
-  font-size: 0.9rem;
-  color: #6c757d;
+  padding: var(--spacing-medium);
+  border-top: 1px solid #eee; /* This can be another variable if used elsewhere */
+  background-color: var(--color-light-gray);
+  font-size: 0.9rem; /* Keep exact for now */
+  color: var(--color-secondary);
 }

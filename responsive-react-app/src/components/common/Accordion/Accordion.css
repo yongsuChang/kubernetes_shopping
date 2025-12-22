@@ -1,7 +1,7 @@
 .accordion-item {
-  border: 1px solid #ddd;
-  margin-bottom: 10px;
-  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  margin-bottom: var(--spacing-base);
+  border-radius: var(--border-radius);
   overflow: hidden;
 }
 
@@ -9,23 +9,23 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px;
-  background-color: #f8f9fa;
+  padding: var(--spacing-medium);
+  background-color: var(--color-light-gray);
   cursor: pointer;
 }
 
 .accordion-header h3 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1.1rem; /* Keep exact for now, can be broken into variables if needed */
 }
 
 .accordion-header span {
-  font-size: 1.5rem;
+  font-size: var(--font-size-large);
   font-weight: bold;
 }
 
 .accordion-content {
-  padding: 15px;
-  border-top: 1px solid #eee;
-  background-color: white;
+  padding: var(--spacing-medium);
+  border-top: 1px solid #eee; /* This can be another variable if used elsewhere */
+  background-color: var(--color-white);
 }
