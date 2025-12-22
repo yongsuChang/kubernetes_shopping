@@ -23,6 +23,7 @@ import Tooltip from './components/common/Tooltip/Tooltip';
 import Modal from './components/common/Modal/Modal';
 import Alert from './components/common/Alert/Alert';
 import ProgressBar from './components/common/ProgressBar/ProgressBar';
+import Spinner from './components/common/Spinner/Spinner';
 import './App.css';
 
 function App() {
@@ -157,6 +158,11 @@ function App() {
         </div>
         <div style={{ width: '400px', marginTop: '20px' }}>
           <ProgressBar progress={75} />
+        </div>
+        <div style={{ display: 'flex', gap: '20px', alignItems: 'center', marginTop: '20px' }}>
+          <Spinner size="small" />
+          <Spinner />
+          <Spinner size="large" color="green" />
         </div>
       </div>
     </Layout>

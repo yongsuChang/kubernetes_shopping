@@ -50,7 +50,7 @@
 - [x] Tooltip
 - [x] Modal (Dialog)
 - [x] Alert (Notification)
-- [ ] Progress Bar
+- [x] Progress Bar
 - [ ] Spinner (Loader)
 - [ ] Avatar
 - [ ] Badge
