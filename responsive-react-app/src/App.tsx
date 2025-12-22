@@ -13,6 +13,7 @@ import DatePicker from './components/common/DatePicker/DatePicker';
 import FileUpload from './components/common/FileUpload/FileUpload';
 import Navbar from './components/common/Navbar/Navbar';
 import Sidebar from './components/common/Sidebar/Sidebar';
+import { Tabs, Tab } from './components/common/Tabs/Tabs';
 import './App.css';
 
 function App() {
@@ -65,6 +66,23 @@ function App() {
         </div>
         <DatePicker />
         <FileUpload />
+
+        <div style={{ marginTop: '20px' }}>
+          <Tabs>
+            <Tab label="Tab 1">
+              <h3>Content for Tab 1</h3>
+              <p>This is the first tab's content.</p>
+            </Tab>
+            <Tab label="Tab 2">
+              <h3>Content for Tab 2</h3>
+              <p>This is the second tab's content.</p>
+            </Tab>
+            <Tab label="Tab 3">
+              <h3>Content for Tab 3</h3>
+              <p>This is the third tab's content.</p>
+            </Tab>
+          </Tabs>
+        </div>
       </div>
     </Layout>
   );

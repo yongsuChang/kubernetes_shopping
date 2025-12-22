@@ -38,7 +38,7 @@
 
 ### Navigation
 - [x] Navbar
-- [ ] Sidebar
+- [x] Sidebar
 - [ ] Tabs
 - [ ] Breadcrumbs
 - [ ] Pagination
