@@ -1,0 +1,10 @@
+.labeled-input {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.labeled-input label {
+  font-size: 14px;
+  color: #333;
+}

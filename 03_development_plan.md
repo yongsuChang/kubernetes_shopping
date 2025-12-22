@@ -27,7 +27,7 @@
 - [x] Button
 - [x] Toggle Switch
 - [x] Dropdown (Select)
-- [ ] Input
+- [x] Input
 - [ ] Labeled Input
 - [ ] Textarea
 - [ ] Checkbox

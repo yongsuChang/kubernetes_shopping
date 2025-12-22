@@ -3,6 +3,7 @@ import Button from './components/common/Button/Button';
 import ToggleSwitch from './components/common/ToggleSwitch/ToggleSwitch';
 import Dropdown from './components/common/Dropdown/Dropdown';
 import Input from './components/common/Input/Input';
+import LabeledInput from './components/common/LabeledInput/LabeledInput';
 import './App.css';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
           <Dropdown options={dropdownOptions} />
         </div>
         <Input placeholder="This is an input" />
+        <LabeledInput label="This is a labeled input" placeholder="Enter value" />
       </div>
     </Layout>
   );
