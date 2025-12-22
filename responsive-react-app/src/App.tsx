@@ -25,6 +25,7 @@ import Alert from './components/common/Alert/Alert';
 import ProgressBar from './components/common/ProgressBar/ProgressBar';
 import Spinner from './components/common/Spinner/Spinner';
 import Avatar from './components/common/Avatar/Avatar';
+import Badge from './components/common/Badge/Badge';
 import './App.css';
 
 function App() {
@@ -169,6 +170,12 @@ function App() {
           <Avatar initials="JD" />
           <Avatar src="https://i.pravatar.cc/150?img=3" alt="User Avatar" size="medium" />
           <Avatar initials="SM" size="large" />
+        </div>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginTop: '20px' }}>
+          <Badge>New</Badge>
+          <Badge variant="success">Success</Badge>
+          <Badge variant="danger">Error</Badge>
+          <Badge variant="warning">Warning</Badge>
         </div>
       </div>
     </Layout>

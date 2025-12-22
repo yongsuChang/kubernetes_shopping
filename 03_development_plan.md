@@ -52,7 +52,7 @@
 - [x] Alert (Notification)
 - [x] Progress Bar
 - [x] Spinner (Loader)
-- [ ] Avatar
+- [x] Avatar
 - [ ] Badge
 
 ### Layout & Structure
