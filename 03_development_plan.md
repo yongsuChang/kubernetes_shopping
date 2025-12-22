@@ -30,7 +30,7 @@
 - [x] Input
 - [x] Labeled Input
 - [x] Textarea
-- [ ] Checkbox
+- [x] Checkbox
 - [ ] Radio Button
 - [ ] Slider
 - [ ] Date Picker

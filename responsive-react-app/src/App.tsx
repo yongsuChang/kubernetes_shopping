@@ -6,6 +6,7 @@ import Input from './components/common/Input/Input';
 import LabeledInput from './components/common/LabeledInput/LabeledInput';
 import Textarea from './components/common/Textarea/Textarea';
 import Checkbox from './components/common/Checkbox/Checkbox';
+import RadioButton from './components/common/RadioButton/RadioButton';
 import './App.css';
 
 function App() {
@@ -30,6 +31,11 @@ function App() {
         <LabeledInput label="This is a labeled input" placeholder="Enter value" />
         <Textarea placeholder="This is a textarea" />
         <Checkbox label="Check me" />
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <RadioButton name="radioGroup" label="Option A" />
+          <RadioButton name="radioGroup" label="Option B" defaultChecked />
+          <RadioButton name="radioGroup" label="Option C" />
+        </div>
       </div>
     </Layout>
   );
