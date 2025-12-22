@@ -24,7 +24,7 @@
 ## Component Checklist
 
 ### Form Elements
-- [ ] Button
+- [x] Button
 - [ ] Toggle Switch
 - [ ] Dropdown (Select)
 - [ ] Input
