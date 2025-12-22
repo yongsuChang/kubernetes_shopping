@@ -27,18 +27,25 @@
     - [x] Vendor Management (Registration in `shop-api` & Approval in `admin-api`)
     - [x] Product Management (CRUD for Vendors in `shop-api`)
     - [x] Order Management (Browsing & Ordering for Customers in `shop-api`)
-- [ ] Kubernetes Manifests
+- [x] Kubernetes Manifests
+    - [x] Base resources (Namespace, Secret, ConfigMap)
+    - [x] MySQL Deployment & Service
+    - [x] API Module Deployments (2 Replicas each)
+    - [x] Nginx Ingress Controller setup
 
 ## Frontend (React)
 - [x] Project Initialization (Vite + TS)
 - [x] UI Component Library (25+ components)
 - [x] Responsive Layout & CSS Variables
 - [x] Vitest Environment Setup & Verification
+- [x] Linter & Code Style Standardization
+- [x] State Management (Zustand)
+- [x] Backend API Integration (Axios + Interceptors)
+- [x] Core Pages Implementation (Login, Signup, Product List)
 - [ ] Gemini API Integration
-- [ ] Backend API Integration
-- [ ] State Management (Zustand/Context)
 
-## Infrastructure (To be done)
-- [ ] Dockerization
-- [ ] Kubernetes Cluster Setup
+## Infrastructure
+- [x] Dockerization
+    - [x] Multi-stage Dockerfiles for all API modules
+- [x] Kubernetes Configuration (Ready for deployment)
 - [ ] CI/CD Pipeline
