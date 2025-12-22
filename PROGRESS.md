@@ -17,12 +17,16 @@
     - Entities: Member, Vendor, Product, Address, Order, Review
     - Enums: Role, Status types
 - [x] Application Scaffolding
-    - Main Application classes with Component Scanning
-    - Health Check Controllers
-- [ ] Business Logic Implementation
-    - [ ] Authentication (Signup/Login)
-    - [ ] Vendor Management
-    - [ ] Product & Order Management
+    - [x] Main Application classes with Component Scanning
+    - [x] Health Check Controllers
+    - [x] Swagger (SpringDoc OpenAPI) Integration
+    - [x] Global Exception Handler
+
+- [x] Business Logic Implementation
+    - [x] Authentication (Signup/Login) in `shop-api`
+    - [x] Vendor Management (Registration in `shop-api` & Approval in `admin-api`)
+    - [x] Product Management (CRUD for Vendors in `shop-api`)
+    - [x] Order Management (Browsing & Ordering for Customers in `shop-api`)
 - [ ] Kubernetes Manifests
 
 ## Frontend (React)
