@@ -9,6 +9,7 @@ import Checkbox from './components/common/Checkbox/Checkbox';
 import RadioButton from './components/common/RadioButton/RadioButton';
 import Slider from './components/common/Slider/Slider';
 import DatePicker from './components/common/DatePicker/DatePicker';
+import FileUpload from './components/common/FileUpload/FileUpload';
 import './App.css';
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
           <Slider min={0} max={100} step={1} defaultValue={50} />
         </div>
         <DatePicker />
+        <FileUpload />
       </div>
     </Layout>
   );

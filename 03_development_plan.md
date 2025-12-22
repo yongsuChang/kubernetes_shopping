@@ -33,7 +33,7 @@
 - [x] Checkbox
 - [x] Radio Button
 - [x] Slider
-- [ ] Date Picker
+- [x] Date Picker
 - [ ] File Upload
 
 ### Navigation
