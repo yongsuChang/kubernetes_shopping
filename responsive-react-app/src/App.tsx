@@ -20,12 +20,14 @@ import Menu from './components/common/Menu/Menu';
 import Card from './components/common/Card/Card';
 import { Accordion, AccordionItem } from './components/common/Accordion/Accordion';
 import Tooltip from './components/common/Tooltip/Tooltip';
+import Modal from './components/common/Modal/Modal';
 import './App.css';
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 5;
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const dropdownOptions = [
     { value: 'option1', label: 'Option 1' },
@@ -136,6 +138,14 @@ function App() {
           <Tooltip content="This is a helpful tooltip">
             <span>Hover over me</span>
           </Tooltip>
+        </div>
+        <div style={{ marginTop: '20px' }}>
+          <Button onClick={() => setIsModalOpen(true)}>Open Modal</Button>
+          <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="My Modal Title">
+            <p>This is the content of the modal.</p>
+            <p>You can put any React children here.</p>
+            <Button onClick={() => setIsModalOpen(false)}>Close Modal</Button>
+          </Modal>
         </div>
       </div>
     </Layout>

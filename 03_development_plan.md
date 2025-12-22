@@ -47,7 +47,7 @@
 ### Information Display
 - [x] Card
 - [x] Accordion
-- [ ] Tooltip
+- [x] Tooltip
 - [ ] Modal (Dialog)
 - [ ] Alert (Notification)
 - [ ] Progress Bar
