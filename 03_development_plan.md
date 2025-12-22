@@ -49,7 +49,7 @@
 - [x] Accordion
 - [x] Tooltip
 - [x] Modal (Dialog)
-- [ ] Alert (Notification)
+- [x] Alert (Notification)
 - [ ] Progress Bar
 - [ ] Spinner (Loader)
 - [ ] Avatar

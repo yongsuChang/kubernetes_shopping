@@ -22,6 +22,7 @@ import { Accordion, AccordionItem } from './components/common/Accordion/Accordio
 import Tooltip from './components/common/Tooltip/Tooltip';
 import Modal from './components/common/Modal/Modal';
 import Alert from './components/common/Alert/Alert';
+import ProgressBar from './components/common/ProgressBar/ProgressBar';
 import './App.css';
 
 function App() {
@@ -153,6 +154,9 @@ function App() {
           <Alert message="This is an error alert!" variant="error" />
           <Alert message="This is an info alert!" variant="info" />
           <Alert message="This is a warning alert!" variant="warning" />
+        </div>
+        <div style={{ width: '400px', marginTop: '20px' }}>
+          <ProgressBar progress={75} />
         </div>
       </div>
     </Layout>
