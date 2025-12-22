@@ -59,4 +59,4 @@
 - [x] Grid
 - [x] Container
 - [x] Header
-- [ ] Footer
+- [x] Footer

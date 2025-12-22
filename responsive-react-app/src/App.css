@@ -40,3 +40,40 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #root {
+    padding: 1rem;
+  }
+
+  /* Adjustments for the main content area to stack vertically on small screens */
+  .App-main-content-wrapper { /* Add this class to the div wrapping all components in App.tsx */
+    flex-direction: column;
+    padding: 1rem 0 1rem 0 !important; /* Adjust padding for small screens */
+  }
+
+  .grid-container {
+    grid-template-columns: 1fr !important; /* Stack grid items on small screens */
+  }
+
+  /* Hide elements like Sidebar on very small screens if needed, or adjust its width */
+  .sidebar {
+    width: 0;
+    padding-top: 15px;
+  }
+  .sidebar.open {
+    width: 100%;
+  }
+
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar-links {
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 10px;
+  }
+}
