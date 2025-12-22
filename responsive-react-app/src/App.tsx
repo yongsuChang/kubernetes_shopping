@@ -28,6 +28,7 @@ import Avatar from './components/common/Avatar/Avatar';
 import Badge from './components/common/Badge/Badge';
 import { Grid, GridItem } from './components/common/Grid/Grid';
 import Container from './components/common/Container/Container';
+import Header from './components/common/Header/Header';
 import './App.css';
 
 function App() {
@@ -83,6 +84,7 @@ function App() {
       <Container>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '20px 0 20px 0' }}>
           <Button onClick={() => setIsSidebarOpen(true)}>Open Sidebar</Button>
+          <Header title="Welcome to the Demo Page" />
           <h2>Hello from the new layout!</h2>
           <Grid columns={12} gap="20px">
             <GridItem span={4}>
