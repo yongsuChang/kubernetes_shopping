@@ -40,7 +40,7 @@
 - [x] Navbar
 - [x] Sidebar
 - [x] Tabs
-- [ ] Breadcrumbs
+- [x] Breadcrumbs
 - [ ] Pagination
 - [ ] Menu
 

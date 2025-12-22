@@ -15,10 +15,13 @@ import Navbar from './components/common/Navbar/Navbar';
 import Sidebar from './components/common/Sidebar/Sidebar';
 import { Tabs, Tab } from './components/common/Tabs/Tabs';
 import Breadcrumbs from './components/common/Breadcrumbs/Breadcrumbs';
+import Pagination from './components/common/Pagination/Pagination';
 import './App.css';
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = 5;
 
   const dropdownOptions = [
     { value: 'option1', label: 'Option 1' },
@@ -44,6 +47,12 @@ function App() {
     { label: 'Category', href: '#' },
     { label: 'Current Page', href: '#' },
   ];
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
 
   return (
     <Layout>
@@ -93,6 +102,7 @@ function App() {
             </Tab>
           </Tabs>
         </div>
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       </div>
     </Layout>
   );
