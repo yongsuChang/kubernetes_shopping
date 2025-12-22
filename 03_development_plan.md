@@ -51,7 +51,7 @@
 - [x] Modal (Dialog)
 - [x] Alert (Notification)
 - [x] Progress Bar
-- [ ] Spinner (Loader)
+- [x] Spinner (Loader)
 - [ ] Avatar
 - [ ] Badge
 

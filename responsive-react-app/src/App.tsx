@@ -24,6 +24,7 @@ import Modal from './components/common/Modal/Modal';
 import Alert from './components/common/Alert/Alert';
 import ProgressBar from './components/common/ProgressBar/ProgressBar';
 import Spinner from './components/common/Spinner/Spinner';
+import Avatar from './components/common/Avatar/Avatar';
 import './App.css';
 
 function App() {
@@ -163,6 +164,11 @@ function App() {
           <Spinner size="small" />
           <Spinner />
           <Spinner size="large" color="green" />
+        </div>
+        <div style={{ display: 'flex', gap: '20px', alignItems: 'center', marginTop: '20px' }}>
+          <Avatar initials="JD" />
+          <Avatar src="https://i.pravatar.cc/150?img=3" alt="User Avatar" size="medium" />
+          <Avatar initials="SM" size="large" />
         </div>
       </div>
     </Layout>
