@@ -1,74 +1,20 @@
-# 초기 개발 계획 (Front-end & Back-end)
+# Development Plan for responsive-react-app
 
-이 문서는 Kubernetes 배포를 제외한 애플리케이션의 초기 개발 단계를 정의합니다.
+## Current Status
+- Project `responsive-react-app` initialized using Vite and React with TypeScript.
+- Development server is running in the background with PID **28327**.
+  - To stop the development server, run `kill 28327` in your terminal.
 
-## Phase 1: 프로젝트 기반 설정
+## Next Steps
+- Implement responsive design for the application.
+- Integrate Gemini API for specific features (details to be defined).
+- Create UI components as required.
+- Add unit and integration tests.
 
-- **Task 1.1: 백엔드 - 프로젝트 초기화**
-  - FastAPI 프로젝트 구조 설정
-  - 데이터베이스(MySQL) 연결 설정 (로컬 환경 기준)
-  - ORM (e.g., SQLAlchemy) 설정 및 초기 모델 정의
-
-- **Task 1.2: 백엔드 - 핵심 인증 구현**
-  - 회원가입, 로그인 API 엔드포인트 구현
-  - 비밀번호 해싱 및 검증 로직 추가
-  - JWT 생성 및 검증 로직 구현
-  - 역할(Role) 기반 접근 제어를 위한 기본 미들웨어/의존성 추가
-
-- **Task 1.3: 프론트엔드 - 프로젝트 초기화**
-  - Vite와 React(TypeScript)를 사용해 프로젝트 생성
-  - 기본 폴더 구조 설정 (`pages`, `components`, `services`, `hooks` 등)
-  - React Router 설정을 통한 기본 페이지 라우팅 구현
-
-- **Task 1.4: 프론트엔드 - API 통신 및 상태 관리 설정**
-  - API 요청을 처리할 클라이언트(e.g., Axios) 설정
-  - 전역 상태 관리를 위한 라이브러리(e.g., Zustand, Redux Toolkit) 설정
-
-## Phase 2: 기능 구현 (역할별 순차 진행)
-
-### 2.1. 관리자 (Admin) 기능
-- **Backend**:
-  - 회원 목록 조회, 상태 변경 등 회원 관리 API 구현
-  - 입점 업체 승인, 정보 수정 등 업체 관리 API 구현
-- **Frontend**:
-  - 관리자용 로그인 페이지 구현
-  - 회원 및 업체 관리를 위한 UI/페이지 구현
-  - API 연동 및 데이터 표시
-
-### 2.2. 입점 업체 (Vendor) 기능
-- **Backend**:
-  - 상품 등록, 수정, 삭제(비활성화) API 구현
-  - 자신에게 들어온 주문 목록 조회 및 상태 업데이트 API 구현
-- **Frontend**:
-  - 업체 관리자용 상품 관리 페이지 구현
-  - 주문 관리 페이지 구현
-  - API 연동
-
-### 2.3. 고객 (Customer) 기능
-- **Backend**:
-  - 상품 목록 조회 및 상세 조회 API 구현
-  - 상품 검색 API 구현
-  - 주문 생성 API 구현
-  - 내 주문 목록 조회 API 구현
-  - 리뷰 작성 및 조회 API 구현
-- **Frontend**:
-  - 메인 페이지, 상품 목록/상세 페이지 구현
-  - 장바구니 및 주문 프로세스 UI 구현
-  - 마이페이지(주문 내역, 내 정보) 구현
-  - API 연동
-
-## Phase 3: 테스트 및 안정화
-
-- **Task 3.1: 단위 및 통합 테스트**
-  - **백엔드**: 각 API 엔드포인트에 대한 단위 테스트 및 통합 테스트 작성 (Pytest 사용)
-  - **프론트엔드**: 주요 컴포넌트 및 페이지에 대한 단위 테스트 작성 (Jest, React Testing Library 사용)
-
-- **Task 3.2: E2E 테스트**
-  - 주요 사용자 시나리오(회원가입 → 로그인 → 상품 주문)에 대한 E2E 테스트 자동화 (Cypress 또는 Playwright 사용)
-
-- **Task 3.3: 버그 수정 및 리팩토링**
-  - 테스트 과정에서 발견된 버그 수정
-  - 코드 품질 개선 및 리팩토링 수행
-
----
-*이 계획은 초기 단계에 집중하며, 프로젝트 진행 상황에 따라 유연하게 변경될 수 있습니다.*
+## Progress Checklist
+- [x] Initialize a new React project environment (e.g., using Vite).
+- [x] Start development server.
+- [ ] Implement responsive design.
+- [ ] Integrate Gemini API.
+- [ ] Create UI components.
+- [ ] Add unit and integration tests.
