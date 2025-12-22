@@ -1,7 +1,12 @@
 import React from 'react';
 import './Layout.css';
 
-const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface LayoutProps {
+  children: React.ReactNode;
+  footerContent?: React.ReactNode;
+}
+
+const Layout: React.FC<LayoutProps> = ({ children, footerContent }) => {
   return (
     <div className="layout">
       <header className="header">
@@ -10,9 +15,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <main className="main-content">
         {children}
       </main>
-      <footer className="footer">
-        <p>© 2025 My Responsive App</p>
-      </footer>
+      {footerContent && footerContent}
     </div>
   );
 };

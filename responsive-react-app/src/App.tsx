@@ -29,6 +29,7 @@ import Badge from './components/common/Badge/Badge';
 import { Grid, GridItem } from './components/common/Grid/Grid';
 import Container from './components/common/Container/Container';
 import Header from './components/common/Header/Header';
+import Footer from './components/common/Footer/Footer';
 import './App.css';
 
 function App() {
@@ -75,7 +76,7 @@ function App() {
   };
 
   return (
-    <Layout>
+    <Layout footerContent={<Footer />}>
       <Navbar title="My Responsive App" links={navbarLinks} />
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} links={sidebarLinks} />
       <div style={{ padding: '0 20px' }}>
