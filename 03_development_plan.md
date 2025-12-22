@@ -32,7 +32,7 @@
 - [x] Textarea
 - [x] Checkbox
 - [x] Radio Button
-- [ ] Slider
+- [x] Slider
 - [ ] Date Picker
 - [ ] File Upload
 

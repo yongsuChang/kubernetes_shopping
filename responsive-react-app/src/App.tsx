@@ -8,6 +8,7 @@ import Textarea from './components/common/Textarea/Textarea';
 import Checkbox from './components/common/Checkbox/Checkbox';
 import RadioButton from './components/common/RadioButton/RadioButton';
 import Slider from './components/common/Slider/Slider';
+import DatePicker from './components/common/DatePicker/DatePicker';
 import './App.css';
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
         <div style={{ width: '300px', padding: '10px 0' }}>
           <Slider min={0} max={100} step={1} defaultValue={50} />
         </div>
+        <DatePicker />
       </div>
     </Layout>
   );
