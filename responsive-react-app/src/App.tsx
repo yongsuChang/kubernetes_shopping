@@ -17,6 +17,7 @@ import { Tabs, Tab } from './components/common/Tabs/Tabs';
 import Breadcrumbs from './components/common/Breadcrumbs/Breadcrumbs';
 import Pagination from './components/common/Pagination/Pagination';
 import Menu from './components/common/Menu/Menu';
+import Card from './components/common/Card/Card';
 import './App.css';
 
 function App() {
@@ -113,6 +114,12 @@ function App() {
         <Menu items={menuItems}>
           <Button variant="secondary">Open Menu</Button>
         </Menu>
+        <div style={{ width: '300px', marginTop: '20px' }}>
+          <Card title="My Card Title" footer="Card Footer Text">
+            <p>This is the content of the card.</p>
+            <p>More content here.</p>
+          </Card>
+        </div>
       </div>
     </Layout>
   );

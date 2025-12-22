@@ -42,7 +42,7 @@
 - [x] Tabs
 - [x] Breadcrumbs
 - [x] Pagination
-- [ ] Menu
+- [x] Menu
 
 ### Information Display
 - [ ] Card
