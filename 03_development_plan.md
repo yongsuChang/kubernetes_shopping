@@ -37,7 +37,7 @@
 - [x] File Upload
 
 ### Navigation
-- [ ] Navbar
+- [x] Navbar
 - [ ] Sidebar
 - [ ] Tabs
 - [ ] Breadcrumbs

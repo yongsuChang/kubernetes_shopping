@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import Layout from './components/layout/Layout';
 import Button from './components/common/Button/Button';
 import ToggleSwitch from './components/common/ToggleSwitch/ToggleSwitch';
@@ -11,9 +12,12 @@ import Slider from './components/common/Slider/Slider';
 import DatePicker from './components/common/DatePicker/DatePicker';
 import FileUpload from './components/common/FileUpload/FileUpload';
 import Navbar from './components/common/Navbar/Navbar';
+import Sidebar from './components/common/Sidebar/Sidebar';
 import './App.css';
 
 function App() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   const dropdownOptions = [
     { value: 'option1', label: 'Option 1' },
     { value: 'option2', label: 'Option 2' },
@@ -27,10 +31,18 @@ function App() {
     { label: 'Contact', href: '#' },
   ];
 
+  const sidebarLinks = [
+    { label: 'Dashboard', href: '#' },
+    { label: 'Profile', href: '#' },
+    { label: 'Settings', href: '#' },
+  ];
+
   return (
     <Layout>
       <Navbar title="My Responsive App" links={navbarLinks} />
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} links={sidebarLinks} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '20px' }}>
+        <Button onClick={() => setIsSidebarOpen(true)}>Open Sidebar</Button>
         <h2>Hello from the new layout!</h2>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           <Button variant="primary">Primary</Button>
