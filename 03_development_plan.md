@@ -53,7 +53,7 @@
 - [x] Progress Bar
 - [x] Spinner (Loader)
 - [x] Avatar
-- [ ] Badge
+- [x] Badge
 
 ### Layout & Structure
 - [ ] Grid
