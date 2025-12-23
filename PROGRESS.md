@@ -1,5 +1,7 @@
 # 프로젝트 진행 현황 (Project Progress Tracking)
 
+> **Note**: 프로젝트 아키텍처, 데이터 모델, 구현 상세에 대한 심층 분석 내용은 [04_architecture_and_analysis.md](./04_architecture_and_analysis.md) 파일을 참고하세요.
+
 ## 🏗️ 백엔드 (Java Spring Boot)
 
 ### ✅ 완료된 작업
