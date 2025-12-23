@@ -7,18 +7,24 @@
 .header {
   background-color: #333;
   color: white;
-  padding: 1rem;
-  text-align: center;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .main-content {
   flex-grow: 1;
-  padding: 1rem;
+  padding: 2rem;
+  max-width: 1600px; /* 웹에서 너무 넓어지는 것을 방지하되 충분히 넓게 설정 */
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .footer {
   background-color: #333;
   color: white;
-  padding: 1rem;
+  padding: 1.5rem;
   text-align: center;
 }
