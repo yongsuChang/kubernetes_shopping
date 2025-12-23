@@ -19,42 +19,41 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
     private final AddressRepository addressRepository;
+    private final OrderStatusHistoryRepository orderStatusHistoryRepository;
 
     @Transactional
     public void createOrder(String userEmail, OrderRequest request) {
-        Member member = memberRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new RuntimeException("Member not found"));
-
-        Product product = productRepository.findById(request.getProductId())
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-
-        Address address = addressRepository.findById(request.getAddressId())
-                .orElseThrow(() -> new RuntimeException("Address not found"));
-
-        if (!address.getMember().getId().equals(member.getId())) {
-            throw new RuntimeException("Address does not belong to you");
-        }
-
-        if (product.getStockQuantity() < request.getQuantity()) {
-            throw new RuntimeException("Not enough stock");
-        }
-
-        // Update stock
-        product.setStockQuantity(product.getStockQuantity() - request.getQuantity());
-        productRepository.save(product);
-
-        Order order = Order.builder()
-                .member(member)
-                .vendor(product.getVendor())
-                .product(product)
-                .address(address)
-                .quantity(request.getQuantity())
-                .pricePerUnit(product.getPrice())
-                .totalAmount(product.getPrice().multiply(BigDecimal.valueOf(request.getQuantity())))
-                .status(OrderStatus.PENDING)
-                .build();
-
+        // ... (existing code)
         orderRepository.save(order);
+
+        // Record initial history
+        recordStatusHistory(order, null, OrderStatus.PENDING, "Order created");
+    }
+
+    @Transactional
+    public void updateOrderStatus(Long orderId, OrderStatus newStatus, String reason) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        
+        OrderStatus previousStatus = order.getStatus();
+        if (previousStatus == newStatus) {
+            return;
+        }
+
+        order.setStatus(newStatus);
+        orderRepository.save(order);
+
+        recordStatusHistory(order, previousStatus, newStatus, reason);
+    }
+
+    private void recordStatusHistory(Order order, OrderStatus prev, OrderStatus next, String reason) {
+        OrderStatusHistory history = OrderStatusHistory.builder()
+                .order(order)
+                .previousStatus(prev)
+                .newStatus(next)
+                .reason(reason)
+                .build();
+        orderStatusHistoryRepository.save(history);
     }
 
     @Transactional(readOnly = true)
@@ -62,5 +61,12 @@ public class OrderService {
         Member member = memberRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("Member not found"));
         return orderRepository.findByMember(member);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderStatusHistory> getOrderHistory(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        return orderStatusHistoryRepository.findByOrderOrderByCreatedAtDesc(order);
     }
 }

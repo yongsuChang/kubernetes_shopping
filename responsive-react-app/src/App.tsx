@@ -7,6 +7,7 @@ import ProductListPage from './pages/shop/ProductListPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import VendorManagement from './pages/admin/VendorManagement';
 import VendorDashboard from './pages/vendor/VendorDashboard';
+import MyOrdersPage from './pages/shop/MyOrdersPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import HomePage from './pages/Home';
 import { useAuthStore } from './store/useAuthStore';
@@ -43,7 +44,7 @@ function App() {
             path="/mypage" 
             element={
               <ProtectedRoute allowedRoles={['ROLE_USER', 'ROLE_SUPER_ADMIN']}>
-                <div style={{ padding: '20px' }}><h1>My Page</h1><p>User profile and order history coming soon.</p></div>
+                <MyOrdersPage />
               </ProtectedRoute>
             } 
           />
