@@ -7,6 +7,8 @@ import Card from '../components/common/Card/Card';
 import Button from '../components/common/Button/Button';
 import Spinner from '../components/common/Spinner/Spinner';
 import Badge from '../components/common/Badge/Badge';
+import { useCartStore } from '../store/useCartStore';
+import Alert from '../components/common/Alert/Alert';
 
 interface Product {
   id: number;
@@ -15,19 +17,20 @@ interface Product {
   price: number;
   category: string;
   status: string;
+  vendor?: { id: number };
 }
 
 const HomePage: React.FC = () => {
   const { email, role, logout } = useAuthStore();
   const [latestProducts, setLatestProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showMsg, setShowMsg] = useState(false);
+  const addItem = useCartStore(state => state.addItem);
 
   useEffect(() => {
     const fetchLatestProducts = async () => {
       try {
-        // 백엔드에서 최신 상품을 가져오는 API가 있다면 사용, 없으면 전체 상품 중 일부 사용
         const response = await shopClient.get('/api/v1/shop/products');
-        // 최근 등록순으로 정렬하거나 상위 6개만 표시
         setLatestProducts(response.data.slice(0, 6));
       } catch (err) {
         console.error('Failed to fetch latest products', err);
@@ -38,11 +41,27 @@ const HomePage: React.FC = () => {
     fetchLatestProducts();
   }, []);
 
+  const handleAddToCart = (product: Product) => {
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      vendorId: product.vendor?.id || 0
+    });
+    setShowMsg(true);
+    setTimeout(() => setShowMsg(false), 2000);
+  };
+
   return (
     <div className="home-page">
       <section className="hero-section" style={{ backgroundColor: '#f0f2f5', padding: '40px', borderRadius: '10px', marginBottom: '40px' }}>
-        <h1>Discover Amazing Products</h1>
-        <p>Your one-stop destination for everything you need.</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <h1>Discover Amazing Products</h1>
+            <p>Your one-stop destination for everything you need.</p>
+          </div>
+          {showMsg && <Alert variant="success">Added to cart!</Alert>}
+        </div>
         {!email && (
           <Link to="/login">
             <Button variant="primary" style={{ padding: '10px 30px' }}>Get Started</Button>
@@ -83,7 +102,10 @@ const HomePage: React.FC = () => {
                 <p style={{ height: '50px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{product.description}</p>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '15px' }}>
                   <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>${product.price}</span>
-                  <Link to={`/products`}><Button variant="outline-primary">Details</Button></Link>
+                  <div style={{ display: 'flex', gap: '5px' }}>
+                    <Button variant="outline-primary" onClick={() => handleAddToCart(product)}>Cart</Button>
+                    <Link to={`/products`}><Button variant="outline-secondary">Details</Button></Link>
+                  </div>
                 </div>
               </Card>
             ))}

@@ -11,6 +11,8 @@ import VendorDashboard from './pages/vendor/VendorDashboard';
 import ProductManagement from './pages/vendor/ProductManagement';
 import OrderFulfillment from './pages/vendor/OrderFulfillment';
 import MyOrdersPage from './pages/shop/MyOrdersPage';
+import CartPage from './pages/shop/CartPage';
+import CheckoutPage from './pages/shop/CheckoutPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import HomePage from './pages/Home';
 import { useAuthStore } from './store/useAuthStore';
@@ -26,7 +28,15 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/products" element={<ProductListPage />} />
-          
+          <Route path="/cart" element={<CartPage />} />
+          <Route 
+            path="/checkout" 
+            element={
+              <ProtectedRoute>
+                <CheckoutPage />
+              </ProtectedRoute>
+            } 
+          />
           <Route 
             path="/admin" 
             element={
