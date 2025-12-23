@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { shopClient } from '../../api/client';
 import Card from '../../components/common/Card/Card';
-import Grid from '../../components/common/Grid/Grid';
+import { Grid } from '../../components/common/Grid/Grid';
 import Spinner from '../../components/common/Spinner/Spinner';
 import Button from '../../components/common/Button/Button';
 
