@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { shopClient } from '../../api/client';
 import Card from '../../components/common/Card/Card';
 import Alert from '../../components/common/Alert/Alert';
 import Spinner from '../../components/common/Spinner/Spinner';
 import Badge from '../../components/common/Badge/Badge';
+import Button from '../../components/common/Button/Button';
+import { Grid } from '../../components/common/Grid/Grid';
 
 interface VendorInfo {
   id: number;
@@ -60,9 +63,24 @@ const VendorDashboard: React.FC = () => {
         </p>
       </Card>
       
-      <div style={{ marginTop: '20px' }}>
+      <div style={{ marginTop: '30px' }}>
         <h3>Management Tools</h3>
-        <p>Product management and orders will be displayed here.</p>
+        <Grid columns={3}>
+          <Card title="Product Management">
+            <p>Add, edit, or remove your products.</p>
+            <Link to="/vendor/products">
+              <Button variant="primary">Manage Products</Button>
+            </Link>
+          </Card>
+          <Card title="Order Fulfillment">
+            <p>Manage incoming orders and shipping.</p>
+            <Button variant="secondary" disabled>Coming Soon</Button>
+          </Card>
+          <Card title="Sales Statistics">
+            <p>View your sales reports and trends.</p>
+            <Button variant="secondary" disabled>Coming Soon</Button>
+          </Card>
+        </Grid>
       </div>
     </div>
   );

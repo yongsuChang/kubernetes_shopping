@@ -43,4 +43,13 @@ public class ProductController {
             @PathVariable Long vendorId) {
         return ResponseEntity.ok(productService.getVendorProducts(userEmail, vendorId));
     }
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<String> deleteProduct(
+            @AuthenticationPrincipal String userEmail,
+            @PathVariable Long vendorId,
+            @PathVariable Long productId) {
+        productService.deleteProduct(userEmail, vendorId, productId);
+        return ResponseEntity.ok("Product deleted successfully");
+    }
 }

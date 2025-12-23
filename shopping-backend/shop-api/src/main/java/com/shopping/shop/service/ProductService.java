@@ -64,6 +64,20 @@ public class ProductService {
         return productRepository.findByVendor(vendor);
     }
 
+    @Transactional
+    public void deleteProduct(String userEmail, Long vendorId, Long productId) {
+        getVendorAndCheckOwnership(userEmail, vendorId);
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        if (!product.getVendor().getId().equals(vendorId)) {
+            throw new RuntimeException("Product does not belong to this vendor");
+        }
+
+        product.setDeleted(true);
+        productRepository.save(product);
+    }
+
     private Vendor getVendorAndCheckOwnership(String userEmail, Long vendorId) {
         Member member = memberRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new RuntimeException("Member not found"));
