@@ -124,7 +124,7 @@
 
 
 
-- [ ] **CI/CD 파이프라인**: GitHub Actions 등을 이용한 자동 빌드/배포 구축
+- [x] **CI/CD 파이프라인**: GitHub Actions를 이용한 자동 빌드/배포 구축 완료 (CI 기본 설정)
 
 
 
