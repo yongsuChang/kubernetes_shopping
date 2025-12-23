@@ -6,6 +6,7 @@ import Button from '../../components/common/Button/Button';
 import Spinner from '../../components/common/Spinner/Spinner';
 import Badge from '../../components/common/Badge/Badge';
 import Alert from '../../components/common/Alert/Alert';
+import { Tabs, Tab } from '../../components/common/Tabs/Tabs';
 
 interface Vendor {
   id: number;
@@ -16,79 +17,109 @@ interface Vendor {
 }
 
 const VendorManagement: React.FC = () => {
-  const [vendors, setVendors] = useState<Vendor[]>([]);
+  const [pendingVendors, setPendingVendors] = useState<Vendor[]>([]);
+  const [allVendors, setAllVendors] = useState<Vendor[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<{ type: 'success' | 'danger', text: string } | null>(null);
 
-  const fetchPendingVendors = async () => {
+  const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await adminClient.get('/api/v1/admin/vendors/pending');
-      setVendors(response.data);
+      const [pendingRes, allRes] = await Promise.all([
+        adminClient.get('/api/v1/admin/vendors/pending'),
+        adminClient.get('/api/v1/admin/vendors')
+      ]);
+      setPendingVendors(pendingRes.data);
+      setAllVendors(allRes.data);
     } catch (err) {
       console.error('Failed to fetch vendors', err);
+      setMessage({ type: 'danger', text: 'Failed to fetch vendor data' });
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchPendingVendors();
+    fetchData();
   }, []);
 
-  const handleApprove = async (id: number) => {
+  const handleUpdateStatus = async (id: number, status: string, actionName: string) => {
     try {
-      await adminClient.post(`/api/v1/admin/vendors/${id}/approve`);
-      setMessage({ type: 'success', text: 'Vendor approved successfully' });
-      fetchPendingVendors();
+      if (status === 'ACTIVE' && actionName === 'Approve') {
+        await adminClient.post(`/api/v1/admin/vendors/${id}/approve`);
+      } else {
+        await adminClient.patch(`/api/v1/admin/vendors/${id}/status?status=${status}`);
+      }
+      setMessage({ type: 'success', text: `Vendor ${actionName}d successfully` });
+      fetchData();
     } catch (err) {
-      setMessage({ type: 'danger', text: 'Failed to approve vendor' });
+      setMessage({ type: 'danger', text: `Failed to ${actionName} vendor` });
     }
   };
 
-  const handleReject = async (id: number) => {
-    try {
-      await adminClient.post(`/api/v1/admin/vendors/${id}/reject`);
-      setMessage({ type: 'success', text: 'Vendor rejected successfully' });
-      fetchPendingVendors();
-    } catch (err) {
-      setMessage({ type: 'danger', text: 'Failed to reject vendor' });
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'ACTIVE': return <Badge variant="success">Active</Badge>;
+      case 'PENDING': return <Badge variant="warning">Pending</Badge>;
+      case 'SUSPENDED': return <Badge variant="danger">Suspended</Badge>;
+      case 'INACTIVE': return <Badge variant="secondary">Inactive</Badge>;
+      default: return <Badge variant="info">{status}</Badge>;
     }
   };
 
-  if (loading) return <Spinner />;
+  if (loading && pendingVendors.length === 0) return <Spinner />;
 
   return (
     <div style={{ padding: '20px' }}>
-      <h2>Vendor Approval Management</h2>
+      <h2>Vendor Management</h2>
       {message && (
         <Alert variant={message.type} onClose={() => setMessage(null)}>
           {message.text}
         </Alert>
       )}
       
-      <div style={{ marginTop: '20px' }}>
-        <h3>Pending Vendors</h3>
-        {vendors.length === 0 ? (
-          <p>No pending vendor registrations.</p>
-        ) : (
-          <Grid columns={2}>
-            {vendors.map((vendor) => (
-              <Card key={vendor.id} title={vendor.name}>
-                <p>{vendor.description}</p>
-                <p><strong>Email:</strong> {vendor.contactEmail}</p>
-                <p>
-                  Status: <Badge variant="warning">{vendor.status}</Badge>
-                </p>
-                <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-                  <Button variant="success" onClick={() => handleApprove(vendor.id)}>Approve</Button>
-                  <Button variant="danger" onClick={() => handleReject(vendor.id)}>Reject</Button>
-                </div>
-              </Card>
-            ))}
-          </Grid>
-        )}
-      </div>
+      <Tabs>
+        <Tab label="Pending Approval">
+          <div style={{ marginTop: '20px' }}>
+            {pendingVendors.length === 0 ? (
+              <p>No pending vendor registrations.</p>
+            ) : (
+              <Grid columns={2}>
+                {pendingVendors.map((vendor) => (
+                  <Card key={vendor.id} title={vendor.name}>
+                    <p>{vendor.description}</p>
+                    <p><strong>Email:</strong> {vendor.contactEmail}</p>
+                    <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                      <Button variant="success" onClick={() => handleUpdateStatus(vendor.id, 'ACTIVE', 'Approve')}>Approve</Button>
+                      <Button variant="danger" onClick={() => handleUpdateStatus(vendor.id, 'INACTIVE', 'Reject')}>Reject</Button>
+                    </div>
+                  </Card>
+                ))}
+              </Grid>
+            )}
+          </div>
+        </Tab>
+        <Tab label="All Vendors">
+          <div style={{ marginTop: '20px' }}>
+            <Grid columns={3}>
+              {allVendors.map((vendor) => (
+                <Card key={vendor.id} title={vendor.name}>
+                  <p style={{ fontSize: '0.9rem', color: '#666' }}>ID: #{vendor.id}</p>
+                  <p>Status: {getStatusBadge(vendor.status)}</p>
+                  <p><strong>Email:</strong> {vendor.contactEmail}</p>
+                  <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                    {vendor.status === 'ACTIVE' ? (
+                      <Button variant="outline-danger" onClick={() => handleUpdateStatus(vendor.id, 'SUSPENDED', 'Suspend')}>Suspend</Button>
+                    ) : (vendor.status === 'SUSPENDED' || vendor.status === 'INACTIVE') && (
+                      <Button variant="outline-success" onClick={() => handleUpdateStatus(vendor.id, 'ACTIVE', 'Activate')}>Activate</Button>
+                    )}
+                  </div>
+                </Card>
+              ))}
+            </Grid>
+          </div>
+        </Tab>
+      </Tabs>
     </div>
   );
 };

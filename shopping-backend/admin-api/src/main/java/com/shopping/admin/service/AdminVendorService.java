@@ -24,12 +24,24 @@ public class AdminVendorService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<VendorResponse> getAllVendors() {
+        return vendorRepository.findAll().stream()
+                .map(VendorResponse::from)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
-    public void approveVendor(Long vendorId) {
+    public void updateVendorStatus(Long vendorId, VendorStatus status) {
         Vendor vendor = vendorRepository.findById(vendorId)
                 .orElseThrow(() -> new RuntimeException("Vendor not found"));
-        vendor.setStatus(VendorStatus.ACTIVE);
+        vendor.setStatus(status);
         vendorRepository.save(vendor);
+    }
+
+    @Transactional
+    public void approveVendor(Long vendorId) {
+        updateVendorStatus(vendorId, VendorStatus.ACTIVE);
     }
 
     @Transactional
