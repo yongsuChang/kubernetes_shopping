@@ -2,6 +2,7 @@ package com.shopping.shop.service;
 
 import com.shopping.common.entity.Member;
 import com.shopping.common.enums.MemberStatus;
+import com.shopping.common.repository.MemberRepository;
 import com.shopping.common.security.JwtUtils;
 import com.shopping.shop.dto.LoginRequest;
 import com.shopping.shop.dto.LoginResponse;

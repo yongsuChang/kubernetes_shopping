@@ -12,36 +12,3 @@ allprojects {
         mavenCentral()
     }
 }
-
-subprojects {
-    apply(plugin = "java")
-    apply(plugin = "io.spring.dependency-management")
-
-    java {
-        sourceCompatibility = JavaVersion.VERSION_21
-    }
-
-    configurations {
-        compileOnly {
-            extendsFrom(configurations.annotationProcessor.get())
-        }
-    }
-
-    dependencies {
-        compileOnly("org.projectlombok:lombok")
-        annotationProcessor("org.projectlombok:lombok")
-        testImplementation("org.springframework.boot:spring-boot-starter-test")
-    }
-
-    dependencyManagement {
-        imports {
-            mavenBom("org.springframework.boot:spring-boot-dependencies:3.4.1")
-        }
-        dependencies {
-            dependency("io.jsonwebtoken:jjwt-api:0.12.3")
-            dependency("io.jsonwebtoken:jjwt-impl:0.12.3")
-            dependency("io.jsonwebtoken:jjwt-jackson:0.12.3")
-            dependency("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
-        }
-    }
-}
