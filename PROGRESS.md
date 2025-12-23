@@ -24,6 +24,9 @@
     - [x] Health Check Controllers
     - [x] Swagger (SpringDoc OpenAPI) Integration
     - [x] Global Exception Handler
+- [x] Strict Admin Security
+    - Implemented `AdminAccessFilter` for secondary authorization
+    - Prepared IP-based whitelist filtering policy
 
 - [x] Business Logic Implementation
     - [x] Authentication (Signup/Login) in `shop-api`
@@ -45,6 +48,9 @@
 - [x] State Management (Zustand)
 - [x] Backend API Integration (Axios + Interceptors)
 - [x] Core Pages Implementation (Login, Signup, Product List)
+- [x] Admin Dashboard & Vendor Management
+    - Implemented `AdminDashboard` and `VendorManagement` pages
+    - Integrated with `admin-api` for vendor approvals
 
 
 ## Infrastructure
