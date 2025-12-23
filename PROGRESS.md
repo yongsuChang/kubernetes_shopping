@@ -51,6 +51,13 @@
 - [x] Admin Dashboard & Vendor Management
     - Implemented `AdminDashboard` and `VendorManagement` pages
     - Integrated with `admin-api` for vendor approvals
+- [x] Role-based Access Control & UX Improvements
+    - [x] Allow non-logged-in users to browse products
+    - [x] Dynamic Navigation:
+        - [x] ROLE_USER: My Page button
+        - [x] ROLE_SHOP_ADMIN: Vendor Management button
+        - [x] ROLE_SUPER_ADMIN: Admin Dashboard button
+    - [x] Token-first Authentication Flow: Verify token on frontend before API calls
 
 
 ## Infrastructure
