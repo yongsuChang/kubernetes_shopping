@@ -1,90 +1,80 @@
-# Project Progress Tracking
+# 프로젝트 진행 현황 (Project Progress Tracking)
 
-## Backend (Java Spring Boot)
-- [x] Multi-module Project Setup (Gradle Kotlin DSL)
-    - `common`: Shared entities, security utils, enums
-    - `admin-api`: Root management API (Port 8081)
-    - `shop-api`: Vendor & Customer API (Port 8082)
-- [x] Build System Refactoring
-    - Migrated dependencies to individual modules
-    - Added Gradle wrapper
-- [x] Database Configuration
-    - MySQL 8 integration
-    - JPA/Hibernate with Soft Delete support
-- [x] Security & Authentication
-    - Spring Security 3.x integration
-    - JWT (jjwt 0.12.3) implementation
-    - Role-based Access Control (SUPER_ADMIN, SHOP_ADMIN, USER)
-    - Configurable CORS filter
-- [x] Core Domain Implementation (Common Module)
-    - Entities: Member, Vendor, Product, Address, Order, Review
-    - Enums: Role, Status types
-- [x] Application Scaffolding
-    - [x] Main Application classes with Component Scanning
-    - [x] Health Check Controllers
-    - [x] Swagger (SpringDoc OpenAPI) Integration
-    - [x] Global Exception Handler
-    - [x] Strict Admin Security
-    - Implemented `AdminAccessFilter` for secondary authorization
-    - Prepared IP-based whitelist filtering policy
-    - Restricted Health Check API to SUPER_ADMIN only (both modules)
-- [x] Business Logic Implementation
-    - [x] Authentication (Signup/Login) in `shop-api`
-    - [x] Vendor Management (Registration in `shop-api` & Approval in `admin-api`)
-    - [x] Product Management (CRUD for Vendors in `shop-api`)
-    - [x] Order Management (Browsing & Ordering for Customers in `shop-api`)
-- [x] Kubernetes Manifests
-    - [x] Base resources (Namespace, Secret, ConfigMap)
-    - [x] MySQL Deployment & Service
-    - [x] API Module Deployments (2 Replicas each)
-    - [x] Nginx Ingress Controller setup
+## 🏗️ 백엔드 (Java Spring Boot)
 
-## Frontend (React)
-- [x] Project Initialization (Vite + TS)
-- [x] UI Component Library (25+ components)
-- [x] Responsive Layout & CSS Variables
-- [x] Vitest Environment Setup & Verification
-- [x] Linter & Code Style Standardization
-- [x] State Management (Zustand)
-- [x] Backend API Integration (Axios + Interceptors)
-- [x] Core Pages Implementation (Login, Signup, Product List)
-- [x] Admin Dashboard & Vendor Management
-    - Implemented `AdminDashboard` and `VendorManagement` pages
-    - Integrated with `admin-api` for vendor approvals
-- [x] Role-based Access Control & UX Improvements
-    - [x] Allow non-logged-in users to browse products
-    - [x] Dynamic Navigation:
-        - [x] ROLE_USER: My Page button
-        - [x] ROLE_SHOP_ADMIN: Vendor Management button
-        - [x] ROLE_SUPER_ADMIN: Admin Dashboard button
-    - [x] Token-first Authentication Flow: Verify token on frontend before API calls
-    
-    ## 🚀 Pending Features & Roadmap
-    
-    ### 👤 User Features (ROLE_USER)
-    - [ ] **My Page**: Profile management & Order history details
-    - [ ] **Shopping Cart**: Add/Remove products & adjust quantities
-    - [ ] **Checkout Process**: Implement order creation and mock payment flow
-    - [ ] **Reviews**: Posting and managing product reviews
-    
-    ### 🏪 Vendor Features (ROLE_SHOP_ADMIN)
-    - [ ] **Vendor Dashboard**: Sales overview and statistics
-    - [ ] **Product Management (Frontend)**: UI for Creating, Updating, and Deleting products
-    - [ ] **Order Fulfillment**: Management of incoming orders and status updates (Processing -> Shipped)
-    
-    ### 👑 Admin Features (ROLE_SUPER_ADMIN)
-    - [ ] **User Management**: View all users and manage roles/status
-    - [ ] **Advanced Vendor Control**: Suspend or reactivate vendors
-    - [ ] **System Statistics**: Global sales and registration metrics
-    
-    ### 🛠 Infrastructure & Security
-    - [ ] **IP Whitelist Enforcement**: Activate strict blocking in `AdminAccessFilter`
-    - [ ] **CI/CD Pipeline**: Automated build and deployment (GitHub Actions)
-    - [ ] **Logging & Monitoring**: Integrated logging stack (ELK or similar)
-    
-    ## Infrastructure
-    
-- [x] Dockerization
-    - [x] Multi-stage Dockerfiles for all API modules
-- [x] Kubernetes Configuration (Ready for deployment)
-- [ ] CI/CD Pipeline
+### ✅ 완료된 작업
+- [x] **멀티 모듈 프로젝트 설정 (Gradle Kotlin DSL)**
+    - `common`: 공통 엔티티, 보안 유틸리티, 열거형(Enums)
+    - `admin-api`: 전체 관리자 API (Port 8081)
+    - `shop-api`: 입점 업체 및 고객 API (Port 8082)
+- [x] **빌드 시스템 최적화**
+    - 모듈별 의존성 분리 및 리팩토링
+    - Gradle Wrapper 적용
+- [x] **데이터베이스 구성**
+    - MySQL 8 연동
+    - JPA/Hibernate 기반 Soft Delete(논리 삭제) 구현
+- [x] **보안 및 인증 (Spring Security 3.x)**
+    - JWT (jjwt 0.12.3) 기반 인증 구현
+    - 역할 기반 접근 제어 (SUPER_ADMIN, SHOP_ADMIN, USER)
+    - CORS 필터 설정 (Vite 개발 환경 대응)
+    - **Health Check API 보안 강화**: 전체 관리자 전용으로 제한
+    - **AdminAccessFilter 구현**: 전체 관리자 2차 검증 및 IP 화이트리스트 기반 마련
+- [x] **핵심 도메인 및 비즈니스 로직**
+    - 회원가입/로그인 (shop-api)
+    - 업체 등록 및 승인 프로세스 (shop/admin-api 연동)
+    - 상품 CRUD 및 주문 관리 기초 로직
+- [x] **API 문서화 및 공통 기능**
+    - Swagger (SpringDoc OpenAPI) 통합
+    - 전역 예외 처리기(Global Exception Handler) 구현
+
+---
+
+## 🎨 프론트엔드 (React + TypeScript)
+
+### ✅ 완료된 작업
+- [x] **프로젝트 초기화 (Vite)**
+- [x] **UI 컴포넌트 라이브러리 구축** (25개 이상의 공통 컴포넌트)
+- [x] **상태 관리 및 API 연동**
+    - Zustand 기반 인증 상태 관리
+    - Axios 인터셉터를 활용한 토큰 처리
+- [x] **역할 기반 동적 UI/UX**
+    - 비로그인 유저: 상품 둘러보기 허용
+    - 로그인 유저(USER): '마이페이지' 버튼 활성화
+    - 입점 업체(SHOP_ADMIN): '업체 관리' 버튼 활성화
+    - 전체 관리자(SUPER_ADMIN): '관리자 대시보드' 버튼 활성화
+- [x] **보안 라우팅 (Protected Routes)**
+    - 페이지 진입 전 토큰 및 권한 선검증 로직 적용
+    - 검증 시 로딩 스피너 적용으로 UX 개선
+- [x] **주요 페이지 구현**
+    - 로그인/회원가입
+    - 상품 목록 조회
+    - 전체 관리자: 업체 승인 관리 페이지
+
+---
+
+## 🚀 향후 로드맵 및 미완료 작업
+
+### 👤 고객 기능 (ROLE_USER)
+- [ ] **마이페이지**: 프로필 수정 및 상세 주문 내역 확인
+- [ ] **장바구니**: 상품 담기, 수량 조절 및 삭제
+- [ ] **주문/결제**: 주문 생성 프로세스 및 결제 시뮬레이션
+- [ ] **리뷰 시스템**: 상품 리뷰 작성 및 관리
+
+### 🏪 입점 업체 기능 (ROLE_SHOP_ADMIN)
+- [ ] **업체 대시보드**: 판매 통계 및 요약 정보 시각화
+- [ ] **상품 관리 고도화**: 프론트엔드 상품 등록/수정/삭제 UI 완성
+- [ ] **주문 이행 관리**: 들어온 주문 확인 및 배송 상태 업데이트
+
+### 👑 전체 관리자 기능 (ROLE_SUPER_ADMIN)
+- [ ] **사용자 관리**: 전체 회원 목록 조회 및 상태(정지 등) 관리
+- [ ] **시스템 리포트**: 플랫폼 전체 매출 및 가입 통계 대시보드
+
+### 🛠️ 인프라 및 보안 (Infrastructure)
+- [x] **Dockerization**: 모든 API 모듈의 멀티 스테이지 빌드 Dockerfile 작성
+- [x] **Kubernetes 설정**: MySQL, API 서버 배포용 Manifest 작성 완료
+- [ ] **IP 화이트리스트 강제화**: `AdminAccessFilter` 내 실제 차단 로직 활성화
+- [ ] **CI/CD 파이프라인**: GitHub Actions 등을 이용한 자동 빌드/배포 구축
+- [ ] **모니터링**: 로깅 및 메트릭 수집 시스템 통합
+
+---
+*최종 업데이트: 2025-12-23*
