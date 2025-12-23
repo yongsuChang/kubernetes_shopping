@@ -27,7 +27,9 @@ const AdminDashboard: React.FC = () => {
         
         <Card title="System Reports">
           <p>View platform statistics and reports.</p>
-          <Button variant="secondary" disabled>Coming Soon</Button>
+          <Link to="/admin/reports">
+            <Button variant="secondary">View Reports</Button>
+          </Link>
         </Card>
       </Grid>
     </div>

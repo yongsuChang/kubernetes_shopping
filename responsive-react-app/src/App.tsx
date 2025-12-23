@@ -1,5 +1,4 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import LoginPage from './pages/auth/LoginPage';
 import SignupPage from './pages/auth/SignupPage';
@@ -7,6 +6,7 @@ import ProductListPage from './pages/shop/ProductListPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import VendorManagement from './pages/admin/VendorManagement';
 import UserManagement from './pages/admin/UserManagement';
+import SystemReport from './pages/admin/SystemReport';
 import VendorDashboard from './pages/vendor/VendorDashboard';
 import ProductManagement from './pages/vendor/ProductManagement';
 import OrderFulfillment from './pages/vendor/OrderFulfillment';
@@ -15,8 +15,6 @@ import CartPage from './pages/shop/CartPage';
 import CheckoutPage from './pages/shop/CheckoutPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import HomePage from './pages/Home';
-import { useAuthStore } from './store/useAuthStore';
-import Button from './components/common/Button/Button';
 import './App.css';
 
 function App() {
@@ -58,6 +56,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['ROLE_SUPER_ADMIN']}>
                 <UserManagement />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/reports" 
+            element={
+              <ProtectedRoute allowedRoles={['ROLE_SUPER_ADMIN']}>
+                <SystemReport />
               </ProtectedRoute>
             } 
           />

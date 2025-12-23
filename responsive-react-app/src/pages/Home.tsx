@@ -60,7 +60,7 @@ const HomePage: React.FC = () => {
             <h1>Discover Amazing Products</h1>
             <p>Your one-stop destination for everything you need.</p>
           </div>
-          {showMsg && <Alert variant="success">Added to cart!</Alert>}
+          {showMsg && <Alert variant="success" message="Added to cart!" />}
         </div>
         {!email && (
           <Link to="/login">
