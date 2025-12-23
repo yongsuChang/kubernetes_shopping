@@ -79,6 +79,26 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
+    public com.shopping.shop.dto.VendorStatsResponse getVendorStats(String userEmail, Long vendorId) {
+        List<Order> orders = getVendorOrders(userEmail, vendorId);
+        
+        BigDecimal totalRevenue = orders.stream()
+                .filter(o -> o.getStatus() != com.shopping.common.enums.OrderStatus.CANCELLED)
+                .map(Order::getTotalAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return com.shopping.shop.dto.VendorStatsResponse.builder()
+                .totalOrders((long) orders.size())
+                .totalRevenue(totalRevenue)
+                .pendingOrders(orders.stream().filter(o -> o.getStatus() == com.shopping.common.enums.OrderStatus.PENDING).count())
+                .processingOrders(orders.stream().filter(o -> o.getStatus() == com.shopping.common.enums.OrderStatus.PROCESSING).count())
+                .shippedOrders(orders.stream().filter(o -> o.getStatus() == com.shopping.common.enums.OrderStatus.SHIPPED).count())
+                .deliveredOrders(orders.stream().filter(o -> o.getStatus() == com.shopping.common.enums.OrderStatus.DELIVERED).count())
+                .cancelledOrders(orders.stream().filter(o -> o.getStatus() == com.shopping.common.enums.OrderStatus.CANCELLED).count())
+                .build();
+    }
+
+    @Transactional(readOnly = true)
     public List<OrderStatusHistory> getOrderHistory(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));

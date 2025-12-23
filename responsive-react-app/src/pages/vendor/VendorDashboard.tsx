@@ -15,17 +15,32 @@ interface VendorInfo {
   description: string;
 }
 
+interface VendorStats {
+  totalOrders: number;
+  totalRevenue: number;
+  pendingOrders: number;
+  processingOrders: number;
+  shippedOrders: number;
+  deliveredOrders: number;
+  cancelledOrders: number;
+}
+
 const VendorDashboard: React.FC = () => {
   const [vendor, setVendor] = useState<VendorInfo | null>(null);
+  const [stats, setStats] = useState<VendorStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchVendorInfo = async () => {
+    const fetchData = async () => {
       try {
-        // 내 업체 정보를 가져오는 API 호출 (미승인 상태면 여기서 403 발생 가능)
-        const response = await shopClient.get('/api/v1/shop/vendors/me');
-        setVendor(response.data);
+        const vendorRes = await shopClient.get('/api/v1/shop-admin/vendors/me');
+        setVendor(vendorRes.data);
+        
+        if (vendorRes.data.status === 'ACTIVE') {
+          const statsRes = await shopClient.get(`/api/v1/shop-admin/vendors/${vendorRes.data.id}/stats`);
+          setStats(statsRes.data);
+        }
       } catch (err: any) {
         if (err.response?.status === 403) {
           setError('Your vendor account is pending approval from the administrator.');
@@ -36,7 +51,7 @@ const VendorDashboard: React.FC = () => {
         setLoading(false);
       }
     };
-    fetchVendorInfo();
+    fetchData();
   }, []);
 
   if (loading) return <Spinner />;
@@ -62,6 +77,26 @@ const VendorDashboard: React.FC = () => {
           Current Status: <Badge variant={vendor?.status === 'ACTIVE' ? 'success' : 'warning'}>{vendor?.status}</Badge>
         </p>
       </Card>
+
+      {stats && (
+        <div style={{ marginTop: '30px' }}>
+          <h3>Sales Summary</h3>
+          <Grid columns={4}>
+            <Card title="Total Revenue">
+              <h2 style={{ color: 'var(--color-success)' }}>${stats.totalRevenue.toFixed(2)}</h2>
+            </Card>
+            <Card title="Total Orders">
+              <h2>{stats.totalOrders}</h2>
+            </Card>
+            <Card title="Pending">
+              <h2 style={{ color: 'var(--color-warning)' }}>{stats.pendingOrders}</h2>
+            </Card>
+            <Card title="Delivered">
+              <h2 style={{ color: 'var(--color-primary)' }}>{stats.deliveredOrders}</h2>
+            </Card>
+          </Grid>
+        </div>
+      )}
       
       <div style={{ marginTop: '30px' }}>
         <h3>Management Tools</h3>
@@ -80,7 +115,7 @@ const VendorDashboard: React.FC = () => {
           </Card>
           <Card title="Sales Statistics">
             <p>View your sales reports and trends.</p>
-            <Button variant="secondary" disabled>Coming Soon</Button>
+            <Button variant="secondary" disabled>Detailed Reports (Coming Soon)</Button>
           </Card>
         </Grid>
       </div>

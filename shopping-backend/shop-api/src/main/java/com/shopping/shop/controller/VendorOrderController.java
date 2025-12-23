@@ -24,6 +24,13 @@ public class VendorOrderController {
         return ResponseEntity.ok(orderService.getVendorOrders(userEmail, vendorId));
     }
 
+    @GetMapping("/stats")
+    public ResponseEntity<com.shopping.shop.dto.VendorStatsResponse> getVendorStats(
+            @AuthenticationPrincipal String userEmail,
+            @PathVariable Long vendorId) {
+        return ResponseEntity.ok(orderService.getVendorStats(userEmail, vendorId));
+    }
+
     @PatchMapping("/{orderId}/status")
     public ResponseEntity<String> updateOrderStatus(
             @AuthenticationPrincipal String userEmail,

@@ -22,7 +22,15 @@ public class ShopController {
     private final ProductRepository productRepository;
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getAllProducts() {
+    public ResponseEntity<List<Product>> getAllProducts(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String search) {
+        if (category != null && !category.isEmpty()) {
+            return ResponseEntity.ok(productRepository.findByCategoryAndIsDeletedFalse(category));
+        }
+        if (search != null && !search.isEmpty()) {
+            return ResponseEntity.ok(productRepository.findByNameContainingIgnoreCaseAndIsDeletedFalse(search));
+        }
         return ResponseEntity.ok(productRepository.findByIsDeletedFalse());
     }
 
