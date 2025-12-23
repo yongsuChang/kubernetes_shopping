@@ -9,7 +9,7 @@ import Button from '../../components/common/Button/Button';
 
 interface Order {
   id: number;
-  product: { name: string };
+  product: { id: number, name: string };
   quantity: number;
   totalAmount: number;
   status: string;
@@ -27,21 +27,28 @@ interface OrderHistory {
 const MyOrdersPage: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // History modal
   const [selectedOrder, setSelectedOrder] = useState<number | null>(null);
   const [history, setHistory] = useState<OrderHistory[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
 
+  // Review modal
+  const [reviewOrder, setReviewOrder] = useState<Order | null>(null);
+  const [reviewData, setReviewData] = useState({ rating: 5, comment: '' });
+
+  const fetchOrders = async () => {
+    try {
+      const response = await shopClient.get('/api/v1/shop/orders/me');
+      setOrders(response.data);
+    } catch (err) {
+      console.error('Failed to fetch orders', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const response = await shopClient.get('/api/v1/shop/orders/me');
-        setOrders(response.data);
-      } catch (err) {
-        console.error('Failed to fetch orders', err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchOrders();
   }, []);
 
@@ -55,6 +62,35 @@ const MyOrdersPage: React.FC = () => {
       console.error('Failed to fetch history', err);
     } finally {
       setHistoryLoading(false);
+    }
+  };
+
+  const handleSubmitReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!reviewOrder) return;
+    try {
+      await shopClient.post('/api/v1/shop/reviews', {
+        orderId: reviewOrder.id,
+        rating: reviewData.rating,
+        comment: reviewData.comment
+      });
+      alert('Review submitted successfully!');
+      setReviewOrder(null);
+      setReviewData({ rating: 5, comment: '' });
+    } catch (err) {
+      console.error('Failed to submit review', err);
+      alert('Failed to submit review. You might have already reviewed this order.');
+    }
+  };
+
+  const getStatusBadgeVariant = (status: string) => {
+    switch (status) {
+      case 'PENDING': return 'warning';
+      case 'PROCESSING': return 'info';
+      case 'SHIPPED': return 'primary';
+      case 'DELIVERED': return 'success';
+      case 'CANCELLED': return 'danger';
+      default: return 'secondary';
     }
   };
 
@@ -74,9 +110,14 @@ const MyOrdersPage: React.FC = () => {
                   <p>Quantity: {order.quantity}</p>
                   <p>Total: <strong>${order.totalAmount}</strong></p>
                   <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
-                  <Badge variant="info">{order.status}</Badge>
+                  <Badge variant={getStatusBadgeVariant(order.status)}>{order.status}</Badge>
                 </div>
-                <Button onClick={() => viewHistory(order.id)}>View Status History</Button>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  {order.status === 'DELIVERED' && (
+                    <Button variant="success" onClick={() => setReviewOrder(order)}>Write Review</Button>
+                  )}
+                  <Button onClick={() => viewHistory(order.id)}>Status History</Button>
+                </div>
               </div>
             </Card>
           ))}
@@ -91,7 +132,7 @@ const MyOrdersPage: React.FC = () => {
         >
           {historyLoading ? <Spinner /> : (
             <div style={{ padding: '10px' }}>
-              {history.map((h, index) => (
+              {history.map((h) => (
                 <div key={h.id} style={{ 
                   borderLeft: '2px solid var(--color-primary)', 
                   paddingLeft: '20px', 
@@ -116,6 +157,35 @@ const MyOrdersPage: React.FC = () => {
               ))}
             </div>
           )}
+        </Modal>
+      )}
+
+      {reviewOrder && (
+        <Modal 
+          isOpen={!!reviewOrder} 
+          onClose={() => setReviewOrder(null)} 
+          title={`Review for ${reviewOrder.product.name}`}
+        >
+          <form onSubmit={handleSubmitReview} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+            <div>
+              <label>Rating: </label>
+              <select 
+                value={reviewData.rating} 
+                onChange={(e) => setReviewData({...reviewData, rating: parseInt(e.target.value)})}
+                style={{ padding: '5px', marginLeft: '10px' }}
+              >
+                {[5,4,3,2,1].map(num => <option key={num} value={num}>{num} Stars</option>)}
+              </select>
+            </div>
+            <textarea 
+              placeholder="Tell us about your experience..."
+              value={reviewData.comment}
+              onChange={(e) => setReviewData({...reviewData, comment: e.target.value})}
+              required
+              style={{ minHeight: '100px', padding: '10px', width: '100%', boxSizing: 'border-box' }}
+            />
+            <Button type="submit" variant="primary">Submit Review</Button>
+          </form>
         </Modal>
       )}
     </div>
