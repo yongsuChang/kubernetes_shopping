@@ -24,10 +24,10 @@
     - [x] Health Check Controllers
     - [x] Swagger (SpringDoc OpenAPI) Integration
     - [x] Global Exception Handler
-- [x] Strict Admin Security
+    - [x] Strict Admin Security
     - Implemented `AdminAccessFilter` for secondary authorization
     - Prepared IP-based whitelist filtering policy
-
+    - Restricted Health Check API to SUPER_ADMIN only (both modules)
 - [x] Business Logic Implementation
     - [x] Authentication (Signup/Login) in `shop-api`
     - [x] Vendor Management (Registration in `shop-api` & Approval in `admin-api`)
