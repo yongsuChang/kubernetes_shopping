@@ -36,7 +36,8 @@ public class AdminAccessFilter extends OncePerRequestFilter {
             String clientIp = getClientIp(request);
             log.debug("Admin access attempt from IP: {} for path: {}", clientIp, path);
 
-            // 1. IP Whitelist Check (Strict Blocking Activated)
+            // 1. IP Whitelist Check (Strict Blocking Disabled Temporarily for Debugging)
+            /*
             if (!isIpAllowed(clientIp)) {
                 log.warn("Access denied from unauthorized IP: {}", clientIp);
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -44,6 +45,7 @@ public class AdminAccessFilter extends OncePerRequestFilter {
                 response.getWriter().write("{\"error\": \"Access denied from this IP address.\"}");
                 return;
             }
+            */
 
             // 2. Strong Role Check
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();

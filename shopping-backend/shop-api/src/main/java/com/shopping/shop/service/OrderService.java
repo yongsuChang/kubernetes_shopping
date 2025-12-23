@@ -4,6 +4,7 @@ import com.shopping.common.entity.*;
 import com.shopping.common.enums.OrderStatus;
 import com.shopping.common.repository.*;
 import com.shopping.shop.dto.OrderRequest;
+import com.shopping.shop.dto.VendorStatsResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,10 +21,42 @@ public class OrderService {
     private final MemberRepository memberRepository;
     private final AddressRepository addressRepository;
     private final OrderStatusHistoryRepository orderStatusHistoryRepository;
+    private final VendorRepository vendorRepository;
 
     @Transactional
     public void createOrder(String userEmail, OrderRequest request) {
-        // ... (existing code)
+        Member member = memberRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("Member not found"));
+
+        Product product = productRepository.findById(request.getProductId())
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        Address address = addressRepository.findById(request.getAddressId())
+                .orElseThrow(() -> new RuntimeException("Address not found"));
+
+        if (!address.getMember().getId().equals(member.getId())) {
+            throw new RuntimeException("Address does not belong to you");
+        }
+
+        if (product.getStockQuantity() < request.getQuantity()) {
+            throw new RuntimeException("Not enough stock");
+        }
+
+        // Update stock
+        product.setStockQuantity(product.getStockQuantity() - request.getQuantity());
+        productRepository.save(product);
+
+        Order order = Order.builder()
+                .member(member)
+                .vendor(product.getVendor())
+                .product(product)
+                .address(address)
+                .quantity(request.getQuantity())
+                .pricePerUnit(product.getPrice())
+                .totalAmount(product.getPrice().multiply(BigDecimal.valueOf(request.getQuantity())))
+                .status(OrderStatus.PENDING)
+                .build();
+
         orderRepository.save(order);
 
         // Record initial history
@@ -79,22 +112,22 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public com.shopping.shop.dto.VendorStatsResponse getVendorStats(String userEmail, Long vendorId) {
+    public VendorStatsResponse getVendorStats(String userEmail, Long vendorId) {
         List<Order> orders = getVendorOrders(userEmail, vendorId);
         
         BigDecimal totalRevenue = orders.stream()
-                .filter(o -> o.getStatus() != com.shopping.common.enums.OrderStatus.CANCELLED)
+                .filter(o -> o.getStatus() != OrderStatus.CANCELLED)
                 .map(Order::getTotalAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        return com.shopping.shop.dto.VendorStatsResponse.builder()
+        return VendorStatsResponse.builder()
                 .totalOrders((long) orders.size())
                 .totalRevenue(totalRevenue)
-                .pendingOrders(orders.stream().filter(o -> o.getStatus() == com.shopping.common.enums.OrderStatus.PENDING).count())
-                .processingOrders(orders.stream().filter(o -> o.getStatus() == com.shopping.common.enums.OrderStatus.PROCESSING).count())
-                .shippedOrders(orders.stream().filter(o -> o.getStatus() == com.shopping.common.enums.OrderStatus.SHIPPED).count())
-                .deliveredOrders(orders.stream().filter(o -> o.getStatus() == com.shopping.common.enums.OrderStatus.DELIVERED).count())
-                .cancelledOrders(orders.stream().filter(o -> o.getStatus() == com.shopping.common.enums.OrderStatus.CANCELLED).count())
+                .pendingOrders(orders.stream().filter(o -> o.getStatus() == OrderStatus.PENDING).count())
+                .processingOrders(orders.stream().filter(o -> o.getStatus() == OrderStatus.PROCESSING).count())
+                .shippedOrders(orders.stream().filter(o -> o.getStatus() == OrderStatus.SHIPPED).count())
+                .deliveredOrders(orders.stream().filter(o -> o.getStatus() == OrderStatus.DELIVERED).count())
+                .cancelledOrders(orders.stream().filter(o -> o.getStatus() == OrderStatus.CANCELLED).count())
                 .build();
     }
 

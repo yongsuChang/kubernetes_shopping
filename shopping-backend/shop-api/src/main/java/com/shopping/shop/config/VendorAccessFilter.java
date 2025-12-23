@@ -2,7 +2,6 @@ package com.shopping.shop.config;
 
 import com.shopping.common.entity.Member;
 import com.shopping.common.entity.Vendor;
-import com.shopping.common.enums.Role;
 import com.shopping.common.enums.VendorStatus;
 import com.shopping.common.repository.MemberRepository;
 import com.shopping.common.repository.VendorRepository;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Filter to block vendors who are not yet approved (status != ACTIVE).
@@ -45,11 +45,15 @@ public class VendorAccessFilter extends OncePerRequestFilter {
                 String email = auth.getName();
                 
                 // Check vendor status
-                boolean isAllowed = memberRepository.findByEmail(email)
-                        .map(member -> vendorRepository.findByOwner(member)
-                                .map(vendor -> vendor.getStatus() == VendorStatus.ACTIVE)
-                                .orElse(false))
-                        .orElse(false);
+                Optional<Member> memberOpt = memberRepository.findByEmail(email);
+                boolean isAllowed = false;
+                
+                if (memberOpt.isPresent()) {
+                    Optional<Vendor> vendorOpt = vendorRepository.findByOwner(memberOpt.get());
+                    if (vendorOpt.isPresent()) {
+                        isAllowed = vendorOpt.get().getStatus() == VendorStatus.ACTIVE;
+                    }
+                }
 
                 if (!isAllowed) {
                     log.warn("Access denied for unapproved vendor admin: {}", email);

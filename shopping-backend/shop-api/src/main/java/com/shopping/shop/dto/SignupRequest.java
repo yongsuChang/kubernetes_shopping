@@ -21,5 +21,12 @@ public class SignupRequest {
     private String password;
 
     @NotNull
-    private Role role; // Usually USER or SHOP_ADMIN
+    private Role role;
+
+    // Optional Vendor Info (for ROLE_SHOP_ADMIN)
+    private String vendorName;
+    private String vendorDescription;
+    private String vendorEmail;
+    private String vendorPhone;
+    private String vendorAddress;
 }
