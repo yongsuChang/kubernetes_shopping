@@ -5,6 +5,9 @@
     - `common`: Shared entities, security utils, enums
     - `admin-api`: Root management API (Port 8081)
     - `shop-api`: Vendor & Customer API (Port 8082)
+- [x] Build System Refactoring
+    - Migrated dependencies to individual modules
+    - Added Gradle wrapper
 - [x] Database Configuration
     - MySQL 8 integration
     - JPA/Hibernate with Soft Delete support
@@ -42,7 +45,7 @@
 - [x] State Management (Zustand)
 - [x] Backend API Integration (Axios + Interceptors)
 - [x] Core Pages Implementation (Login, Signup, Product List)
-- [ ] Gemini API Integration
+
 
 ## Infrastructure
 - [x] Dockerization
