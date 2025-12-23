@@ -20,7 +20,9 @@ const AdminDashboard: React.FC = () => {
         
         <Card title="User Management">
           <p>Manage platform users and roles.</p>
-          <Button variant="secondary" disabled>Coming Soon</Button>
+          <Link to="/admin/users">
+            <Button variant="primary">Go to Users</Button>
+          </Link>
         </Card>
         
         <Card title="System Reports">

@@ -6,6 +6,7 @@ import SignupPage from './pages/auth/SignupPage';
 import ProductListPage from './pages/shop/ProductListPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import VendorManagement from './pages/admin/VendorManagement';
+import UserManagement from './pages/admin/UserManagement';
 import VendorDashboard from './pages/vendor/VendorDashboard';
 import MyOrdersPage from './pages/shop/MyOrdersPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -37,6 +38,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['ROLE_SUPER_ADMIN']}>
                 <VendorManagement />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/users" 
+            element={
+              <ProtectedRoute allowedRoles={['ROLE_SUPER_ADMIN']}>
+                <UserManagement />
               </ProtectedRoute>
             } 
           />
