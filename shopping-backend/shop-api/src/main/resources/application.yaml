@@ -4,10 +4,10 @@ spring:
   profiles:
     active: dev
   datasource:
-    url: jdbc:mysql://localhost:3306/shopping_shop?serverTimezone=UTC&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/shopping?serverTimezone=UTC&characterEncoding=UTF-8
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: password
+    username: yongsu
+    password: admin12345
   jpa:
     hibernate:
       ddl-auto: update
@@ -25,6 +25,4 @@ jwt:
   expiration: 86400000 # 24 hours
 
 cors:
-  allowed-origins:
-    - "http://localhost:5173"
-    - "http://127.0.0.1:5173"
+  allowed-origins: "http://localhost:5173,http://127.0.0.1:5173"
