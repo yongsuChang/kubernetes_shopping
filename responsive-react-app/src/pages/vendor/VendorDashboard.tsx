@@ -74,7 +74,9 @@ const VendorDashboard: React.FC = () => {
           </Card>
           <Card title="Order Fulfillment">
             <p>Manage incoming orders and shipping.</p>
-            <Button variant="secondary" disabled>Coming Soon</Button>
+            <Link to="/vendor/orders">
+              <Button variant="primary">Manage Orders</Button>
+            </Link>
           </Card>
           <Card title="Sales Statistics">
             <p>View your sales reports and trends.</p>

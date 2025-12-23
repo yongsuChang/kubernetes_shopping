@@ -64,6 +64,21 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
+    public List<Order> getVendorOrders(String userEmail, Long vendorId) {
+        Vendor vendor = vendorRepository.findById(vendorId)
+                .orElseThrow(() -> new RuntimeException("Vendor not found"));
+        
+        Member member = memberRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("Member not found"));
+
+        if (!vendor.getOwner().getId().equals(member.getId())) {
+            throw new RuntimeException("You are not the owner of this vendor");
+        }
+
+        return orderRepository.findByVendor(vendor);
+    }
+
+    @Transactional(readOnly = true)
     public List<OrderStatusHistory> getOrderHistory(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));

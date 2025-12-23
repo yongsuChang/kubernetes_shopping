@@ -39,14 +39,4 @@ public class OrderController {
                 .map(OrderStatusHistoryResponse::from)
                 .collect(Collectors.toList()));
     }
-
-    // This would typically be in a separate VendorOrderController, but for simplicity:
-    @PatchMapping("/{orderId}/status")
-    public ResponseEntity<String> updateOrderStatus(
-            @PathVariable Long orderId,
-            @RequestParam OrderStatus status,
-            @RequestParam(required = false) String reason) {
-        orderService.updateOrderStatus(orderId, status, reason);
-        return ResponseEntity.ok("Order status updated to " + status);
-    }
 }
