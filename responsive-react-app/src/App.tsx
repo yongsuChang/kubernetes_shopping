@@ -6,6 +6,7 @@ import SignupPage from './pages/auth/SignupPage';
 import ProductListPage from './pages/shop/ProductListPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import VendorManagement from './pages/admin/VendorManagement';
+import VendorDashboard from './pages/vendor/VendorDashboard';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import HomePage from './pages/Home';
 import { useAuthStore } from './store/useAuthStore';
@@ -50,7 +51,7 @@ function App() {
             path="/vendor" 
             element={
               <ProtectedRoute allowedRoles={['ROLE_SHOP_ADMIN', 'ROLE_SUPER_ADMIN']}>
-                <div style={{ padding: '20px' }}><h1>Vendor Dashboard</h1><p>Product management and shop settings coming soon.</p></div>
+                <VendorDashboard />
               </ProtectedRoute>
             } 
           />

@@ -20,6 +20,7 @@ public class SecurityConfig {
 
     private final JwtUtils jwtUtils;
     private final CorsFilter corsFilter;
+    private final VendorAccessFilter vendorAccessFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -28,6 +29,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(new JwtAuthenticationFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class)
+            .addFilterAfter(vendorAccessFilter, JwtAuthenticationFilter.class)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/v1/auth/health").hasRole("SUPER_ADMIN")
                 .requestMatchers("/api/v1/auth/**").permitAll()

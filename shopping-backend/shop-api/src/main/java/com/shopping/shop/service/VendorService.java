@@ -39,4 +39,12 @@ public class VendorService {
 
         vendorRepository.save(vendor);
     }
+
+    @Transactional(readOnly = true)
+    public Vendor getMyVendor(String userEmail) {
+        Member member = memberRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("Member not found"));
+        return vendorRepository.findByOwner(member)
+                .orElseThrow(() -> new RuntimeException("Vendor not registered for this user"));
+    }
 }
