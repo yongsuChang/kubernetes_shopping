@@ -58,9 +58,32 @@
         - [x] ROLE_SHOP_ADMIN: Vendor Management button
         - [x] ROLE_SUPER_ADMIN: Admin Dashboard button
     - [x] Token-first Authentication Flow: Verify token on frontend before API calls
-
-
-## Infrastructure
+    
+    ## 🚀 Pending Features & Roadmap
+    
+    ### 👤 User Features (ROLE_USER)
+    - [ ] **My Page**: Profile management & Order history details
+    - [ ] **Shopping Cart**: Add/Remove products & adjust quantities
+    - [ ] **Checkout Process**: Implement order creation and mock payment flow
+    - [ ] **Reviews**: Posting and managing product reviews
+    
+    ### 🏪 Vendor Features (ROLE_SHOP_ADMIN)
+    - [ ] **Vendor Dashboard**: Sales overview and statistics
+    - [ ] **Product Management (Frontend)**: UI for Creating, Updating, and Deleting products
+    - [ ] **Order Fulfillment**: Management of incoming orders and status updates (Processing -> Shipped)
+    
+    ### 👑 Admin Features (ROLE_SUPER_ADMIN)
+    - [ ] **User Management**: View all users and manage roles/status
+    - [ ] **Advanced Vendor Control**: Suspend or reactivate vendors
+    - [ ] **System Statistics**: Global sales and registration metrics
+    
+    ### 🛠 Infrastructure & Security
+    - [ ] **IP Whitelist Enforcement**: Activate strict blocking in `AdminAccessFilter`
+    - [ ] **CI/CD Pipeline**: Automated build and deployment (GitHub Actions)
+    - [ ] **Logging & Monitoring**: Integrated logging stack (ELK or similar)
+    
+    ## Infrastructure
+    
 - [x] Dockerization
     - [x] Multi-stage Dockerfiles for all API modules
 - [x] Kubernetes Configuration (Ready for deployment)
