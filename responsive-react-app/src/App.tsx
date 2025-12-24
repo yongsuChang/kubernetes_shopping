@@ -7,6 +7,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import VendorManagement from './pages/admin/VendorManagement';
 import UserManagement from './pages/admin/UserManagement';
 import SystemReport from './pages/admin/SystemReport';
+import AdminProductManagement from './pages/admin/AdminProductManagement';
 import VendorDashboard from './pages/vendor/VendorDashboard';
 import ProductManagement from './pages/vendor/ProductManagement';
 import OrderFulfillment from './pages/vendor/OrderFulfillment';
@@ -64,6 +65,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['ROLE_SUPER_ADMIN']}>
                 <SystemReport />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/products" 
+            element={
+              <ProtectedRoute allowedRoles={['ROLE_SUPER_ADMIN']}>
+                <AdminProductManagement />
               </ProtectedRoute>
             } 
           />

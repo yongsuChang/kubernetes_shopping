@@ -31,6 +31,13 @@ const AdminDashboard: React.FC = () => {
             <Button variant="secondary">View Reports</Button>
           </Link>
         </Card>
+
+        <Card title="Product Management">
+          <p>Review and manage all products on the platform.</p>
+          <Link to="/admin/products">
+            <Button variant="outline-primary">Go to Products</Button>
+          </Link>
+        </Card>
       </Grid>
     </div>
   );

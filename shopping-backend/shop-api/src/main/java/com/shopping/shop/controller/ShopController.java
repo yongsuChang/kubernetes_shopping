@@ -27,4 +27,12 @@ public class ShopController {
         }
         return ResponseEntity.ok(productRepository.findByIsDeletedFalse());
     }
+
+    @GetMapping("/products/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+        return productRepository.findById(id)
+                .filter(p -> !p.isDeleted())
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
