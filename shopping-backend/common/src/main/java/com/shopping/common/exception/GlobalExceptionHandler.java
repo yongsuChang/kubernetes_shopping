@@ -2,6 +2,7 @@ package com.shopping.common.exception;
 
 import com.shopping.common.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -10,6 +11,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+@Slf4j
+@RestControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
@@ -17,13 +20,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<Map<String, String>> handleBusinessException(BusinessException e) {
+        log.warn("Business exception: {}", e.getMessageKey());
         Map<String, String> response = new HashMap<>();
-        response.put("message", "Triggered: " + e.getMessageKey());
+        String message = messageUtils.getMessage(e.getMessageKey());
+        response.put("message", message);
         return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException e) {
+        log.error("Runtime exception occurred", e);
         Map<String, String> response = new HashMap<>();
         response.put("message", e.getMessage());
         return ResponseEntity.badRequest().body(response);
@@ -31,6 +37,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleException(Exception e) {
+        log.error("Unhandled exception occurred", e);
         Map<String, String> response = new HashMap<>();
         response.put("message", messageUtils.getMessage("error.internal_server"));
         response.put("details", e.getMessage());

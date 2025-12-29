@@ -24,8 +24,11 @@ public class MessageUtils {
 
     public String getMessage(String code, Object[] args, Locale locale) {
         log.info("Requested Locale: {}", locale);
-        String message = messageSource.getMessage(code, args, locale);
-        log.info("Resolved message: {}", message);
-        return message;
+        try {
+            return messageSource.getMessage(code, args, locale);
+        } catch (org.springframework.context.NoSuchMessageException e) {
+            log.warn("Message key not found: {}", code);
+            return code; // 키가 없으면 키 자체를 반환
+        }
     }
 }

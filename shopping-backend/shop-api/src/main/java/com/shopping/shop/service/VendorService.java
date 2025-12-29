@@ -5,10 +5,16 @@ import com.shopping.common.entity.Vendor;
 import com.shopping.common.enums.VendorStatus;
 import com.shopping.common.repository.MemberRepository;
 import com.shopping.common.repository.VendorRepository;
+import com.shopping.common.repository.MemberRepository;
+import com.shopping.common.repository.VendorRepository;
+import com.shopping.common.repository.OrderRepository;
+import com.shopping.common.enums.OrderStatus;
 import com.shopping.shop.dto.VendorRegistrationRequest;
+import com.shopping.shop.dto.VendorStatsResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +22,30 @@ public class VendorService {
 
     private final VendorRepository vendorRepository;
     private final MemberRepository memberRepository;
+    private final OrderRepository orderRepository;
+
+    @Transactional(readOnly = true)
+    public VendorStatsResponse getVendorStats(String userEmail, Long vendorId) {
+        Vendor vendor = getMyVendor(userEmail);
+        if (!vendor.getId().equals(vendorId)) {
+            throw new RuntimeException("Unauthorized access to vendor stats");
+        }
+
+        BigDecimal totalRevenue = orderRepository.sumTotalAmountByVendor(vendor);
+        if (totalRevenue == null) {
+            totalRevenue = BigDecimal.ZERO;
+        }
+
+        return VendorStatsResponse.builder()
+                .totalOrders(orderRepository.countByVendor(vendor))
+                .totalRevenue(totalRevenue)
+                .pendingOrders(orderRepository.countByVendorAndStatus(vendor, OrderStatus.PENDING))
+                .processingOrders(orderRepository.countByVendorAndStatus(vendor, OrderStatus.PROCESSING))
+                .shippedOrders(orderRepository.countByVendorAndStatus(vendor, OrderStatus.SHIPPED))
+                .deliveredOrders(orderRepository.countByVendorAndStatus(vendor, OrderStatus.DELIVERED))
+                .cancelledOrders(orderRepository.countByVendorAndStatus(vendor, OrderStatus.CANCELLED))
+                .build();
+    }
 
     @Transactional
     public void registerVendor(String userEmail, VendorRegistrationRequest request) {

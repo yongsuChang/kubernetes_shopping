@@ -16,7 +16,7 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
   messages:
-    basename: classpath*:messages
+    basename: classpath*:common-messages,classpath*:admin-messages
     encoding: UTF-8
 
 server:
@@ -26,4 +26,4 @@ jwt:
   secret: ${jwt.secret}
   expiration: 3600000 # 1 hour
 cors:
-  allowed-origins: "http://localhost:5173,http://127.0.0.1:5173"
+  allowed-origins: "http://localhost,http://localhost:5173,http://127.0.0.1:5173"

@@ -1,6 +1,7 @@
 package com.shopping.common.entity;
 
 import com.shopping.common.enums.ProductStatus;
+import com.shopping.common.enums.Category;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -38,7 +39,8 @@ public class Product extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ProductStatus status;
 
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
     @Builder.Default
     private boolean isDeleted = false;

@@ -1,6 +1,7 @@
 package com.shopping.admin.dto;
 
 import com.shopping.common.entity.Product;
+import com.shopping.common.enums.Category;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,7 +16,7 @@ public class ProductResponse {
     private String description;
     private BigDecimal price;
     private Integer stockQuantity;
-    private String category;
+    private Category category;
     private String vendorName;
     private boolean isDeleted;
     private LocalDateTime createdAt;

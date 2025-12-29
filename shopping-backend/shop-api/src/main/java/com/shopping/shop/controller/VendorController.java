@@ -2,6 +2,7 @@ package com.shopping.shop.controller;
 
 import com.shopping.common.entity.Vendor;
 import com.shopping.shop.dto.VendorRegistrationRequest;
+import com.shopping.shop.dto.VendorStatsResponse;
 import com.shopping.shop.service.VendorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,5 +28,12 @@ public class VendorController {
     @GetMapping("/me")
     public ResponseEntity<Vendor> getMyVendor(@AuthenticationPrincipal String userEmail) {
         return ResponseEntity.ok(vendorService.getMyVendor(userEmail));
+    }
+
+    @GetMapping("/{vendorId}/stats")
+    public ResponseEntity<VendorStatsResponse> getVendorStats(
+            @AuthenticationPrincipal String userEmail,
+            @PathVariable Long vendorId) {
+        return ResponseEntity.ok(vendorService.getVendorStats(userEmail, vendorId));
     }
 }

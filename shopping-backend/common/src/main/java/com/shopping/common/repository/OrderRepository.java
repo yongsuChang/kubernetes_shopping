@@ -16,6 +16,15 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByMember(Member member);
     List<Order> findByVendor(Vendor vendor);
 
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.vendor = :vendor")
+    long countByVendor(Vendor vendor);
+
+    @Query("SELECT SUM(o.totalAmount) FROM Order o WHERE o.vendor = :vendor AND o.status != 'CANCELLED'")
+    BigDecimal sumTotalAmountByVendor(Vendor vendor);
+
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.vendor = :vendor AND o.status = :status")
+    long countByVendorAndStatus(Vendor vendor, com.shopping.common.enums.OrderStatus status);
+
     @Query("SELECT SUM(o.totalAmount) FROM Order o WHERE o.status != 'CANCELLED'")
     BigDecimal sumTotalAmount();
 

@@ -85,16 +85,16 @@ const VendorDashboard: React.FC = () => {
           <h3>{t('vendor.my_sales')}</h3>
           <Grid columns={4}>
             <Card title="Total Revenue">
-              <h2 style={{ color: 'var(--color-success)' }}>${stats.totalRevenue.toFixed(2)}</h2>
+              <h2 style={{ color: 'var(--color-success)' }}>${(stats.totalRevenue || 0).toFixed(2)}</h2>
             </Card>
             <Card title="Total Orders">
-              <h2>{stats.totalOrders}</h2>
+              <h2>{stats.totalOrders || 0}</h2>
             </Card>
             <Card title="Pending">
-              <h2 style={{ color: 'var(--color-warning)' }}>{stats.pendingOrders}</h2>
+              <h2 style={{ color: 'var(--color-warning)' }}>{stats.pendingOrders || 0}</h2>
             </Card>
             <Card title="Delivered">
-              <h2 style={{ color: 'var(--color-primary)' }}>{stats.deliveredOrders}</h2>
+              <h2 style={{ color: 'var(--color-primary)' }}>{stats.deliveredOrders || 0}</h2>
             </Card>
           </Grid>
         </div>

@@ -1,5 +1,6 @@
 package com.shopping.shop.dto;
 
+import com.shopping.common.enums.Category;
 import com.shopping.common.enums.ProductStatus;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -25,7 +26,8 @@ public class ProductRequest {
     @Min(0)
     private Integer stockQuantity;
 
-    private String category;
+    @NotNull
+    private Category category;
     
     @NotNull
     private ProductStatus status;

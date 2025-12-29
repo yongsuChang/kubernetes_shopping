@@ -1,18 +1,21 @@
 package com.shopping.shop.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
-@Getter
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class VendorStatsResponse {
-    private Long totalOrders;
-    private BigDecimal totalRevenue;
-    private Long pendingOrders;
-    private Long processingOrders;
-    private Long shippedOrders;
-    private Long deliveredOrders;
-    private Long cancelledOrders;
+    private long totalOrders;
+    private BigDecimal totalRevenue; // double -> BigDecimal로 변경
+    private long pendingOrders;
+    private long processingOrders;
+    private long shippedOrders;
+    private long deliveredOrders;
+    private long cancelledOrders;
 }
