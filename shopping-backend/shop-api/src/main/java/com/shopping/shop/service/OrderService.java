@@ -3,6 +3,7 @@ package com.shopping.shop.service;
 import com.shopping.common.entity.*;
 import com.shopping.common.enums.OrderStatus;
 import com.shopping.common.repository.*;
+import com.shopping.common.utils.MessageUtils;
 import com.shopping.shop.dto.OrderRequest;
 import com.shopping.shop.dto.VendorStatsResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,24 +23,25 @@ public class OrderService {
     private final AddressRepository addressRepository;
     private final OrderStatusHistoryRepository orderStatusHistoryRepository;
     private final VendorRepository vendorRepository;
+    private final MessageUtils messageUtils;
 
     @Transactional
     public void createOrder(String userEmail, OrderRequest request) {
         Member member = memberRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new RuntimeException("Member not found"));
+                .orElseThrow(() -> new RuntimeException(messageUtils.getMessage("auth.user_not_found")));
 
         Product product = productRepository.findById(request.getProductId())
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new RuntimeException(messageUtils.getMessage("product.not_found")));
 
         Address address = addressRepository.findById(request.getAddressId())
                 .orElseThrow(() -> new RuntimeException("Address not found"));
 
         if (!address.getMember().getId().equals(member.getId())) {
-            throw new RuntimeException("Address does not belong to you");
+            throw new RuntimeException(messageUtils.getMessage("order.wrong_address"));
         }
 
         if (product.getStockQuantity() < request.getQuantity()) {
-            throw new RuntimeException("Not enough stock");
+            throw new RuntimeException(messageUtils.getMessage("product.out_of_stock"));
         }
 
         // Update stock
@@ -66,7 +68,7 @@ public class OrderService {
     @Transactional
     public void updateOrderStatus(Long orderId, OrderStatus newStatus, String reason) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new RuntimeException(messageUtils.getMessage("order.not_found")));
         
         OrderStatus previousStatus = order.getStatus();
         if (previousStatus == newStatus) {

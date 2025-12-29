@@ -6,6 +6,7 @@ import com.shopping.common.entity.Vendor;
 import com.shopping.common.repository.MemberRepository;
 import com.shopping.common.repository.ProductRepository;
 import com.shopping.common.repository.VendorRepository;
+import com.shopping.common.utils.MessageUtils;
 import com.shopping.shop.dto.ProductRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final VendorRepository vendorRepository;
     private final MemberRepository memberRepository;
+    private final MessageUtils messageUtils;
 
     @Transactional
     public void createProduct(String userEmail, Long vendorId, ProductRequest request) {
@@ -42,7 +44,7 @@ public class ProductService {
     public void updateProduct(String userEmail, Long vendorId, Long productId, ProductRequest request) {
         getVendorAndCheckOwnership(userEmail, vendorId);
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new RuntimeException(messageUtils.getMessage("product.not_found")));
 
         if (!product.getVendor().getId().equals(vendorId)) {
             throw new RuntimeException("Product does not belong to this vendor");
@@ -64,11 +66,12 @@ public class ProductService {
         return productRepository.findByVendor(vendor);
     }
 
-    @Transactional
-    public void deleteProduct(String userEmail, Long vendorId, Long productId) {
+        @Transactional
+
+        public void deleteProduct(String userEmail, Long vendorId, Long productId) {
         getVendorAndCheckOwnership(userEmail, vendorId);
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new RuntimeException(messageUtils.getMessage("product.not_found")));
 
         if (!product.getVendor().getId().equals(vendorId)) {
             throw new RuntimeException("Product does not belong to this vendor");
@@ -80,10 +83,10 @@ public class ProductService {
 
     private Vendor getVendorAndCheckOwnership(String userEmail, Long vendorId) {
         Member member = memberRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new RuntimeException("Member not found"));
+                .orElseThrow(() -> new RuntimeException(messageUtils.getMessage("auth.user_not_found")));
         
         Vendor vendor = vendorRepository.findById(vendorId)
-                .orElseThrow(() -> new RuntimeException("Vendor not found"));
+                .orElseThrow(() -> new RuntimeException(messageUtils.getMessage("vendor.not_found")));
 
         if (!vendor.getOwner().getId().equals(member.getId())) {
             throw new RuntimeException("You are not the owner of this vendor");

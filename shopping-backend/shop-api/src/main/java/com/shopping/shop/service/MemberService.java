@@ -8,6 +8,7 @@ import com.shopping.common.enums.VendorStatus;
 import com.shopping.common.repository.MemberRepository;
 import com.shopping.common.repository.VendorRepository;
 import com.shopping.common.security.JwtUtils;
+import com.shopping.common.utils.MessageUtils;
 import com.shopping.shop.dto.LoginRequest;
 import com.shopping.shop.dto.LoginResponse;
 import com.shopping.shop.dto.SignupRequest;
@@ -28,12 +29,13 @@ public class MemberService {
     private final VendorRepository vendorRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
+    private final MessageUtils messageUtils;
 
     @Transactional
     public void signup(SignupRequest request) {
         log.info("Starting signup process for email: {}, role: {}", request.getEmail(), request.getRole());
         if (memberRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new RuntimeException(messageUtils.getMessage("auth.email_exists"));
         }
 
         Member member = Member.builder()
@@ -56,7 +58,7 @@ public class MemberService {
             
             if (vendorRepository.existsByName(vName)) {
                 log.error("Vendor name already exists: {}", vName);
-                throw new RuntimeException("Vendor name already exists");
+                throw new RuntimeException(messageUtils.getMessage("vendor.name_exists"));
             }
 
             Vendor vendor = Vendor.builder()
@@ -80,10 +82,10 @@ public class MemberService {
     @Transactional(readOnly = true)
     public LoginResponse login(LoginRequest request) {
         Member member = memberRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException(messageUtils.getMessage("auth.user_not_found")));
 
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
-            throw new RuntimeException("Invalid password");
+            throw new RuntimeException(messageUtils.getMessage("auth.invalid_password"));
         }
 
         String token = jwtUtils.createToken(member.getEmail(), member.getRole().name());

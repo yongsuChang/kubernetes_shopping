@@ -1,4 +1,5 @@
 import axios from 'axios';
+import i18n from '../i18n';
 
 const shopClient = axios.create({
   baseURL: import.meta.env.VITE_SHOP_API_URL,
@@ -14,6 +15,8 @@ const addInterceptors = (client: typeof shopClient) => {
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    // Set Accept-Language header
+    config.headers['Accept-Language'] = i18n.language || 'ko';
     return config;
   });
 

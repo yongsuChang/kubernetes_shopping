@@ -4,6 +4,7 @@ import com.shopping.admin.dto.VendorResponse;
 import com.shopping.common.entity.Vendor;
 import com.shopping.common.enums.VendorStatus;
 import com.shopping.common.repository.VendorRepository;
+import com.shopping.common.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 public class AdminVendorService {
 
     private final VendorRepository vendorRepository;
+    private final MessageUtils messageUtils;
 
     @Transactional(readOnly = true)
     public List<VendorResponse> getPendingVendors() {
@@ -34,7 +36,7 @@ public class AdminVendorService {
     @Transactional
     public void updateVendorStatus(Long vendorId, VendorStatus status) {
         Vendor vendor = vendorRepository.findById(vendorId)
-                .orElseThrow(() -> new RuntimeException("Vendor not found"));
+                .orElseThrow(() -> new RuntimeException(messageUtils.getMessage("vendor.not_found")));
         vendor.setStatus(status);
         vendorRepository.save(vendor);
     }
@@ -47,7 +49,7 @@ public class AdminVendorService {
     @Transactional
     public void rejectVendor(Long vendorId) {
         Vendor vendor = vendorRepository.findById(vendorId)
-                .orElseThrow(() -> new RuntimeException("Vendor not found"));
+                .orElseThrow(() -> new RuntimeException(messageUtils.getMessage("vendor.not_found")));
         vendor.setStatus(VendorStatus.INACTIVE);
         vendorRepository.save(vendor);
     }

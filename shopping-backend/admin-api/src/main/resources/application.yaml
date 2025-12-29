@@ -16,6 +16,9 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
+  messages:
+    basename: messages
+    encoding: UTF-8
 
 server:
   port: 8081

@@ -1,5 +1,7 @@
 package com.shopping.common.exception;
 
+import com.shopping.common.utils.MessageUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -8,7 +10,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+
+    private final MessageUtils messageUtils;
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException e) {
@@ -20,7 +25,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleException(Exception e) {
         Map<String, String> response = new HashMap<>();
-        response.put("message", "An internal server error occurred");
+        response.put("message", messageUtils.getMessage("error.internal_server"));
         response.put("details", e.getMessage());
         return ResponseEntity.internalServerError().body(response);
     }
