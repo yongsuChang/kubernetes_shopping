@@ -24,10 +24,9 @@ spring:
 
 server:
   port: 8081
-
+ 
 jwt:
-  secret: "v9y$B&E)H@McQfTjWnZr4u7x!A%C*F-JaNdRgUkXp2s5v8y/B?E(G+KbPeShVmYq"
+  secret: ${jwt.secret}
   expiration: 3600000 # 1 hour
-
 cors:
   allowed-origins: "http://localhost:5173,http://127.0.0.1:5173"
