@@ -17,6 +17,7 @@ import java.util.List;
  * Checks for SUPER_ADMIN role and prepares for IP-based filtering.
  */
 @Slf4j
+@org.springframework.stereotype.Component
 public class AdminAccessFilter extends OncePerRequestFilter {
 
     // TODO: Move to configuration/database in the future
@@ -49,6 +50,11 @@ public class AdminAccessFilter extends OncePerRequestFilter {
 
             // 2. Strong Role Check
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            log.info("AdminAccessFilter - Path: {}, Auth: {}, Authorities: {}", 
+                path, 
+                auth != null ? auth.getName() : "null", 
+                auth != null ? auth.getAuthorities() : "none");
+
             if (auth == null || !auth.getAuthorities().stream()
                     .anyMatch(a -> a.getAuthority().equals("ROLE_SUPER_ADMIN"))) {
                 log.error("Non-admin access blocked for path: {} by user: {}", path, auth != null ? auth.getName() : "anonymous");

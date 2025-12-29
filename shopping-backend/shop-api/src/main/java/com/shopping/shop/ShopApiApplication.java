@@ -7,11 +7,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@SpringBootApplication
-@ComponentScan(basePackages = {"com.shopping.shop", "com.shopping.common"})
-@EntityScan(basePackages = {"com.shopping.common.entity"})
-@EnableJpaRepositories(basePackages = {"com.shopping.shop.repository", "com.shopping.common.repository"})
-@EnableJpaAuditing
+@SpringBootApplication(scanBasePackages = "com.shopping")
+@EnableJpaRepositories(basePackages = "com.shopping")
+@EntityScan(basePackages = "com.shopping")
 public class ShopApiApplication {
     public static void main(String[] args) {
         SpringApplication.run(ShopApiApplication.class, args);

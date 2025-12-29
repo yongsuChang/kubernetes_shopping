@@ -23,8 +23,10 @@ const addInterceptors = (client: typeof shopClient) => {
   client.interceptors.response.use(
     (response) => response,
     (error) => {
-      if (error.response?.status === 401) {
+      const isAuthUrl = error.config?.url?.includes('/api/v1/auth/');
+      if (error.response?.status === 401 && !isAuthUrl) {
         localStorage.removeItem('token');
+        // useAuthStore.getState().logout() 을 호출하는 것이 더 좋으나 순환 참조 방지를 위해 최소화
         window.location.href = '/login';
       }
       return Promise.reject(error);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
 import Spinner from '../common/Spinner/Spinner';
@@ -10,37 +10,25 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles }) => {
   const { token, role } = useAuthStore();
-  const [isVerifying, setIsVerifying] = useState(true);
   const location = useLocation();
 
-  useEffect(() => {
-    // Simulate or perform token verification check
-    // In a real app, you might call a /me endpoint here
-    const verifyToken = async () => {
-      // Small delay to ensure state is loaded and to show loading state as requested
-      await new Promise(resolve => setTimeout(resolve, 500));
-      setIsVerifying(false);
-    };
+  // 토큰이 없는 경우 즉시 로그인 페이지로 이동
+  if (!token) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
 
-    verifyToken();
-  }, [token]);
-
-  if (isVerifying) {
+  // 역할이 로드되지 않은 경우 잠시 대기
+  if (allowedRoles && !role) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         <Spinner />
-        <p style={{ marginLeft: '10px' }}>Verifying authentication...</p>
       </div>
     );
   }
 
-  if (!token) {
-    // Redirect to login if not authenticated
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
-
+  // 권한 체크
   if (allowedRoles && role && !allowedRoles.includes(role)) {
-    // Redirect to home if role not authorized
+    console.warn(`Access denied. Required: ${allowedRoles}, Current: ${role}`);
     return <Navigate to="/" replace />;
   }
 

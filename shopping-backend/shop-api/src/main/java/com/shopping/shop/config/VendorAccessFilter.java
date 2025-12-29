@@ -19,10 +19,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Optional;
 
-/**
- * Filter to block vendors who are not yet approved (status != ACTIVE).
- * Only applies to members with ROLE_SHOP_ADMIN.
- */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -37,6 +33,7 @@ public class VendorAccessFilter extends OncePerRequestFilter {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+        // 1. 이미 인증된 SHOP_ADMIN 권한 보유자인 경우에만 체크
         if (auth != null && auth.isAuthenticated()) {
             boolean isShopAdmin = auth.getAuthorities().stream()
                     .anyMatch(a -> a.getAuthority().equals("ROLE_SHOP_ADMIN"));
@@ -44,7 +41,7 @@ public class VendorAccessFilter extends OncePerRequestFilter {
             if (isShopAdmin) {
                 String email = auth.getName();
                 
-                // Check vendor status
+                // 2. 캐시를 피하기 위해 DB에서 최신 상태를 직접 확인
                 Optional<Member> memberOpt = memberRepository.findByEmail(email);
                 boolean isAllowed = false;
                 
@@ -55,11 +52,12 @@ public class VendorAccessFilter extends OncePerRequestFilter {
                     }
                 }
 
+                // 3. 승인되지 않은 경우 403 리턴
                 if (!isAllowed) {
-                    log.warn("Access denied for unapproved vendor admin: {}", email);
+                    log.warn("Access denied for unapproved vendor: {}", email);
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                    response.setContentType("application/json");
-                    response.getWriter().write("{\"error\": \"Vendor is not active or pending approval.\"}");
+                    response.setContentType("application/json;charset=UTF-8");
+                    response.getWriter().write("{\"error\": \"Your vendor account is pending approval.\"}");
                     return;
                 }
             }
@@ -71,10 +69,11 @@ public class VendorAccessFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        // Allow health check, auth, and registration
+        // Skip filter for public paths and all vendor admin management paths
+        // SecurityConfig will handle the ROLE_SHOP_ADMIN check
         return path.startsWith("/api/v1/auth/") || 
                path.startsWith("/api/v1/health") ||
-               path.equals("/api/v1/shop-admin/vendors/register") ||
-               path.equals("/api/v1/shop-admin/vendors/me");
+               path.startsWith("/api/v1/shop/products") ||
+               path.startsWith("/api/v1/shop-admin/vendors/");
     }
 }
