@@ -32,10 +32,7 @@
     "role": "권한",
     "no_account": "계정이 없으신가요?",
     "have_account": "이미 계정이 있으신가요?",
-    "vendor_name": "업체명",
-    "vendor_description": "업체 설명",
-    "vendor_email": "업체 이메일",
-    "vendor_address": "업체 주소"
+    "signup_success": "회원가입이 완료되었습니다. 로그인해 주세요."
   },
   "shop": {
     "add_to_cart": "장바구니 담기",

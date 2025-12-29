@@ -1,6 +1,6 @@
 .btn {
   padding: var(--spacing-base) var(--spacing-large);
-  border: 1px solid transparent;
+  border: 1px solid var(--border-color, #ddd);
   border-radius: var(--border-radius);
   cursor: pointer;
   font-size: var(--font-size-base);

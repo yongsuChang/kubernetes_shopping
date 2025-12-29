@@ -35,9 +35,20 @@ const ProductManagement: React.FC = () => {
     description: '',
     price: 0,
     stockQuantity: 0,
-    category: '',
+    category: 'OTHERS',
     status: 'AVAILABLE'
   });
+
+  const categories = [
+    'ELECTRONICS',
+    'FASHION',
+    'HOME_KITCHEN',
+    'BEAUTY',
+    'SPORTS',
+    'BOOKS',
+    'TOYS',
+    'OTHERS'
+  ];
 
   const fetchVendorAndProducts = async () => {
     setLoading(true);
@@ -78,7 +89,7 @@ const ProductManagement: React.FC = () => {
         description: '',
         price: 0,
         stockQuantity: 0,
-        category: '',
+        category: 'OTHERS',
         status: 'AVAILABLE'
       });
     }
@@ -178,11 +189,19 @@ const ProductManagement: React.FC = () => {
               required 
             />
           </div>
-          <LabeledInput 
-            label="Category" 
-            value={formData.category} 
-            onChange={(e) => setFormData({...formData, category: e.target.value})} 
-          />
+          <div className="labeled-input" style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Category</label>
+            <select 
+              className="input"
+              value={formData.category} 
+              onChange={(e) => setFormData({...formData, category: e.target.value})}
+              style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid var(--border-color)' }}
+            >
+              {categories.map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+          </div>
           <div style={{ marginTop: '10px' }}>
             <Button type="submit" variant="success" style={{ width: '100%' }}>
               {editingProduct ? t('vendor.edit_product') : t('vendor.add_product')}

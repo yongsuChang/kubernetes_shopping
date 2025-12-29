@@ -32,10 +32,7 @@
     "role": "Role",
     "no_account": "Don't have an account?",
     "have_account": "Already have an account?",
-    "vendor_name": "Vendor Name",
-    "vendor_description": "Vendor Description",
-    "vendor_email": "Vendor Email",
-    "vendor_address": "Vendor Address"
+    "signup_success": "Signup successful! Please log in."
   },
   "shop": {
     "add_to_cart": "Add to Cart",

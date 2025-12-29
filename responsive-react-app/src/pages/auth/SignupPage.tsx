@@ -30,7 +30,7 @@ const SignupPage: React.FC = () => {
     setError('');
     try {
       await shopClient.post('/api/v1/auth/signup', formData);
-      alert(t('shop.item_added') + ' (Check Alert logic)'); // Simplification for now
+      alert(t('auth.signup_success'));
       navigate('/login');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Signup failed.');
