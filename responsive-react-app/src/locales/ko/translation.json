@@ -15,6 +15,14 @@
     "cancel": "취소",
     "logout": "로그아웃"
   },
+  "home": {
+    "hero_subtitle": "당신에게 필요한 모든 것이 있는 곳.",
+    "get_started": "시작하기",
+    "login_promo": "로그인하고 더 많은 기능을 이용해보세요.",
+    "latest_arrivals": "최신 등록 상품",
+    "view_all": "전체보기",
+    "details": "상세보기"
+  },
   "auth": {
     "login_title": "로그인",
     "signup_title": "회원가입",

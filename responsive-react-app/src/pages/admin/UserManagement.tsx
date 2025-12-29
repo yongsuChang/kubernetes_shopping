@@ -8,6 +8,15 @@ import Spinner from '../../components/common/Spinner/Spinner';
 import Badge from '../../components/common/Badge/Badge';
 import Alert from '../../components/common/Alert/Alert';
 
+interface Member {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+  createdAt: string;
+}
+
 const UserManagement: React.FC = () => {
   const { t } = useTranslation();
   const [members, setMembers] = useState<Member[]>([]);

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from 'react';
 import { shopClient } from '../../api/client';
 import Card from '../../components/common/Card/Card';

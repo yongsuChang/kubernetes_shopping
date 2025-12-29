@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { shopClient } from '../../api/client';
 import Card from '../../components/common/Card/Card';
 import { Grid } from '../../components/common/Grid/Grid';
@@ -18,18 +19,6 @@ interface Product {
   category: string;
   status: string;
 }
-
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { shopClient } from '../../api/client';
-import Card from '../../components/common/Card/Card';
-import { Grid } from '../../components/common/Grid/Grid';
-import Button from '../../components/common/Button/Button';
-import Spinner from '../../components/common/Spinner/Spinner';
-import Badge from '../../components/common/Badge/Badge';
-import Alert from '../../components/common/Alert/Alert';
-import Modal from '../../components/common/Modal/Modal';
-import LabeledInput from '../../components/common/LabeledInput/LabeledInput';
 
 const ProductManagement: React.FC = () => {
   const { t } = useTranslation();

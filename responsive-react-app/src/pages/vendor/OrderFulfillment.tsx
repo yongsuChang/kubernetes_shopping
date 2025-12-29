@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { shopClient } from '../../api/client';
 import Card from '../../components/common/Card/Card';
 import Button from '../../components/common/Button/Button';
@@ -16,16 +17,6 @@ interface Order {
   status: string;
   createdAt: string;
 }
-
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { shopClient } from '../../api/client';
-import Card from '../../components/common/Card/Card';
-import Button from '../../components/common/Button/Button';
-import Spinner from '../../components/common/Spinner/Spinner';
-import Badge from '../../components/common/Badge/Badge';
-import Alert from '../../components/common/Alert/Alert';
-import { Grid } from '../../components/common/Grid/Grid';
 
 const OrderFulfillment: React.FC = () => {
   const { t } = useTranslation();

@@ -15,6 +15,14 @@
     "cancel": "Cancel",
     "logout": "Logout"
   },
+  "home": {
+    "hero_subtitle": "Your one-stop destination for everything you need.",
+    "get_started": "Get Started",
+    "login_promo": "Login to enjoy more personalized shopping features.",
+    "latest_arrivals": "Latest Arrivals",
+    "view_all": "View All",
+    "details": "Details"
+  },
   "auth": {
     "login_title": "Login",
     "signup_title": "Sign Up",

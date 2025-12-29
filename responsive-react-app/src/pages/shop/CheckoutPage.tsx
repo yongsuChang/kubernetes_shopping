@@ -9,6 +9,14 @@ import Spinner from '../../components/common/Spinner/Spinner';
 import Alert from '../../components/common/Alert/Alert';
 import LabeledInput from '../../components/common/LabeledInput/LabeledInput';
 
+interface Address {
+  id: number;
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+}
+
 const CheckoutPage: React.FC = () => {
   const { t } = useTranslation();
   const { items, getTotalPrice, clearCart } = useCartStore();
@@ -64,7 +72,6 @@ const CheckoutPage: React.FC = () => {
 
     setOrdering(true);
     try {
-      // In this simple implementation, we place orders for each item sequentially
       for (const item of items) {
         await shopClient.post('/api/v1/shop/orders', {
           productId: item.id,

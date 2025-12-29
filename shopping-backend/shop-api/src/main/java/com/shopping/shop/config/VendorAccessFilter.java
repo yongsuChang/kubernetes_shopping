@@ -71,8 +71,9 @@ public class VendorAccessFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        // Allow vendor registration, auth, and self-info check
+        // Allow health check, auth, and registration
         return path.startsWith("/api/v1/auth/") || 
+               path.startsWith("/api/v1/health") ||
                path.equals("/api/v1/shop-admin/vendors/register") ||
                path.equals("/api/v1/shop-admin/vendors/me");
     }

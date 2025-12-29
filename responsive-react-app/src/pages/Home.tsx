@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { shopClient } from '../api/client';
 import { useAuthStore } from '../store/useAuthStore';
 import { Grid } from '../components/common/Grid/Grid';
@@ -19,19 +20,6 @@ interface Product {
   status: string;
   vendor?: { id: number };
 }
-
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { shopClient } from '../api/client';
-import { useAuthStore } from '../store/useAuthStore';
-import { Grid } from '../components/common/Grid/Grid';
-import Card from '../components/common/Card/Card';
-import Button from '../components/common/Button/Button';
-import Spinner from '../components/common/Spinner/Spinner';
-import Badge from '../components/common/Badge/Badge';
-import { useCartStore } from '../store/useCartStore';
-import Alert from '../components/common/Alert/Alert';
 
 const HomePage: React.FC = () => {
   const { t } = useTranslation();
@@ -72,13 +60,13 @@ const HomePage: React.FC = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <h1>{t('common.welcome')}</h1>
-            <p>Your one-stop destination for everything you need.</p>
+            <p>{t('home.hero_subtitle')}</p>
           </div>
           {showMsg && <Alert variant="success">{t('shop.item_added')}</Alert>}
         </div>
         {!email && (
           <Link to="/login">
-            <Button variant="primary" style={{ padding: '10px 30px' }}>Get Started</Button>
+            <Button variant="primary" style={{ padding: '10px 30px' }}>{t('home.get_started')}</Button>
           </Link>
         )}
       </section>
@@ -87,7 +75,7 @@ const HomePage: React.FC = () => {
         {email ? (
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <p>Logged in as: <strong>{email}</strong> <Badge variant="info">{role}</Badge></p>
+              <p>{t('common.login')} as: <strong>{email}</strong> <Badge variant="info">{role}</Badge></p>
               <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                 {role === 'ROLE_USER' && <Link to="/mypage"><Button variant="secondary">{t('common.mypage')}</Button></Link>}
                 {role === 'ROLE_SHOP_ADMIN' && <Link to="/vendor"><Button variant="success">{t('vendor.dashboard')}</Button></Link>}
@@ -97,14 +85,14 @@ const HomePage: React.FC = () => {
             <Button onClick={logout} variant="danger">{t('common.logout')}</Button>
           </div>
         ) : (
-          <p>Login to enjoy more personalized shopping features.</p>
+          <p>{t('home.login_promo')}</p>
         )}
       </section>
 
       <section className="latest-products-section">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h2>Latest Arrivals</h2>
-          <Link to="/products" style={{ color: 'var(--color-primary)', textDecoration: 'none' }}>View All →</Link>
+          <h2>{t('home.latest_arrivals')}</h2>
+          <Link to="/products" style={{ color: 'var(--color-primary)', textDecoration: 'none' }}>{t('home.view_all')} →</Link>
         </div>
 
         {loading ? (
@@ -118,7 +106,7 @@ const HomePage: React.FC = () => {
                   <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>${product.price}</span>
                   <div style={{ display: 'flex', gap: '5px' }}>
                     <Button variant="outline-primary" onClick={() => handleAddToCart(product)}>{t('common.cart')}</Button>
-                    <Link to={`/products`}><Button variant="outline-secondary">Details</Button></Link>
+                    <Link to={`/products`}><Button variant="outline-secondary">{t('home.details')}</Button></Link>
                   </div>
                 </div>
               </Card>

@@ -31,7 +31,7 @@ public class SecurityConfig {
             .addFilterBefore(new JwtAuthenticationFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class)
             .addFilterAfter(vendorAccessFilter, JwtAuthenticationFilter.class)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/v1/auth/health").hasRole("SUPER_ADMIN")
+                .requestMatchers("/api/v1/health/**").permitAll()
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .requestMatchers("/api/v1/shop-admin/**").hasRole("SHOP_ADMIN")

@@ -3,11 +3,13 @@ spring:
     name: shop-api
   profiles:
     active: dev
+  config:
+    import: "aws-parameterstore:/config/shopping/"
   datasource:
-    url: jdbc:mysql://localhost:3306/shopping?serverTimezone=UTC&characterEncoding=UTF-8
+    url: ${db.url}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: yongsu
-    password: admin12345
+    username: ${db.username}
+    password: ${db.password}
   jpa:
     hibernate:
       ddl-auto: update
@@ -17,7 +19,7 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
   messages:
-    basename: messages
+    basename: classpath*:messages
     encoding: UTF-8
 
 server:

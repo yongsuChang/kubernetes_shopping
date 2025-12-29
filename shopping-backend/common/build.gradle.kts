@@ -23,7 +23,10 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-jackson")
 
     // Swagger
-    api("org.springdoc:springdoc-openapi-starter-webmvc-ui")
+    api("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
+
+    // AWS SSM Parameter Store
+    api("io.awspring.cloud:spring-cloud-aws-starter-parameter-store:3.2.0")
 }
 
 java {
@@ -33,6 +36,7 @@ java {
 dependencyManagement {
     imports {
         mavenBom("org.springframework.boot:spring-boot-dependencies:3.4.1")
+        mavenBom("io.awspring.cloud:spring-cloud-aws-dependencies:3.2.0")
     }
     dependencies {
         dependency("io.jsonwebtoken:jjwt-api:0.12.3")

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { shopClient } from '../../api/client';
 import Card from '../../components/common/Card/Card';
 import Alert from '../../components/common/Alert/Alert';
@@ -24,17 +25,6 @@ interface VendorStats {
   deliveredOrders: number;
   cancelledOrders: number;
 }
-
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { shopClient } from '../../api/client';
-import Card from '../../components/common/Card/Card';
-import Alert from '../../components/common/Alert/Alert';
-import Spinner from '../../components/common/Spinner/Spinner';
-import Badge from '../../components/common/Badge/Badge';
-import Button from '../../components/common/Button/Button';
-import { Grid } from '../../components/common/Grid/Grid';
 
 const VendorDashboard: React.FC = () => {
   const { t } = useTranslation();
