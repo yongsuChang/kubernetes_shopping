@@ -25,7 +25,19 @@ interface VendorStats {
   cancelledOrders: number;
 }
 
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { shopClient } from '../../api/client';
+import Card from '../../components/common/Card/Card';
+import Alert from '../../components/common/Alert/Alert';
+import Spinner from '../../components/common/Spinner/Spinner';
+import Badge from '../../components/common/Badge/Badge';
+import Button from '../../components/common/Button/Button';
+import { Grid } from '../../components/common/Grid/Grid';
+
 const VendorDashboard: React.FC = () => {
+  const { t } = useTranslation();
   const [vendor, setVendor] = useState<VendorInfo | null>(null);
   const [stats, setStats] = useState<VendorStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -70,7 +82,7 @@ const VendorDashboard: React.FC = () => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h1>Vendor Dashboard</h1>
+      <h1>{t('vendor.dashboard')}</h1>
       <Card title={vendor?.name || 'My Shop'}>
         <p>{vendor?.description}</p>
         <p>
@@ -80,7 +92,7 @@ const VendorDashboard: React.FC = () => {
 
       {stats && (
         <div style={{ marginTop: '30px' }}>
-          <h3>Sales Summary</h3>
+          <h3>{t('vendor.my_sales')}</h3>
           <Grid columns={4}>
             <Card title="Total Revenue">
               <h2 style={{ color: 'var(--color-success)' }}>${stats.totalRevenue.toFixed(2)}</h2>
@@ -101,13 +113,13 @@ const VendorDashboard: React.FC = () => {
       <div style={{ marginTop: '30px' }}>
         <h3>Management Tools</h3>
         <Grid columns={3}>
-          <Card title="Product Management">
+          <Card title={t('vendor.product_mgmt')}>
             <p>Add, edit, or remove your products.</p>
             <Link to="/vendor/products">
               <Button variant="primary">Manage Products</Button>
             </Link>
           </Card>
-          <Card title="Order Fulfillment">
+          <Card title={t('vendor.order_mgmt')}>
             <p>Manage incoming orders and shipping.</p>
             <Link to="/vendor/orders">
               <Button variant="primary">Manage Orders</Button>

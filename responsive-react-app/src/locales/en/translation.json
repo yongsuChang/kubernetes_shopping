@@ -57,5 +57,19 @@
     "total_users": "Total Users",
     "total_vendors": "Total Vendors",
     "pending_approvals": "Pending Approvals"
+  },
+  "vendor": {
+    "dashboard": "Vendor Dashboard",
+    "product_mgmt": "Product Management",
+    "order_mgmt": "Order Fulfillment",
+    "my_sales": "My Sales",
+    "add_product": "Add New Product",
+    "edit_product": "Edit Product",
+    "delete_product": "Delete Product",
+    "stock": "Stock",
+    "price": "Price",
+    "order_id": "Order ID",
+    "customer": "Customer",
+    "fulfillment_status": "Fulfillment Status"
   }
 }

@@ -20,7 +20,21 @@ interface Product {
   vendor?: { id: number };
 }
 
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { shopClient } from '../api/client';
+import { useAuthStore } from '../store/useAuthStore';
+import { Grid } from '../components/common/Grid/Grid';
+import Card from '../components/common/Card/Card';
+import Button from '../components/common/Button/Button';
+import Spinner from '../components/common/Spinner/Spinner';
+import Badge from '../components/common/Badge/Badge';
+import { useCartStore } from '../store/useCartStore';
+import Alert from '../components/common/Alert/Alert';
+
 const HomePage: React.FC = () => {
+  const { t } = useTranslation();
   const { email, role, logout } = useAuthStore();
   const [latestProducts, setLatestProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,10 +71,10 @@ const HomePage: React.FC = () => {
       <section className="hero-section" style={{ backgroundColor: '#f0f2f5', padding: '40px', borderRadius: '10px', marginBottom: '40px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <h1>Discover Amazing Products</h1>
+            <h1>{t('common.welcome')}</h1>
             <p>Your one-stop destination for everything you need.</p>
           </div>
-          {showMsg && <Alert variant="success" message="Added to cart!" />}
+          {showMsg && <Alert variant="success">{t('shop.item_added')}</Alert>}
         </div>
         {!email && (
           <Link to="/login">
@@ -75,12 +89,12 @@ const HomePage: React.FC = () => {
             <div>
               <p>Logged in as: <strong>{email}</strong> <Badge variant="info">{role}</Badge></p>
               <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                {role === 'ROLE_USER' && <Link to="/mypage"><Button variant="secondary">My Page</Button></Link>}
-                {role === 'ROLE_SHOP_ADMIN' && <Link to="/vendor"><Button variant="success">Vendor Dashboard</Button></Link>}
-                {role === 'ROLE_SUPER_ADMIN' && <Link to="/admin"><Button variant="warning">Admin Dashboard</Button></Link>}
+                {role === 'ROLE_USER' && <Link to="/mypage"><Button variant="secondary">{t('common.mypage')}</Button></Link>}
+                {role === 'ROLE_SHOP_ADMIN' && <Link to="/vendor"><Button variant="success">{t('vendor.dashboard')}</Button></Link>}
+                {role === 'ROLE_SUPER_ADMIN' && <Link to="/admin"><Button variant="warning">{t('admin.dashboard')}</Button></Link>}
               </div>
             </div>
-            <Button onClick={logout} variant="danger">Logout</Button>
+            <Button onClick={logout} variant="danger">{t('common.logout')}</Button>
           </div>
         ) : (
           <p>Login to enjoy more personalized shopping features.</p>
@@ -103,7 +117,7 @@ const HomePage: React.FC = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '15px' }}>
                   <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>${product.price}</span>
                   <div style={{ display: 'flex', gap: '5px' }}>
-                    <Button variant="outline-primary" onClick={() => handleAddToCart(product)}>Cart</Button>
+                    <Button variant="outline-primary" onClick={() => handleAddToCart(product)}>{t('common.cart')}</Button>
                     <Link to={`/products`}><Button variant="outline-secondary">Details</Button></Link>
                   </div>
                 </div>
@@ -111,7 +125,7 @@ const HomePage: React.FC = () => {
             ))}
           </Grid>
         )}
-        {!loading && latestProducts.length === 0 && <p>No products available yet.</p>}
+        {!loading && latestProducts.length === 0 && <p>{t('shop.no_products')}</p>}
       </section>
     </div>
   );

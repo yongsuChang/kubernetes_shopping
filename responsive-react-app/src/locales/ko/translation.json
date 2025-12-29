@@ -57,5 +57,19 @@
     "total_users": "총 사용자",
     "total_vendors": "총 업체 수",
     "pending_approvals": "승인 대기 중"
+  },
+  "vendor": {
+    "dashboard": "판매자 대시보드",
+    "product_mgmt": "상품 관리",
+    "order_mgmt": "주문 처리",
+    "my_sales": "내 매출",
+    "add_product": "새 상품 등록",
+    "edit_product": "상품 수정",
+    "delete_product": "상품 삭제",
+    "stock": "재고",
+    "price": "가격",
+    "order_id": "주문 번호",
+    "customer": "고객명",
+    "fulfillment_status": "처리 상태"
   }
 }

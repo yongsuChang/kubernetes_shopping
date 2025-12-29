@@ -19,7 +19,20 @@ interface Product {
   status: string;
 }
 
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { shopClient } from '../../api/client';
+import Card from '../../components/common/Card/Card';
+import { Grid } from '../../components/common/Grid/Grid';
+import Button from '../../components/common/Button/Button';
+import Spinner from '../../components/common/Spinner/Spinner';
+import Badge from '../../components/common/Badge/Badge';
+import Alert from '../../components/common/Alert/Alert';
+import Modal from '../../components/common/Modal/Modal';
+import LabeledInput from '../../components/common/LabeledInput/LabeledInput';
+
 const ProductManagement: React.FC = () => {
+  const { t } = useTranslation();
   const [products, setProducts] = useState<Product[]>([]);
   const [vendorId, setVendorId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -118,8 +131,8 @@ const ProductManagement: React.FC = () => {
   return (
     <div style={{ padding: '20px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h2>Product Management</h2>
-        <Button variant="primary" onClick={() => handleOpenModal()}>+ Add New Product</Button>
+        <h2>{t('vendor.product_mgmt')}</h2>
+        <Button variant="primary" onClick={() => handleOpenModal()}>+ {t('vendor.add_product')}</Button>
       </div>
 
       {message && (
@@ -132,12 +145,12 @@ const ProductManagement: React.FC = () => {
         {products.map((product) => (
           <Card key={product.id} title={product.name}>
             <p>{product.description}</p>
-            <p><strong>Price:</strong> ${product.price}</p>
-            <p><strong>Stock:</strong> {product.stockQuantity}</p>
+            <p><strong>{t('vendor.price')}:</strong> ${product.price}</p>
+            <p><strong>{t('vendor.stock')}:</strong> {product.stockQuantity}</p>
             <p>Status: <Badge variant={product.status === 'AVAILABLE' ? 'success' : 'warning'}>{product.status}</Badge></p>
             <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
-              <Button variant="secondary" onClick={() => handleOpenModal(product)}>Edit</Button>
-              <Button variant="outline-danger" onClick={() => handleDelete(product.id)}>Delete</Button>
+              <Button variant="secondary" onClick={() => handleOpenModal(product)}>{t('common.confirm')}</Button>
+              <Button variant="outline-danger" onClick={() => handleDelete(product.id)}>{t('vendor.delete_product')}</Button>
             </div>
           </Card>
         ))}
@@ -146,7 +159,7 @@ const ProductManagement: React.FC = () => {
       <Modal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
-        title={editingProduct ? 'Edit Product' : 'Add New Product'}
+        title={editingProduct ? t('vendor.edit_product') : t('vendor.add_product')}
       >
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
           <LabeledInput 
@@ -162,14 +175,14 @@ const ProductManagement: React.FC = () => {
           />
           <div style={{ display: 'flex', gap: '10px' }}>
             <LabeledInput 
-              label="Price" 
+              label={t('vendor.price')} 
               type="number" 
               value={formData.price.toString()} 
               onChange={(e) => setFormData({...formData, price: parseFloat(e.target.value)})} 
               required 
             />
             <LabeledInput 
-              label="Stock" 
+              label={t('vendor.stock')} 
               type="number" 
               value={formData.stockQuantity.toString()} 
               onChange={(e) => setFormData({...formData, stockQuantity: parseInt(e.target.value)})} 
@@ -183,7 +196,7 @@ const ProductManagement: React.FC = () => {
           />
           <div style={{ marginTop: '10px' }}>
             <Button type="submit" variant="success" style={{ width: '100%' }}>
-              {editingProduct ? 'Update Product' : 'Create Product'}
+              {editingProduct ? t('vendor.edit_product') : t('vendor.add_product')}
             </Button>
           </div>
         </form>
