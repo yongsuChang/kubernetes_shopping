@@ -70,6 +70,9 @@ This document outlines the testing strategy for the Kubernetes Shopping project,
     - [x] Frontend test automation (Vitest).
     - [x] Docker image build validation.
     - [x] Integration testing using `docker-compose` within CI.
+- **Branching Strategy Integration**:
+    - CI는 `main`, `develop` 브랜치 푸시 및 `main` 대상 PR 발생 시 트리거됩니다.
+    - 개별 기능 브랜치(`feature/*`)에서의 잦은 푸시는 CI를 발생시키지 않아 효율적인 작업이 가능합니다.
 
 ## 5. Test Execution Log
 *   **2025-12-29**: Executed `api_test_script.py`. All Core API scenarios **PASSED**. Fixed DTO field name mismatch (`accessToken` -> `token`) and API method mismatch (`PATCH` -> `POST` for vendor approval).

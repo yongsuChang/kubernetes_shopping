@@ -3,6 +3,12 @@
 > **Note**: 프로젝트 아키텍처, 데이터 모델, 구현 상세에 대한 심층 분석 내용은 [04_architecture_and_analysis.md](./04_architecture_and_analysis.md) 파일을 참고하세요.
 > **Test**: 테스트 전략, 시나리오 및 실행 결과는 [TEST.md](./TEST.md) 파일을 참고하세요.
 
+## 🌿 개발 프로세스 및 브랜치 전략
+- **main**: 프로덕션 배포용 최상위 브랜치.
+- **develop**: 개발 통합 브랜치. 모든 기능 구현은 이곳을 향합니다.
+- **feature/*, fix/***: 각 기능 구현 및 버그 수정을 위한 개별 작업 브랜치.
+- **Workflow**: `feature/*` 브랜치에서 작업 -> `develop` 브랜치로 PR 및 병합 -> 안정화 후 `main`으로 최종 병합.
+
 ## 🏗️ 백엔드 (Java Spring Boot)
 
 ### ✅ 완료된 작업
