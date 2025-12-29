@@ -1,0 +1,61 @@
+{
+  "common": {
+    "welcome": "쇼핑몰에 오신 것을 환영합니다",
+    "search": "검색",
+    "cart": "장바구니",
+    "login": "로그인",
+    "signup": "회원가입",
+    "home": "홈",
+    "products": "상품목록",
+    "mypage": "마이페이지",
+    "admin": "관리자",
+    "vendor": "판매자",
+    "loading": "로딩 중...",
+    "confirm": "확인",
+    "cancel": "취소",
+    "logout": "로그아웃"
+  },
+  "auth": {
+    "login_title": "로그인",
+    "signup_title": "회원가입",
+    "email": "이메일",
+    "password": "비밀번호",
+    "name": "이름",
+    "role": "권한",
+    "no_account": "계정이 없으신가요?",
+    "have_account": "이미 계정이 있으신가요?",
+    "vendor_name": "업체명",
+    "vendor_description": "업체 설명",
+    "vendor_email": "업체 이메일",
+    "vendor_address": "업체 주소"
+  },
+  "shop": {
+    "add_to_cart": "장바구니 담기",
+    "item_added": "상품이 장바구니에 담겼습니다!",
+    "no_products": "검색 결과가 없습니다.",
+    "categories": "카테고리",
+    "all_products": "전체 상품",
+    "order_summary": "주문 요약",
+    "total": "합계",
+    "checkout": "주문하기",
+    "place_order": "결제하기",
+    "empty_cart": "장바구니가 비어 있습니다",
+    "browse_products": "상품 둘러보기"
+  },
+  "admin": {
+    "dashboard": "관리자 대시보드",
+    "vendor_mgmt": "입점 업체 관리",
+    "user_mgmt": "사용자 관리",
+    "product_mgmt": "전체 상품 관리",
+    "reports": "시스템 리포트",
+    "status_active": "활성",
+    "status_pending": "승인 대기",
+    "status_inactive": "비활성",
+    "approve": "승인",
+    "reject": "반려",
+    "total_sales": "총 매출",
+    "total_users": "총 사용자",
+    "total_vendors": "총 업체 수",
+    "pending_approvals": "승인 대기 중"
+  }
+}

@@ -18,6 +18,7 @@ interface Product {
 }
 
 const ProductListPage: React.FC = () => {
+  const { t } = useTranslation();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [showMsg, setShowMsg] = useState(false);
@@ -70,7 +71,7 @@ const ProductListPage: React.FC = () => {
     <div style={{ padding: '20px', display: 'flex', gap: '30px' }}>
       {/* Sidebar Filters */}
       <aside style={{ width: '200px', flexShrink: 0 }}>
-        <h3>Categories</h3>
+        <h3>{t('shop.categories')}</h3>
         <ul style={{ listStyle: 'none', padding: 0 }}>
           <li 
             style={{ 
@@ -81,7 +82,7 @@ const ProductListPage: React.FC = () => {
             }}
             onClick={() => setSelectedCategory('')}
           >
-            All Products
+            {t('shop.all_products')}
           </li>
           {categories.map(cat => (
             <li 
@@ -103,17 +104,17 @@ const ProductListPage: React.FC = () => {
       {/* Main Content */}
       <div style={{ flexGrow: 1 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h2>{selectedCategory || 'All Products'}</h2>
+          <h2>{selectedCategory || t('shop.all_products')}</h2>
           <div style={{ width: '300px' }}>
             <Input 
-              placeholder="Search products..." 
+              placeholder={t('common.search')} 
               value={searchTerm} 
               onChange={(e) => setSearchTerm(e.target.value)} 
             />
           </div>
         </div>
 
-        {showMsg && <Alert variant="success" style={{ marginBottom: '20px' }}>Item added to cart!</Alert>}
+        {showMsg && <Alert variant="success" style={{ marginBottom: '20px' }}>{t('shop.item_added')}</Alert>}
 
         {loading ? (
           <Spinner />
@@ -135,7 +136,7 @@ const ProductListPage: React.FC = () => {
                 <p style={{ height: '60px', overflow: 'hidden', fontSize: '0.9rem', color: '#666' }}>{product.description}</p>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '15px' }}>
                   <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>${product.price}</span>
-                  <Button variant="primary" onClick={() => handleAddToCart(product)}>Add to Cart</Button>
+                  <Button variant="primary" onClick={() => handleAddToCart(product)}>{t('shop.add_to_cart')}</Button>
                 </div>
                 <div style={{ marginTop: '10px' }}>
                   <span style={{ 
@@ -151,7 +152,7 @@ const ProductListPage: React.FC = () => {
             ))}
           </Grid>
         )}
-        {!loading && products.length === 0 && <p>No products found matching your criteria.</p>}
+        {!loading && products.length === 0 && <p>{t('shop.no_products')}</p>}
       </div>
     </div>
   );

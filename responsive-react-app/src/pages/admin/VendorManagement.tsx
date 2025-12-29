@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { adminClient } from '../../api/client';
 import Card from '../../components/common/Card/Card';
 import { Grid } from '../../components/common/Grid/Grid';
@@ -17,6 +18,7 @@ interface Vendor {
 }
 
 const VendorManagement: React.FC = () => {
+  const { t } = useTranslation();
   const [pendingVendors, setPendingVendors] = useState<Vendor[]>([]);
   const [allVendors, setAllVendors] = useState<Vendor[]>([]);
   const [loading, setLoading] = useState(true);
@@ -59,10 +61,10 @@ const VendorManagement: React.FC = () => {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'ACTIVE': return <Badge variant="success">Active</Badge>;
-      case 'PENDING': return <Badge variant="warning">Pending</Badge>;
+      case 'ACTIVE': return <Badge variant="success">{t('admin.status_active')}</Badge>;
+      case 'PENDING': return <Badge variant="warning">{t('admin.status_pending')}</Badge>;
       case 'SUSPENDED': return <Badge variant="danger">Suspended</Badge>;
-      case 'INACTIVE': return <Badge variant="secondary">Inactive</Badge>;
+      case 'INACTIVE': return <Badge variant="secondary">{t('admin.status_inactive')}</Badge>;
       default: return <Badge variant="info">{status}</Badge>;
     }
   };
@@ -71,7 +73,7 @@ const VendorManagement: React.FC = () => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h2>Vendor Management</h2>
+      <h2>{t('admin.vendor_mgmt')}</h2>
       {message && (
         <Alert variant={message.type} onClose={() => setMessage(null)}>
           {message.text}
@@ -79,7 +81,7 @@ const VendorManagement: React.FC = () => {
       )}
       
       <Tabs>
-        <Tab label="Pending Approval">
+        <Tab label={t('admin.status_pending')}>
           <div style={{ marginTop: '20px' }}>
             {pendingVendors.length === 0 ? (
               <p>No pending vendor registrations.</p>
@@ -88,10 +90,10 @@ const VendorManagement: React.FC = () => {
                 {pendingVendors.map((vendor) => (
                   <Card key={vendor.id} title={vendor.name}>
                     <p>{vendor.description}</p>
-                    <p><strong>Email:</strong> {vendor.contactEmail}</p>
+                    <p><strong>{t('auth.vendor_email')}:</strong> {vendor.contactEmail}</p>
                     <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-                      <Button variant="success" onClick={() => handleUpdateStatus(vendor.id, 'ACTIVE', 'Approve')}>Approve</Button>
-                      <Button variant="danger" onClick={() => handleUpdateStatus(vendor.id, 'INACTIVE', 'Reject')}>Reject</Button>
+                      <Button variant="success" onClick={() => handleUpdateStatus(vendor.id, 'ACTIVE', 'Approve')}>{t('admin.approve')}</Button>
+                      <Button variant="danger" onClick={() => handleUpdateStatus(vendor.id, 'INACTIVE', 'Reject')}>{t('admin.reject')}</Button>
                     </div>
                   </Card>
                 ))}
@@ -106,7 +108,7 @@ const VendorManagement: React.FC = () => {
                 <Card key={vendor.id} title={vendor.name}>
                   <p style={{ fontSize: '0.9rem', color: '#666' }}>ID: #{vendor.id}</p>
                   <p>Status: {getStatusBadge(vendor.status)}</p>
-                  <p><strong>Email:</strong> {vendor.contactEmail}</p>
+                  <p><strong>{t('auth.vendor_email')}:</strong> {vendor.contactEmail}</p>
                   <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
                     {vendor.status === 'ACTIVE' ? (
                       <Button variant="outline-danger" onClick={() => handleUpdateStatus(vendor.id, 'SUSPENDED', 'Suspend')}>Suspend</Button>

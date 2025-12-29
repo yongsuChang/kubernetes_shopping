@@ -34,6 +34,7 @@ interface SystemReport {
 }
 
 const SystemReport: React.FC = () => {
+  const { t } = useTranslation();
   const [report, setReport] = useState<SystemReport | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -55,26 +56,26 @@ const SystemReport: React.FC = () => {
   }, []);
 
   if (loading) return <Spinner />;
-  if (error) return <Alert variant="error" message={error} />;
+  if (error) return <Alert variant="danger">{error}</Alert>;
   if (!report) return null;
 
   return (
     <div style={{ padding: '20px' }}>
-      <h1>System Report</h1>
+      <h1>{t('admin.reports')}</h1>
       
       <Grid columns={4}>
-        <Card title="Total Sales">
+        <Card title={t('admin.total_sales')}>
           <h2 style={{ color: 'var(--primary-color)' }}>
             ${report.totalSales.toLocaleString()}
           </h2>
         </Card>
-        <Card title="Total Users">
+        <Card title={t('admin.total_users')}>
           <h2>{report.totalUsers}</h2>
         </Card>
-        <Card title="Total Vendors">
+        <Card title={t('admin.total_vendors')}>
           <h2>{report.totalVendors}</h2>
         </Card>
-        <Card title="Pending Approvals">
+        <Card title={t('admin.pending_approvals')}>
           <h2 style={{ color: report.pendingVendorApprovals > 0 ? 'orange' : 'inherit' }}>
             {report.pendingVendorApprovals}
           </h2>
@@ -91,7 +92,7 @@ const SystemReport: React.FC = () => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="amount" name="Sales Amount ($)" fill="#8884d8" />
+                <Bar dataKey="amount" name={t('admin.total_sales') + " ($)"} fill="#8884d8" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -100,7 +101,7 @@ const SystemReport: React.FC = () => {
 
       <div style={{ marginTop: '30px' }}>
         <Grid columns={2}>
-          <Card title="User Registrations">
+          <Card title={t('admin.user_mgmt')}>
             <div style={{ width: '100%', height: 300 }}>
               <ResponsiveContainer>
                 <LineChart data={[...report.dailyUserRegistrations].reverse()}>
@@ -109,13 +110,13 @@ const SystemReport: React.FC = () => {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Line type="monotone" dataKey="count" name="Users" stroke="#82ca9d" />
+                  <Line type="monotone" dataKey="count" name={t('admin.user_mgmt')} stroke="#82ca9d" />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           </Card>
           
-          <Card title="Vendor Registrations">
+          <Card title={t('admin.vendor_mgmt')}>
             <div style={{ width: '100%', height: 300 }}>
               <ResponsiveContainer>
                 <LineChart data={[...report.dailyVendorRegistrations].reverse()}>
@@ -124,7 +125,7 @@ const SystemReport: React.FC = () => {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Line type="monotone" dataKey="count" name="Vendors" stroke="#ffc658" />
+                  <Line type="monotone" dataKey="count" name={t('admin.vendor_mgmt')} stroke="#ffc658" />
                 </LineChart>
               </ResponsiveContainer>
             </div>
