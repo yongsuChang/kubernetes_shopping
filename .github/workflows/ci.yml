@@ -71,6 +71,7 @@ jobs:
   docker-build-and-push:
     needs: [build-and-test-backend, frontend-test]
     runs-on: ubuntu-latest
+    environment: dockerhub
     steps:
       - uses: actions/checkout@v4
 
