@@ -20,7 +20,7 @@ describe('ProtectedRoute', () => {
   });
 
   it('shows spinner while verifying', async () => {
-    (useAuthStore as any).mockReturnValue({ accessToken: 'mock-token', role: 'ROLE_USER' });
+    (useAuthStore as any).mockReturnValue({ token: 'mock-token', role: 'ROLE_USER' });
 
     render(
       <MemoryRouter>
@@ -35,7 +35,7 @@ describe('ProtectedRoute', () => {
   });
 
   it('redirects to login when not authenticated', async () => {
-    (useAuthStore as any).mockReturnValue({ accessToken: null, role: null });
+    (useAuthStore as any).mockReturnValue({ token: null, role: null });
 
     render(
       <MemoryRouter initialEntries={['/protected']}>
@@ -60,7 +60,7 @@ describe('ProtectedRoute', () => {
   });
 
   it('redirects to home when role is unauthorized', async () => {
-    (useAuthStore as any).mockReturnValue({ accessToken: 'mock-token', role: 'ROLE_USER' });
+    (useAuthStore as any).mockReturnValue({ token: 'mock-token', role: 'ROLE_USER' });
 
     render(
       <MemoryRouter initialEntries={['/admin']}>
@@ -84,7 +84,7 @@ describe('ProtectedRoute', () => {
   });
 
   it('renders children when authenticated and authorized', async () => {
-    (useAuthStore as any).mockReturnValue({ accessToken: 'mock-token', role: 'ROLE_USER' });
+    (useAuthStore as any).mockReturnValue({ token: 'mock-token', role: 'ROLE_USER' });
 
     render(
       <MemoryRouter initialEntries={['/protected']}>

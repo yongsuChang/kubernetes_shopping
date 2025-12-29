@@ -18,8 +18,8 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     try {
       const response = await shopClient.post('/api/v1/auth/login', { email, password });
-      const { accessToken, email: userEmail, role } = response.data;
-      setAuth(accessToken, userEmail, role);
+      const { token, email: userEmail, role } = response.data;
+      setAuth(token, userEmail, role);
       
       if (role === 'ROLE_SUPER_ADMIN') navigate('/admin');
       else navigate('/');

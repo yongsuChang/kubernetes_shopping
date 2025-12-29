@@ -9,7 +9,7 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles }) => {
-  const { accessToken, role } = useAuthStore();
+  const { token, role } = useAuthStore();
   const [isVerifying, setIsVerifying] = useState(true);
   const location = useLocation();
 
@@ -23,7 +23,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles 
     };
 
     verifyToken();
-  }, [accessToken]);
+  }, [token]);
 
   if (isVerifying) {
     return (
@@ -34,7 +34,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles 
     );
   }
 
-  if (!accessToken) {
+  if (!token) {
     // Redirect to login if not authenticated
     return <Navigate to="/login" state={{ from: location }} replace />;
   }

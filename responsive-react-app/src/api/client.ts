@@ -10,7 +10,7 @@ const adminClient = axios.create({
 
 const addInterceptors = (client: typeof shopClient) => {
   client.interceptors.request.use((config) => {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -21,7 +21,7 @@ const addInterceptors = (client: typeof shopClient) => {
     (response) => response,
     (error) => {
       if (error.response?.status === 401) {
-        localStorage.removeItem('accessToken');
+        localStorage.removeItem('token');
         window.location.href = '/login';
       }
       return Promise.reject(error);
