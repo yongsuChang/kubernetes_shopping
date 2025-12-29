@@ -13,7 +13,7 @@ services:
       retries: 10
 
   admin-api-test:
-    image: shopping-admin-api:test
+    image: yongsuchang/shopping-admin-api:test
     container_name: admin-api-test
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-test:3306/shopping?serverTimezone=UTC
@@ -29,7 +29,7 @@ services:
         condition: service_healthy
 
   shop-api-test:
-    image: shopping-shop-api:test
+    image: yongsuchang/shopping-shop-api:test
     container_name: shop-api-test
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-test:3306/shopping?serverTimezone=UTC
@@ -45,7 +45,7 @@ services:
         condition: service_healthy
 
   frontend-test:
-    image: shopping-frontend:test
+    image: yongsuchang/shopping-frontend:test
     container_name: frontend-test
     ports:
       - "80:80"

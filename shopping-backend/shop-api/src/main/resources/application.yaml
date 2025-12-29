@@ -6,10 +6,7 @@ spring:
   config:
     import: "aws-parameterstore:/config/shopping/"
   datasource:
-    url: ${db.url}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${db.username}
-    password: ${db.password}
   jpa:
     hibernate:
       ddl-auto: update
