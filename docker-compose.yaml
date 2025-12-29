@@ -1,7 +1,8 @@
 services:
   mysql:
     image: mysql:8.0
-    container_name: shopping-mysql-compose
+    container_name: shopping-mysql
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: shopping
@@ -11,13 +12,13 @@ services:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 20s
       retries: 10
+    volumes:
+      - mysql_data:/var/lib/mysql
 
   admin-api:
-    image: eclipse-temurin:21-jre
-    container_name: admin-api-compose
-    command: java -jar /app/app.jar
-    volumes:
-      - ./shopping-backend/admin-api/build/libs/admin-api-0.0.1-SNAPSHOT.jar:/app/app.jar
+    image: shopping-admin-api:test
+    container_name: admin-api
+    restart: always
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/shopping?serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
@@ -30,11 +31,9 @@ services:
         condition: service_healthy
 
   shop-api:
-    image: eclipse-temurin:21-jre
-    container_name: shop-api-compose
-    command: java -jar /app/app.jar
-    volumes:
-      - ./shopping-backend/shop-api/build/libs/shop-api-0.0.1-SNAPSHOT.jar:/app/app.jar
+    image: shopping-shop-api:test
+    container_name: shop-api
+    restart: always
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/shopping?serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
@@ -46,8 +45,15 @@ services:
       mysql:
         condition: service_healthy
 
-  # Frontend (optional to include here, but useful for full stack)
-  # frontend:
-  #   build: ./responsive-react-app
-  #   ports:
-  #     - "5173:5173"
+  frontend:
+    image: shopping-frontend:test
+    container_name: shopping-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - shop-api
+      - admin-api
+
+volumes:
+  mysql_data:

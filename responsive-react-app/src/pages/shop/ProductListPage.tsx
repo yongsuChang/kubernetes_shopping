@@ -121,12 +121,32 @@ const ProductListPage: React.FC = () => {
           <Grid columns={3}>
             {products.map((product) => (
               <Card key={product.id} title={product.name}>
-                <p style={{ height: '60px', overflow: 'hidden' }}>{product.description}</p>
+                <div style={{ 
+                  backgroundColor: '#f0f0f0', 
+                  height: '150px', 
+                  display: 'flex', 
+                  justifyContent: 'center', 
+                  alignItems: 'center',
+                  marginBottom: '15px',
+                  borderRadius: '4px'
+                }}>
+                  <span style={{ color: '#999' }}>Product Image</span>
+                </div>
+                <p style={{ height: '60px', overflow: 'hidden', fontSize: '0.9rem', color: '#666' }}>{product.description}</p>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '15px' }}>
-                  <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>${product.price}</span>
+                  <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>${product.price}</span>
                   <Button variant="primary" onClick={() => handleAddToCart(product)}>Add to Cart</Button>
                 </div>
-                <p><small>Category: {product.category}</small></p>
+                <div style={{ marginTop: '10px' }}>
+                  <span style={{ 
+                    backgroundColor: '#e9ecef', 
+                    padding: '2px 8px', 
+                    borderRadius: '12px', 
+                    fontSize: '0.75rem' 
+                  }}>
+                    {product.category}
+                  </span>
+                </div>
               </Card>
             ))}
           </Grid>
