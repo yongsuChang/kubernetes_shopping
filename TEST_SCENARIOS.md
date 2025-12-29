@@ -1,55 +1,62 @@
-# Test Scenarios
+# 📋 Integrated Test Scenarios
 
-## Overview
-This document outlines the end-to-end test scenarios for the Kubernetes Shopping platform. These scenarios cover the core critical paths including user authentication, vendor approval, product management, and order placement.
+이 문서는 서비스의 주요 비즈니스 흐름을 검증하기 위한 통합 테스트 시나리오를 정의합니다. 각 시나리오는 서로 다른 권한(User, Vendor, Super Admin) 간의 상호작용을 포함합니다.
 
-## Prerequisites
-- MySQL database is running.
-- `admin-api` (Port 8081) is running.
-- `shop-api` (Port 8082) is running.
+## 1. 사전 준비 (Setup)
+테스트를 시작하기 전, 시스템 관리를 위한 최상위 관리자 계정이 필요합니다.
 
-## Scenarios
+- **Super Admin 계정 (DB 직접 생성)**
+  - 이메일: `admin@test.com`
+  - 비밀번호: `password`
+  - 역할: `ROLE_SUPER_ADMIN`
+  - 상태: `ACTIVE`
 
-### 1. Super Admin Setup
-**Goal**: Verify that the Super Admin can sign up and log in.
-- **Action**: POST `/api/v1/auth/signup` (shop-api) with `ROLE_SUPER_ADMIN`.
-- **Expected Result**: 200 OK, "Signup successful".
-- **Action**: POST `/api/v1/auth/login` (shop-api) with admin credentials.
-- **Expected Result**: 200 OK, Returns JWT Token.
+## 2. 시나리오 A: 입점사(Vendor) 가입 및 운영 프로세스
+이 시나리오는 새로운 판매자가 입점하여 상품을 판매하기까지의 과정을 검증합니다.
 
-### 2. User Lifecycle
-**Goal**: Verify regular user registration and login.
-- **Action**: POST `/api/v1/auth/signup` (shop-api) with `ROLE_USER`.
-- **Expected Result**: 200 OK.
-- **Action**: POST `/api/v1/auth/login`.
-- **Expected Result**: 200 OK, Returns JWT Token.
+1.  **입점 신청 (Public)**
+    - 회원가입 페이지에서 `Vendor` 역할 선택 후 정보 입력.
+    - 회원가입 완료 메시지 확인.
+2.  **권한 제한 확인 (Pending Vendor)**
+    - 가입한 계정으로 로그인.
+    - 업체 관리 대시보드 진입 시 "승인 대기 중" 메시지 또는 기능 제한 확인.
+3.  **입점 승인 (Super Admin)**
+    - `admin@test.com`으로 로그인 후 관리자 대시보드 진입.
+    - '업체 승인 관리' 메뉴에서 해당 업체를 찾아 '승인(Approve)' 처리.
+4.  **상품 등록 (Active Vendor)**
+    - 입점사 계정으로 재로그인.
+    - 상품 관리 메뉴에서 새로운 상품 정보 입력 및 등록.
+    - 상품 목록에 본인의 상품이 정상적으로 표시되는지 확인.
 
-### 3. Vendor Lifecycle
-**Goal**: Verify vendor registration, approval by admin, and product creation.
-- **Step 3.1: Vendor Signup**
-    - **Action**: POST `/api/v1/auth/signup` (shop-api) with `ROLE_SHOP_ADMIN` and vendor details (name, description, etc.).
-    - **Expected Result**: 200 OK.
-- **Step 3.2: Vendor Login (Pre-Approval)**
-    - **Action**: POST `/api/v1/auth/login`.
-    - **Expected Result**: 200 OK, Returns Token (but restricted access).
-- **Step 3.3: Admin Approval**
-    - **Action**: GET `/api/v1/admin/vendors` (admin-api) using Admin Token.
-    - **Expected Result**: List of vendors, finding the new vendor ID.
-    - **Action**: POST `/api/v1/admin/vendors/{id}/approve` (admin-api).
-    - **Expected Result**: 200 OK.
-- **Step 3.4: Product Creation**
-    - **Action**: POST `/api/v1/shop-admin/vendors/{vendorId}/products` (shop-api) using Vendor Token.
-    - **Payload**: Name, Description, Price, Stock.
-    - **Expected Result**: 200 OK, Product Created.
+## 3. 시나리오 B: 일반 고객(User)의 쇼핑 프로세스
+이 시나리오는 일반 고객이 상품을 탐색하고 최종적으로 주문하는 과정을 검증합니다.
 
-### 4. Admin Product Management
-**Goal**: Verify admin can manage platform products.
-- **Action**: GET `/api/v1/admin/products` (admin-api).
-- **Expected Result**: List containing the created product.
-- **Action**: PATCH `/api/v1/admin/products/{id}/toggle-status`.
-- **Expected Result**: 200 OK, Product status changed (e.g., Hidden/Visible).
+1.  **상품 탐색 (Public/User)**
+    - 메인 페이지 및 상품 목록 페이지에서 등록된 상품들 확인.
+    - 카테고리 필터 및 검색 기능 작동 여부 확인.
+2.  **회원가입 및 로그인 (User)**
+    - `Customer` 역할로 일반 회원가입 진행.
+    - 로그인 성공 후 헤더 메뉴 변경(마이페이지, 장바구니 활성화) 확인.
+3.  **장바구니 담기 (User)**
+    - 상품 상세 페이지에서 '장바구니 담기' 클릭.
+    - 장바구니 페이지에서 수량 조절 및 삭제 기능 확인.
+4.  **주문 및 배송지 등록 (User)**
+    - 주문하기 클릭 후 배송지 정보 입력.
+    - 최종 주문 생성 및 주문 완료 안내 확인.
+5.  **주문 내역 확인 (User)**
+    - 마이페이지 내 주문 내역에서 방금 주문한 항목 및 현재 상태(PENDING) 확인.
 
-### 5. Order Flow (Future)
-- **Action**: User adds product to cart.
-- **Action**: User places order.
-- **Action**: Vendor fulfills order.
+## 4. 시나리오 C: 플랫폼 관리 및 통계 프로세스
+플랫폼 운영자가 전체적인 시스템 상황을 모니터링하는 과정을 검증합니다.
+
+1.  **전체 상품 관리 (Super Admin)**
+    - 관리자 대시보드에서 플랫폼의 모든 상품 목록 조회.
+    - 부적절한 상품에 대해 '판매 중지' 처리 테스트.
+2.  **사용자 관리 (Super Admin)**
+    - 전체 회원 목록 조회.
+    - 특정 회원(예: 악성 유저)에 대한 상태 변경(Suspend) 테스트.
+3.  **시스템 리포트 (Super Admin)**
+    - 전체 매출 통계 및 신규 가입자 추이 대시보드 데이터 확인.
+
+---
+*문서 생성일: 2025-12-29*

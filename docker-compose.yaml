@@ -6,8 +6,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: shopping
-      MYSQL_USER: yongsu
-      MYSQL_PASSWORD: password # Parameter Store의 패스워드와 일치해야 합니다.
     ports:
       - "3306:3306"
     healthcheck:
@@ -23,11 +21,12 @@ services:
     restart: always
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/shopping?serverTimezone=UTC&characterEncoding=UTF-8
-      # SPRING_DATASOURCE_USERNAME: root
-      # SPRING_DATASOURCE_PASSWORD: password
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_REGION: ${AWS_REGION}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
     ports:
       - "8081:8081"
     depends_on:
@@ -40,21 +39,18 @@ services:
     restart: always
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/shopping?serverTimezone=UTC&characterEncoding=UTF-8
-      # SPRING_DATASOURCE_USERNAME: root
-      # SPRING_DATASOURCE_PASSWORD: password
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_REGION: ${AWS_REGION}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
     ports:
       - "8082:8082"
     depends_on:
       mysql:
         condition: service_healthy
 
-  frontend:
-    build:
-      context: ./responsive-react-app
-      dockerfile: Dockerfile
   frontend:
     image: yongsuchang/shopping-frontend:test
     container_name: shopping-frontend

@@ -1,7 +1,8 @@
 # 프로젝트 진행 현황 (Project Progress Tracking)
 
+> **⚠️ Urgent**: 현재 입점사 권한 시스템에 간헐적 이슈가 발생하고 있습니다. [TEST.md](./TEST.md)의 **Known Issues**를 최우선으로 처리한 뒤 로드맵을 진행하세요.
 > **Note**: 프로젝트 아키텍처, 데이터 모델, 구현 상세에 대한 심층 분석 내용은 [04_architecture_and_analysis.md](./04_architecture_and_analysis.md) 파일을 참고하세요.
-> **Test**: 테스트 전략, 시나리오 및 실행 결과는 [TEST.md](./TEST.md) 파일을 참고하세요.
+> **Test**: 상세 통합 테스트 시나리오는 [TEST_SCENARIOS.md](./TEST_SCENARIOS.md)를, 전반적인 테스트 전략은 [TEST.md](./TEST.md)를 참고하세요.
 
 ## 🌿 개발 프로세스 및 브랜치 전략
 - **main**: 프로덕션 배포용 최상위 브랜치.
@@ -35,6 +36,8 @@
 - [x] **API 문서화 및 공통 기능**
     - Swagger (SpringDoc OpenAPI) 통합
     - 전역 예외 처리기(Global Exception Handler) 구현
+- [x] **통합 테스트 시나리오 정의**
+    - ROLE 기반 엔드투엔드 시나리오 구축 ([TEST_SCENARIOS.md](./TEST_SCENARIOS.md))
 
 ---
 
