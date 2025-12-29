@@ -28,15 +28,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'pnpm'
           cache-dependency-path: responsive-react-app/pnpm-lock.yaml
-
-      - name: Install pnpm
-        run: npm install -g pnpm
 
       - name: Install dependencies
         working-directory: responsive-react-app
