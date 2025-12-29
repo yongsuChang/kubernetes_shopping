@@ -15,7 +15,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByEmail(String email);
 
     @Query(value = "SELECT DATE(created_at) as date, COUNT(*) as count, 0 as amount " +
-                   "FROM member " +
+                   "FROM members " +
                    "GROUP BY DATE(created_at) ORDER BY date DESC LIMIT 30", nativeQuery = true)
     List<StatisticsProjection> findDailyRegistrations();
 }

@@ -19,8 +19,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT SUM(o.totalAmount) FROM Order o WHERE o.status != 'CANCELLED'")
     BigDecimal sumTotalAmount();
 
-    @Query(value = "SELECT DATE(createdAt) as date, COUNT(*) as count, SUM(total_amount) as amount " +
+    @Query(value = "SELECT DATE(created_at) as date, COUNT(*) as count, SUM(total_amount) as amount " +
                    "FROM orders WHERE status != 'CANCELLED' " +
-                   "GROUP BY DATE(createdAt) ORDER BY date DESC LIMIT 30", nativeQuery = true)
+                   "GROUP BY DATE(created_at) ORDER BY date DESC LIMIT 30", nativeQuery = true)
     List<StatisticsProjection> findDailySales();
 }

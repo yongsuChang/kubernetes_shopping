@@ -21,7 +21,7 @@ server:
   port: 8081
 
 jwt:
-  secret: v9y$B&E)H@McQfTjWnZr4u7x!A%C*F-JaNdRgUkXp2s5v8y/B?E(G+KbPeShVmYq
+  secret: "v9y$B&E)H@McQfTjWnZr4u7x!A%C*F-JaNdRgUkXp2s5v8y/B?E(G+KbPeShVmYq"
   expiration: 3600000 # 1 hour
 
 cors:

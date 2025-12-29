@@ -20,7 +20,7 @@ public interface VendorRepository extends JpaRepository<Vendor, Long> {
     long countByStatus(VendorStatus status);
 
     @Query(value = "SELECT DATE(created_at) as date, COUNT(*) as count, 0 as amount " +
-                   "FROM vendor " +
+                   "FROM vendors " +
                    "GROUP BY DATE(created_at) ORDER BY date DESC LIMIT 30", nativeQuery = true)
     List<StatisticsProjection> findDailyRegistrations();
 }

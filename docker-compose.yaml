@@ -1,0 +1,53 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: shopping-mysql-compose
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: shopping
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  admin-api:
+    image: eclipse-temurin:21-jre
+    container_name: admin-api-compose
+    command: java -jar /app/app.jar
+    volumes:
+      - ./shopping-backend/admin-api/build/libs/admin-api-0.0.1-SNAPSHOT.jar:/app/app.jar
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/shopping?serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+      JWT_SECRET: "v9y$B&E)H@McQfTjWnZr4u7x!A%C*F-JaNdRgUkXp2s5v8y/B?E(G+KbPeShVmYq"
+    ports:
+      - "8081:8081"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  shop-api:
+    image: eclipse-temurin:21-jre
+    container_name: shop-api-compose
+    command: java -jar /app/app.jar
+    volumes:
+      - ./shopping-backend/shop-api/build/libs/shop-api-0.0.1-SNAPSHOT.jar:/app/app.jar
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/shopping?serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+      JWT_SECRET: "v9y$B&E)H@McQfTjWnZr4u7x!A%C*F-JaNdRgUkXp2s5v8y/B?E(G+KbPeShVmYq"
+    ports:
+      - "8082:8082"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  # Frontend (optional to include here, but useful for full stack)
+  # frontend:
+  #   build: ./responsive-react-app
+  #   ports:
+  #     - "5173:5173"
