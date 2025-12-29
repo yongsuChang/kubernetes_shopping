@@ -70,6 +70,10 @@
     "price": "Price",
     "order_id": "Order ID",
     "customer": "Customer",
-    "fulfillment_status": "Fulfillment Status"
+    "fulfillment_status": "Fulfillment Status",
+    "quantity": "Quantity",
+    "order_date": "Order Date",
+    "address": "Address",
+    "add_address": "Add New Address"
   }
 }

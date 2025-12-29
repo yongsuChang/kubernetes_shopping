@@ -17,7 +17,18 @@ interface Order {
   createdAt: string;
 }
 
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { shopClient } from '../../api/client';
+import Card from '../../components/common/Card/Card';
+import Button from '../../components/common/Button/Button';
+import Spinner from '../../components/common/Spinner/Spinner';
+import Badge from '../../components/common/Badge/Badge';
+import Alert from '../../components/common/Alert/Alert';
+import { Grid } from '../../components/common/Grid/Grid';
+
 const OrderFulfillment: React.FC = () => {
+  const { t } = useTranslation();
   const [orders, setOrders] = useState<Order[]>([]);
   const [vendorId, setVendorId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -72,7 +83,7 @@ const OrderFulfillment: React.FC = () => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h2>Order Fulfillment</h2>
+      <h2>{t('vendor.order_mgmt')}</h2>
       {message && (
         <Alert variant={message.type} onClose={() => setMessage(null)}>
           {message.text}
@@ -84,14 +95,14 @@ const OrderFulfillment: React.FC = () => {
       ) : (
         <Grid columns={1}>
           {orders.map((order) => (
-            <Card key={order.id} title={`Order #${order.id} - ${order.product.name}`}>
+            <Card key={order.id} title={`${t('vendor.order_id')} #${order.id} - ${order.product.name}`}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
-                  <p><strong>Customer:</strong> {order.member.name} ({order.member.email})</p>
-                  <p><strong>Quantity:</strong> {order.quantity}</p>
-                  <p><strong>Total:</strong> ${order.totalAmount}</p>
-                  <p><strong>Status:</strong> <Badge variant={getStatusBadgeVariant(order.status)}>{order.status}</Badge></p>
-                  <p><small>Date: {new Date(order.createdAt).toLocaleString()}</small></p>
+                  <p><strong>{t('vendor.customer')}:</strong> {order.member.name} ({order.member.email})</p>
+                  <p><strong>{t('vendor.quantity')}:</strong> {order.quantity}</p>
+                  <p><strong>{t('shop.total')}:</strong> ${order.totalAmount}</p>
+                  <p><strong>{t('vendor.fulfillment_status')}:</strong> <Badge variant={getStatusBadgeVariant(order.status)}>{order.status}</Badge></p>
+                  <p><small>{t('vendor.order_date')}: {new Date(order.createdAt).toLocaleString()}</small></p>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   {order.status === 'PENDING' && (

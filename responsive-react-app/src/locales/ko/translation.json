@@ -70,6 +70,10 @@
     "price": "가격",
     "order_id": "주문 번호",
     "customer": "고객명",
-    "fulfillment_status": "처리 상태"
+    "fulfillment_status": "처리 상태",
+    "quantity": "수량",
+    "order_date": "주문일",
+    "address": "주소",
+    "add_address": "새 배송지 추가"
   }
 }

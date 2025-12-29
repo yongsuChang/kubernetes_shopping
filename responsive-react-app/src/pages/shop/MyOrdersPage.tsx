@@ -25,6 +25,7 @@ interface OrderHistory {
 }
 
 const MyOrdersPage: React.FC = () => {
+  const { t } = useTranslation();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   
@@ -98,18 +99,18 @@ const MyOrdersPage: React.FC = () => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h1>My Orders</h1>
+      <h1>{t('common.mypage')}</h1>
       {orders.length === 0 ? (
         <p>You haven't placed any orders yet.</p>
       ) : (
         <Grid columns={1}>
           {orders.map((order) => (
-            <Card key={order.id} title={`Order #${order.id} - ${order.product.name}`}>
+            <Card key={order.id} title={`${t('vendor.order_id')} #${order.id} - ${order.product.name}`}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <p>Quantity: {order.quantity}</p>
-                  <p>Total: <strong>${order.totalAmount}</strong></p>
-                  <p>Date: {new Date(order.createdAt).toLocaleDateString()}</p>
+                  <p>{t('vendor.quantity')}: {order.quantity}</p>
+                  <p>{t('shop.total')}: <strong>${order.totalAmount}</strong></p>
+                  <p>{t('vendor.order_date')}: {new Date(order.createdAt).toLocaleDateString()}</p>
                   <Badge variant={getStatusBadgeVariant(order.status)}>{order.status}</Badge>
                 </div>
                 <div style={{ display: 'flex', gap: '10px' }}>
