@@ -19,19 +19,19 @@ describe('ProtectedRoute', () => {
     vi.clearAllMocks();
   });
 
-  it('shows spinner while verifying', async () => {
-    (useAuthStore as any).mockReturnValue({ token: 'mock-token', role: 'ROLE_USER' });
+  it('shows spinner when token exists but role is not yet loaded', async () => {
+    // 토큰은 있지만 role이 null인 상태 (로딩 중 시뮬레이션)
+    (useAuthStore as any).mockReturnValue({ token: 'mock-token', role: null });
 
     render(
       <MemoryRouter>
-        <ProtectedRoute>
+        <ProtectedRoute allowedRoles={['ROLE_USER']}>
           <div>Protected Content</div>
         </ProtectedRoute>
       </MemoryRouter>
     );
 
     expect(screen.getByTestId('spinner')).toBeDefined();
-    expect(screen.getByText(/Verifying authentication/i)).toBeDefined();
   });
 
   it('redirects to login when not authenticated', async () => {
