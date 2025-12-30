@@ -23,8 +23,11 @@
 ### 🚀 서비스 배포 전략
 - **Kubernetes**: `frontend`, `shop-api` 배포 및 관리
 - **Standalone**: `mysql-master`, `admin-api`를 별도 VM에서 직접 운영
-- **Storage**: NFS를 활용한 상품 이미지 영구 저장소 구축 (Persistent Volume 연동 계획)
-- [ ] **TODO**: Docker Compose 및 K8s 설정에 이미지 업로드 경로(`/app/uploads/images`)를 외부 볼륨(NFS)으로 마운트하여 데이터 유실 방지
+- **Storage**: NFS를 활용한 상품 이미지 영구 저장소 구축
+    - [ ] **1단계: NFS 서버 설정**: `172.100.100.9` 호스트에 nfs-kernel-server 설치 및 익스포트 경로(`/export/images`) 설정
+    - [ ] **2단계: K8s PV/PVC 생성**: NFS 서버와 연결되는 `PersistentVolume` 및 `PersistentVolumeClaim` 매니페스트 작성
+    - [ ] **3단계: 워크로드 마운트**: `shop-api` Deployment에 PVC를 `/app/uploads/images` 경로로 마운트
+    - [ ] **4단계: 권한 최적화**: NFS 디렉토리와 컨테이너 내부 유저 간의 권한(UID/GID) 정렬
 
 ---
 
@@ -112,7 +115,11 @@
 
 ### 🏪 입점 업체 기능 (ROLE_SHOP_ADMIN)
 
-- [ ] **상품 이미지 업로드**: 상품 등록/수정 시 이미지 업로드 기능 추가 (NFS 저장 연동)
+- [x] **파일 관리 시스템 고도화**:
+    - [x] `Attachment` 테이블 설계 (원본명, 저장명, 경로 등 메타데이터 관리)
+    - [x] `Product` 엔티티와 `Attachment` 연동 (FK 기반)
+    - [x] 파일 업로드 로직 리팩토링 (UUID 기반 저장 및 DB 기록)
+- [x] **상품 이미지 업로드 및 미리보기 수정**: 상품 등록 시 이미지 로딩 및 미리보기 이슈 해결 완료
 - [x] **업체 권한 제한**: 최초 가입 시 기능 사용 불가 -> 전체 관리자 승인 후 대시보드 및 상품 관리 활성화 (VendorAccessFilter 구현 완료)
 
 - [x] **업체 대시보드**: 판매 통계 및 요약 정보 시각화 구현 완료
