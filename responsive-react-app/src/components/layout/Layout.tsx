@@ -21,7 +21,7 @@ const Layout: React.FC<LayoutProps> = ({ children, footerContent }) => {
     <div className="layout">
       <header className="header">
         <Link to="/" style={{ color: 'white', textDecoration: 'none' }}>
-          <h1 style={{ margin: 0 }}>Shopping Mall</h1>
+          <h1 style={{ margin: 0 }}>{t('common.title')}</h1>
         </Link>
         <nav style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
           <div style={{ display: 'flex', gap: '10px', marginRight: '20px' }}>
