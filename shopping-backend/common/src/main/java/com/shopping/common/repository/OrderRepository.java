@@ -6,6 +6,7 @@ import com.shopping.common.entity.Vendor;
 import com.shopping.common.dto.StatisticsProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -17,13 +18,13 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByVendor(Vendor vendor);
 
     @Query("SELECT COUNT(o) FROM Order o WHERE o.vendor = :vendor")
-    long countByVendor(Vendor vendor);
+    long countByVendor(@Param("vendor") Vendor vendor);
 
     @Query("SELECT SUM(o.totalAmount) FROM Order o WHERE o.vendor = :vendor AND o.status != 'CANCELLED'")
-    BigDecimal sumTotalAmountByVendor(Vendor vendor);
+    BigDecimal sumTotalAmountByVendor(@Param("vendor") Vendor vendor);
 
     @Query("SELECT COUNT(o) FROM Order o WHERE o.vendor = :vendor AND o.status = :status")
-    long countByVendorAndStatus(Vendor vendor, com.shopping.common.enums.OrderStatus status);
+    long countByVendorAndStatus(@Param("vendor") Vendor vendor, @Param("status") com.shopping.common.enums.OrderStatus status);
 
     @Query("SELECT SUM(o.totalAmount) FROM Order o WHERE o.status != 'CANCELLED'")
     BigDecimal sumTotalAmount();

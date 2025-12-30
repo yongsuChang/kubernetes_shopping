@@ -2,6 +2,8 @@ package com.shopping.shop.controller;
 
 import com.shopping.common.entity.Order;
 import com.shopping.common.enums.OrderStatus;
+import com.shopping.shop.dto.OrderResponse;
+import com.shopping.shop.dto.VendorStatsResponse;
 import com.shopping.shop.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/shop-admin/vendors/{vendorId}/orders")
@@ -18,14 +21,16 @@ public class VendorOrderController {
     private final OrderService orderService;
 
     @GetMapping
-    public ResponseEntity<List<Order>> getVendorOrders(
+    public ResponseEntity<List<OrderResponse>> getVendorOrders(
             @AuthenticationPrincipal String userEmail,
             @PathVariable Long vendorId) {
-        return ResponseEntity.ok(orderService.getVendorOrders(userEmail, vendorId));
+        return ResponseEntity.ok(orderService.getVendorOrders(userEmail, vendorId).stream()
+                .map(OrderResponse::from)
+                .collect(Collectors.toList()));
     }
 
     @GetMapping("/stats")
-    public ResponseEntity<com.shopping.shop.dto.VendorStatsResponse> getVendorStats(
+    public ResponseEntity<VendorStatsResponse> getVendorStats(
             @AuthenticationPrincipal String userEmail,
             @PathVariable Long vendorId) {
         return ResponseEntity.ok(orderService.getVendorStats(userEmail, vendorId));
@@ -38,6 +43,7 @@ public class VendorOrderController {
             @PathVariable Long orderId,
             @RequestParam OrderStatus status,
             @RequestParam(required = false) String reason) {
+        
         // Validation: Verify if order belongs to the vendor
         List<Order> vendorOrders = orderService.getVendorOrders(userEmail, vendorId);
         boolean belongsToVendor = vendorOrders.stream()

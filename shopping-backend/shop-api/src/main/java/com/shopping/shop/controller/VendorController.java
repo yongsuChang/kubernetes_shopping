@@ -1,7 +1,7 @@
 package com.shopping.shop.controller;
 
-import com.shopping.common.entity.Vendor;
 import com.shopping.shop.dto.VendorRegistrationRequest;
+import com.shopping.shop.dto.VendorResponse;
 import com.shopping.shop.dto.VendorStatsResponse;
 import com.shopping.shop.service.VendorService;
 import jakarta.validation.Valid;
@@ -26,8 +26,8 @@ public class VendorController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<Vendor> getMyVendor(@AuthenticationPrincipal String userEmail) {
-        return ResponseEntity.ok(vendorService.getMyVendor(userEmail));
+    public ResponseEntity<VendorResponse> getMyVendor(@AuthenticationPrincipal String userEmail) {
+        return ResponseEntity.ok(VendorResponse.from(vendorService.getMyVendor(userEmail)));
     }
 
     @GetMapping("/{vendorId}/stats")

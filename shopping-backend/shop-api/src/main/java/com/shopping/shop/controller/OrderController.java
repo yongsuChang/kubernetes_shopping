@@ -1,8 +1,8 @@
 package com.shopping.shop.controller;
 
-import com.shopping.common.entity.Order;
 import com.shopping.common.enums.OrderStatus;
 import com.shopping.shop.dto.OrderRequest;
+import com.shopping.shop.dto.OrderResponse;
 import com.shopping.shop.dto.OrderStatusHistoryResponse;
 import com.shopping.shop.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +29,10 @@ public class OrderController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<List<Order>> getMyOrders(@AuthenticationPrincipal String userEmail) {
-        return ResponseEntity.ok(orderService.getMyOrders(userEmail));
+    public ResponseEntity<List<OrderResponse>> getMyOrders(@AuthenticationPrincipal String userEmail) {
+        return ResponseEntity.ok(orderService.getMyOrders(userEmail).stream()
+                .map(OrderResponse::from)
+                .collect(Collectors.toList()));
     }
 
     @GetMapping("/{orderId}/history")
