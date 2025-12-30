@@ -19,6 +19,7 @@ public class ProductResponse {
     private Category category;
     private ProductStatus status;
     private String vendorName;
+    private String imageUrl;
 
     public static ProductResponse from(Product product) {
         return ProductResponse.builder()
@@ -30,6 +31,7 @@ public class ProductResponse {
                 .category(product.getCategory())
                 .status(product.getStatus())
                 .vendorName(product.getVendor() != null ? product.getVendor().getName() : "Unknown")
+                .imageUrl(product.getImageUrl())
                 .build();
     }
 }

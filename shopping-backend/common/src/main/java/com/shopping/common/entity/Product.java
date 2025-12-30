@@ -42,6 +42,8 @@ public class Product extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    private String imageUrl;
+
     @Builder.Default
     private boolean isDeleted = false;
 }

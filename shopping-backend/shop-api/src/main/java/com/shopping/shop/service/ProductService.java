@@ -35,6 +35,7 @@ public class ProductService {
                 .stockQuantity(request.getStockQuantity())
                 .category(request.getCategory())
                 .status(request.getStatus())
+                .imageUrl(request.getImageUrl())
                 .build();
 
         productRepository.save(product);
@@ -56,6 +57,7 @@ public class ProductService {
         product.setStockQuantity(request.getStockQuantity());
         product.setCategory(request.getCategory());
         product.setStatus(request.getStatus());
+        product.setImageUrl(request.getImageUrl());
 
         productRepository.save(product);
     }
@@ -66,9 +68,8 @@ public class ProductService {
         return productRepository.findByVendor(vendor);
     }
 
-        @Transactional
-
-        public void deleteProduct(String userEmail, Long vendorId, Long productId) {
+    @Transactional
+    public void deleteProduct(String userEmail, Long vendorId, Long productId) {
         getVendorAndCheckOwnership(userEmail, vendorId);
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException(messageUtils.getMessage("product.not_found")));

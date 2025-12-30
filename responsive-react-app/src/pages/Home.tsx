@@ -19,6 +19,7 @@ interface Product {
   category: string;
   status: string;
   vendorName: string;
+  imageUrl?: string;
 }
 
 const HomePage: React.FC = () => {
@@ -110,6 +111,26 @@ const HomePage: React.FC = () => {
           <Grid columns={3}>
             {latestProducts.map((product) => (
               <Card key={product.id} title={product.name}>
+                <div style={{ 
+                  backgroundColor: '#f0f0f0', 
+                  height: '150px', 
+                  display: 'flex', 
+                  justifyContent: 'center', 
+                  alignItems: 'center',
+                  marginBottom: '15px',
+                  borderRadius: '4px',
+                  overflow: 'hidden'
+                }}>
+                  {product.imageUrl ? (
+                    <img 
+                      src={`${import.meta.env.VITE_SHOP_API_URL}${product.imageUrl}`} 
+                      alt={product.name} 
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                    />
+                  ) : (
+                    <span style={{ color: '#999' }}>No Image</span>
+                  )}
+                </div>
                 <p style={{ height: '50px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{product.description}</p>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '15px' }}>
                   <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>${product.price.toFixed(2)}</span>

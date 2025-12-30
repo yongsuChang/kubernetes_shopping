@@ -16,6 +16,7 @@ interface Product {
   price: number;
   category: string;
   vendorName: string;
+  imageUrl?: string;
 }
 
 const ProductListPage: React.FC = () => {
@@ -128,13 +129,21 @@ const ProductListPage: React.FC = () => {
                   backgroundColor: '#f0f0f0', 
                   height: '150px', 
                   display: 'flex', 
-                  flexDirection: 'column',
                   justifyContent: 'center', 
                   alignItems: 'center',
                   marginBottom: '15px',
-                  borderRadius: '4px'
+                  borderRadius: '4px',
+                  overflow: 'hidden'
                 }}>
-                  <span style={{ color: '#999', fontSize: '0.8rem' }}>{product.vendorName}</span>
+                  {product.imageUrl ? (
+                    <img 
+                      src={`${import.meta.env.VITE_SHOP_API_URL}${product.imageUrl}`} 
+                      alt={product.name} 
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                    />
+                  ) : (
+                    <span style={{ color: '#999' }}>No Image</span>
+                  )}
                 </div>
                 <p style={{ height: '60px', overflow: 'hidden', fontSize: '0.9rem', color: '#666' }}>{product.description}</p>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '15px' }}>

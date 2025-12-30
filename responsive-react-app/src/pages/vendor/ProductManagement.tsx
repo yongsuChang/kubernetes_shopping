@@ -18,6 +18,7 @@ interface Product {
   stockQuantity: number;
   category: string;
   status: string;
+  imageUrl?: string;
 }
 
 const ProductManagement: React.FC = () => {
@@ -36,7 +37,8 @@ const ProductManagement: React.FC = () => {
     price: 0,
     stockQuantity: 0,
     category: 'OTHERS',
-    status: 'AVAILABLE'
+    status: 'AVAILABLE',
+    imageUrl: ''
   });
 
   const categories = [
@@ -49,6 +51,30 @@ const ProductManagement: React.FC = () => {
     'TOYS',
     'OTHERS'
   ];
+
+  const [uploading, setUploading] = useState(false);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    const uploadFormData = new FormData();
+    uploadFormData.append('file', file);
+
+    try {
+      const response = await shopClient.post('/api/v1/shop/images/upload', uploadFormData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      setFormData({ ...formData, imageUrl: response.data.imageUrl });
+      setMessage({ type: 'success', text: 'Image uploaded successfully' });
+    } catch (err) {
+      console.error('Upload failed', err);
+      setMessage({ type: 'danger', text: 'Failed to upload image' });
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const fetchVendorAndProducts = async () => {
     setLoading(true);
@@ -80,7 +106,8 @@ const ProductManagement: React.FC = () => {
         price: product.price,
         stockQuantity: product.stockQuantity,
         category: product.category,
-        status: product.status
+        status: product.status,
+        imageUrl: product.imageUrl || ''
       });
     } else {
       setEditingProduct(null);
@@ -90,7 +117,8 @@ const ProductManagement: React.FC = () => {
         price: 0,
         stockQuantity: 0,
         category: 'OTHERS',
-        status: 'AVAILABLE'
+        status: 'AVAILABLE',
+        imageUrl: ''
       });
     }
     setIsModalOpen(true);
@@ -144,6 +172,26 @@ const ProductManagement: React.FC = () => {
       <Grid columns={3}>
         {products.map((product) => (
           <Card key={product.id} title={product.name}>
+            <div style={{ 
+              backgroundColor: '#f0f0f0', 
+              height: '150px', 
+              display: 'flex', 
+              justifyContent: 'center', 
+              alignItems: 'center',
+              marginBottom: '15px',
+              borderRadius: '4px',
+              overflow: 'hidden'
+            }}>
+              {product.imageUrl ? (
+                <img 
+                  src={`${import.meta.env.VITE_SHOP_API_URL}${product.imageUrl}`} 
+                  alt={product.name} 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                />
+              ) : (
+                <span style={{ color: '#999' }}>No Image</span>
+              )}
+            </div>
             <p>{product.description}</p>
             <p><strong>{t('vendor.price')}:</strong> ${product.price}</p>
             <p><strong>{t('vendor.stock')}:</strong> {product.stockQuantity}</p>
@@ -201,6 +249,20 @@ const ProductManagement: React.FC = () => {
                 <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
+          </div>
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Product Image</label>
+            {formData.imageUrl && (
+              <div style={{ marginBottom: '10px' }}>
+                <img 
+                  src={`${import.meta.env.VITE_SHOP_API_URL}${formData.imageUrl}`} 
+                  alt="Preview" 
+                  style={{ width: '100%', maxHeight: '150px', objectFit: 'contain', borderRadius: '5px', border: '1px solid #eee' }} 
+                />
+              </div>
+            )}
+            <input type="file" accept="image/*" onChange={handleFileChange} disabled={uploading} style={{ width: '100%' }} />
+            {uploading && <p style={{ margin: '5px 0', fontSize: '0.8rem', color: 'var(--color-primary)' }}>Uploading image...</p>}
           </div>
           <div style={{ marginTop: '10px' }}>
             <Button type="submit" variant="success" style={{ width: '100%' }}>
