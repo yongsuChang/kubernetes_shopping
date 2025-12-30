@@ -42,7 +42,9 @@ public class Product extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    private String imageUrl;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "image_attachment_id")
+    private Attachment image;
 
     @Builder.Default
     private boolean isDeleted = false;

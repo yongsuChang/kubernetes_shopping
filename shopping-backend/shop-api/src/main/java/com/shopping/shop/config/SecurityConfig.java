@@ -35,6 +35,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/v1/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/shop/images/**").permitAll() // 이미지 최우선 허용
                 .requestMatchers(HttpMethod.GET, "/api/v1/shop/products/**").permitAll()
                 .requestMatchers("/api/v1/health/**").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").hasAuthority("ROLE_SUPER_ADMIN")

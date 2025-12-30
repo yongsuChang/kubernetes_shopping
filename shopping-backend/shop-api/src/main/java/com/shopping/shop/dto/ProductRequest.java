@@ -32,5 +32,5 @@ public class ProductRequest {
     @NotNull
     private ProductStatus status;
 
-    private String imageUrl;
+    private Long imageId; // Attachment ID
 }

@@ -1,8 +1,10 @@
 package com.shopping.shop.service;
 
+import com.shopping.common.entity.Attachment;
 import com.shopping.common.entity.Member;
 import com.shopping.common.entity.Product;
 import com.shopping.common.entity.Vendor;
+import com.shopping.common.repository.AttachmentRepository;
 import com.shopping.common.repository.MemberRepository;
 import com.shopping.common.repository.ProductRepository;
 import com.shopping.common.repository.VendorRepository;
@@ -21,6 +23,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final VendorRepository vendorRepository;
     private final MemberRepository memberRepository;
+    private final AttachmentRepository attachmentRepository;
     private final MessageUtils messageUtils;
 
     @Transactional
@@ -35,7 +38,7 @@ public class ProductService {
                 .stockQuantity(request.getStockQuantity())
                 .category(request.getCategory())
                 .status(request.getStatus())
-                .imageUrl(request.getImageUrl())
+                .image(findAttachment(request.getImageId()))
                 .build();
 
         productRepository.save(product);
@@ -57,9 +60,14 @@ public class ProductService {
         product.setStockQuantity(request.getStockQuantity());
         product.setCategory(request.getCategory());
         product.setStatus(request.getStatus());
-        product.setImageUrl(request.getImageUrl());
+        product.setImage(findAttachment(request.getImageId()));
 
         productRepository.save(product);
+    }
+
+    private Attachment findAttachment(Long id) {
+        if (id == null) return null;
+        return attachmentRepository.findById(id).orElse(null);
     }
 
     @Transactional(readOnly = true)

@@ -1,7 +1,7 @@
 package com.shopping.shop.controller;
 
-import com.shopping.common.entity.Product;
 import com.shopping.shop.dto.ProductRequest;
+import com.shopping.shop.dto.ProductResponse;
 import com.shopping.shop.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/shop-admin/vendors/{vendorId}/products")
@@ -38,10 +39,12 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getVendorProducts(
+    public ResponseEntity<List<ProductResponse>> getVendorProducts(
             @AuthenticationPrincipal String userEmail,
             @PathVariable Long vendorId) {
-        return ResponseEntity.ok(productService.getVendorProducts(userEmail, vendorId));
+        return ResponseEntity.ok(productService.getVendorProducts(userEmail, vendorId).stream()
+                .map(ProductResponse::from)
+                .collect(Collectors.toList()));
     }
 
     @DeleteMapping("/{productId}")

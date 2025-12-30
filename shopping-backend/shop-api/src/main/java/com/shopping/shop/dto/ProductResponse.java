@@ -19,6 +19,7 @@ public class ProductResponse {
     private Category category;
     private ProductStatus status;
     private String vendorName;
+    private Long imageId;
     private String imageUrl;
 
     public static ProductResponse from(Product product) {
@@ -31,7 +32,8 @@ public class ProductResponse {
                 .category(product.getCategory())
                 .status(product.getStatus())
                 .vendorName(product.getVendor() != null ? product.getVendor().getName() : "Unknown")
-                .imageUrl(product.getImageUrl())
+                .imageId(product.getImage() != null ? product.getImage().getId() : null)
+                .imageUrl(product.getImage() != null ? "/api/v1/shop/images/" + product.getImage().getStoredName() : null)
                 .build();
     }
 }

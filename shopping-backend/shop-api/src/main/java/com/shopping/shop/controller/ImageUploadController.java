@@ -1,5 +1,6 @@
 package com.shopping.shop.controller;
 
+import com.shopping.common.entity.Attachment;
 import com.shopping.shop.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,12 @@ public class ImageUploadController {
     private final FileService fileService;
 
     @PostMapping("/upload")
-    public ResponseEntity<Map<String, String>> uploadImage(@RequestParam("file") MultipartFile file) {
-        String imageUrl = fileService.uploadImage(file);
-        return ResponseEntity.ok(Map.of("imageUrl", imageUrl));
+    public ResponseEntity<Map<String, Object>> uploadImage(@RequestParam("file") MultipartFile file) {
+        Attachment attachment = fileService.uploadImage(file);
+        return ResponseEntity.ok(Map.of(
+            "imageId", attachment.getId(),
+            "imageUrl", "/api/v1/shop/images/" + attachment.getStoredName(),
+            "originalName", attachment.getOriginalName()
+        ));
     }
 }
