@@ -10,6 +10,24 @@
 - **feature/*, fix/***: 각 기능 구현 및 버그 수정을 위한 개별 작업 브랜치.
 - **Workflow**: `feature/*` 브랜치에서 작업 -> `develop` 브랜치로 PR 및 병합 -> 안정화 후 `main`으로 최종 병합.
 
+## 🏗️ 인프라 및 배포 구성 (Infrastructure Architecture)
+
+### 🖥️ 호스트 배치 계획 (Host Assignment)
+- **Bastion (Gateway)**: `172.100.100.3` (Public IP: `10.100.0.3`)
+- **Kubernetes Cluster**: 
+    - Master: `172.100.100.4`
+    - Worker Nodes: `172.100.100.5` (Node-1), `172.100.100.6` (Node-2), `172.100.100.7` (Node-3)
+- **Database & Admin API Host**: `172.100.100.8` (MySQL Master + `admin-api`)
+- **Storage Host**: `172.100.100.9` (NFS Server - 상품 이미지 저장용)
+
+### 🚀 서비스 배포 전략
+- **Kubernetes**: `frontend`, `shop-api` 배포 및 관리
+- **Standalone**: `mysql-master`, `admin-api`를 별도 VM에서 직접 운영
+- **Storage**: NFS를 활용한 상품 이미지 영구 저장소 구축 (Persistent Volume 연동 계획)
+- [ ] **TODO**: Docker Compose 및 K8s 설정에 이미지 업로드 경로(`/app/uploads/images`)를 외부 볼륨(NFS)으로 마운트하여 데이터 유실 방지
+
+---
+
 ## 🏗️ 백엔드 (Java Spring Boot)
 
 ### ✅ 완료된 작업
@@ -94,6 +112,7 @@
 
 ### 🏪 입점 업체 기능 (ROLE_SHOP_ADMIN)
 
+- [ ] **상품 이미지 업로드**: 상품 등록/수정 시 이미지 업로드 기능 추가 (NFS 저장 연동)
 - [x] **업체 권한 제한**: 최초 가입 시 기능 사용 불가 -> 전체 관리자 승인 후 대시보드 및 상품 관리 활성화 (VendorAccessFilter 구현 완료)
 
 - [x] **업체 대시보드**: 판매 통계 및 요약 정보 시각화 구현 완료

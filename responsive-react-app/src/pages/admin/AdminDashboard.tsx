@@ -1,12 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useAuthStore } from '../../store/useAuthStore';
 import Card from '../../components/common/Card/Card';
 import { Grid } from '../../components/common/Grid/Grid';
 import Button from '../../components/common/Button/Button';
 
 const AdminDashboard: React.FC = () => {
   const { t } = useTranslation();
+  const { token } = useAuthStore();
+
+  const openSwagger = (apiUrl: string | undefined) => {
+    if (!apiUrl) return;
+    window.open(`${apiUrl}/swagger-ui/index.html?token=${token}`, '_blank');
+  };
 
   return (
     <div style={{ padding: '20px' }}>
@@ -40,6 +47,24 @@ const AdminDashboard: React.FC = () => {
           <Link to="/admin/products">
             <Button variant="outline-primary">{t('admin.go_to_products')}</Button>
           </Link>
+        </Card>
+
+        <Card title="API Documentation">
+          <p>Access Swagger UI for API testing.</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <Button 
+              variant="info" 
+              onClick={() => openSwagger(import.meta.env.VITE_ADMIN_API_URL)}
+            >
+              Admin API Swagger
+            </Button>
+            <Button 
+              variant="info" 
+              onClick={() => openSwagger(import.meta.env.VITE_SHOP_API_URL)}
+            >
+              Shop API Swagger
+            </Button>
+          </div>
         </Card>
       </Grid>
     </div>
