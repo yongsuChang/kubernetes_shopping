@@ -18,6 +18,7 @@ interface Product {
   stockQuantity: number;
   category: string;
   status: string;
+  imageId?: number;
   imageUrl?: string;
 }
 
@@ -38,18 +39,12 @@ const ProductManagement: React.FC = () => {
     stockQuantity: 0,
     category: 'OTHERS',
     status: 'AVAILABLE',
+    imageId: null as number | null,
     imageUrl: ''
   });
 
   const categories = [
-    'ELECTRONICS',
-    'FASHION',
-    'HOME_KITCHEN',
-    'BEAUTY',
-    'SPORTS',
-    'BOOKS',
-    'TOYS',
-    'OTHERS'
+    'ELECTRONICS', 'FASHION', 'HOME_KITCHEN', 'BEAUTY', 'SPORTS', 'BOOKS', 'TOYS', 'OTHERS'
   ];
 
   const [uploading, setUploading] = useState(false);
@@ -66,7 +61,12 @@ const ProductManagement: React.FC = () => {
       const response = await shopClient.post('/api/v1/shop/images/upload', uploadFormData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      setFormData({ ...formData, imageUrl: response.data.imageUrl });
+      // 백엔드에서 준 imageId와 imageUrl 저장
+      setFormData({ 
+        ...formData, 
+        imageId: response.data.imageId, 
+        imageUrl: response.data.imageUrl 
+      });
       setMessage({ type: 'success', text: 'Image uploaded successfully' });
     } catch (err) {
       console.error('Upload failed', err);
@@ -107,6 +107,7 @@ const ProductManagement: React.FC = () => {
         stockQuantity: product.stockQuantity,
         category: product.category,
         status: product.status,
+        imageId: product.imageId || null,
         imageUrl: product.imageUrl || ''
       });
     } else {
@@ -118,6 +119,7 @@ const ProductManagement: React.FC = () => {
         stockQuantity: 0,
         category: 'OTHERS',
         status: 'AVAILABLE',
+        imageId: null,
         imageUrl: ''
       });
     }
@@ -154,6 +156,17 @@ const ProductManagement: React.FC = () => {
     }
   };
 
+  const getFullImageUrl = (path: string | undefined) => {
+    if (!path) return '';
+    if (path.startsWith('http')) return path;
+    
+    // 환경 변수에서 API URL 가져오기 (기본값 설정)
+    const baseUrl = (import.meta.env.VITE_SHOP_API_URL || 'http://localhost:8082').replace(/\/$/, '');
+    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+    
+    return `${baseUrl}${cleanPath}`;
+  };
+
   if (loading && products.length === 0) return <Spinner />;
 
   return (
@@ -184,7 +197,7 @@ const ProductManagement: React.FC = () => {
             }}>
               {product.imageUrl ? (
                 <img 
-                  src={`${import.meta.env.VITE_SHOP_API_URL}${product.imageUrl}`} 
+                  src={getFullImageUrl(product.imageUrl)} 
                   alt={product.name} 
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                 />
@@ -193,7 +206,7 @@ const ProductManagement: React.FC = () => {
               )}
             </div>
             <p>{product.description}</p>
-            <p><strong>{t('vendor.price')}:</strong> ${product.price}</p>
+            <p><strong>{t('vendor.price')}:</strong> ${product.price.toFixed(2)}</p>
             <p><strong>{t('vendor.stock')}:</strong> {product.stockQuantity}</p>
             <p>Status: <Badge variant={product.status === 'AVAILABLE' ? 'success' : 'warning'}>{product.status}</Badge></p>
             <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
@@ -255,7 +268,7 @@ const ProductManagement: React.FC = () => {
             {formData.imageUrl && (
               <div style={{ marginBottom: '10px' }}>
                 <img 
-                  src={`${import.meta.env.VITE_SHOP_API_URL}${formData.imageUrl}`} 
+                  src={getFullImageUrl(formData.imageUrl)} 
                   alt="Preview" 
                   style={{ width: '100%', maxHeight: '150px', objectFit: 'contain', borderRadius: '5px', border: '1px solid #eee' }} 
                 />
@@ -265,7 +278,7 @@ const ProductManagement: React.FC = () => {
             {uploading && <p style={{ margin: '5px 0', fontSize: '0.8rem', color: 'var(--color-primary)' }}>Uploading image...</p>}
           </div>
           <div style={{ marginTop: '10px' }}>
-            <Button type="submit" variant="success" style={{ width: '100%' }}>
+            <Button type="submit" variant="success" style={{ width: '100%' }} disabled={uploading}>
               {editingProduct ? t('vendor.edit_product') : t('vendor.add_product')}
             </Button>
           </div>
