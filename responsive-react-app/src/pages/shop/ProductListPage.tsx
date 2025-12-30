@@ -15,7 +15,7 @@ interface Product {
   description: string;
   price: number;
   category: string;
-  vendor?: { id: number };
+  vendorName: string;
 }
 
 const ProductListPage: React.FC = () => {
@@ -27,7 +27,7 @@ const ProductListPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const addItem = useCartStore(state => state.addItem);
 
-  const categories = ['Electronics', 'Clothing', 'Home', 'Books', 'Beauty', 'Sports'];
+  const categories = ['ELECTRONICS', 'FASHION', 'HOME_KITCHEN', 'BEAUTY', 'SPORTS', 'BOOKS', 'TOYS', 'OTHERS'];
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
@@ -62,7 +62,7 @@ const ProductListPage: React.FC = () => {
       id: product.id,
       name: product.name,
       price: product.price,
-      vendorId: product.vendor?.id || 0
+      vendorId: 0
     });
     setShowMsg(true);
     setTimeout(() => setShowMsg(false), 2000);
@@ -92,7 +92,8 @@ const ProductListPage: React.FC = () => {
                 padding: '10px', 
                 cursor: 'pointer',
                 fontWeight: selectedCategory === cat ? 'bold' : 'normal',
-                color: selectedCategory === cat ? 'var(--color-primary)' : 'inherit'
+                color: selectedCategory === cat ? 'var(--color-primary)' : 'inherit',
+                fontSize: '0.85rem'
               }}
               onClick={() => setSelectedCategory(cat)}
             >
@@ -127,16 +128,17 @@ const ProductListPage: React.FC = () => {
                   backgroundColor: '#f0f0f0', 
                   height: '150px', 
                   display: 'flex', 
+                  flexDirection: 'column',
                   justifyContent: 'center', 
                   alignItems: 'center',
                   marginBottom: '15px',
                   borderRadius: '4px'
                 }}>
-                  <span style={{ color: '#999' }}>Product Image</span>
+                  <span style={{ color: '#999', fontSize: '0.8rem' }}>{product.vendorName}</span>
                 </div>
                 <p style={{ height: '60px', overflow: 'hidden', fontSize: '0.9rem', color: '#666' }}>{product.description}</p>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '15px' }}>
-                  <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>${product.price}</span>
+                  <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--color-primary)' }}>${product.price.toFixed(2)}</span>
                   <Button variant="primary" onClick={() => handleAddToCart(product)}>{t('shop.add_to_cart')}</Button>
                 </div>
                 <div style={{ marginTop: '10px' }}>

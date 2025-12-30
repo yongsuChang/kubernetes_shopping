@@ -52,10 +52,10 @@ const VendorManagement: React.FC = () => {
       } else {
         await adminClient.patch(`/api/v1/admin/vendors/${id}/status?status=${status}`);
       }
-      setMessage({ type: 'success', text: `Vendor ${actionName}d successfully` });
+      setMessage({ type: 'success', text: t('admin.success_action') });
       fetchData();
     } catch (err) {
-      setMessage({ type: 'danger', text: `Failed to ${actionName} vendor` });
+      setMessage({ type: 'danger', text: t('admin.failed_action') });
     }
   };
 
@@ -63,7 +63,7 @@ const VendorManagement: React.FC = () => {
     switch (status) {
       case 'ACTIVE': return <Badge variant="success">{t('admin.status_active')}</Badge>;
       case 'PENDING': return <Badge variant="warning">{t('admin.status_pending')}</Badge>;
-      case 'SUSPENDED': return <Badge variant="danger">Suspended</Badge>;
+      case 'SUSPENDED': return <Badge variant="danger">{t('admin.status_suspended')}</Badge>;
       case 'INACTIVE': return <Badge variant="secondary">{t('admin.status_inactive')}</Badge>;
       default: return <Badge variant="info">{status}</Badge>;
     }
@@ -84,7 +84,7 @@ const VendorManagement: React.FC = () => {
         <Tab label={t('admin.status_pending')}>
           <div style={{ marginTop: '20px' }}>
             {pendingVendors.length === 0 ? (
-              <p>No pending vendor registrations.</p>
+              <p>{t('admin.no_pending_vendors')}</p>
             ) : (
               <Grid columns={2}>
                 {pendingVendors.map((vendor) => (
@@ -101,19 +101,19 @@ const VendorManagement: React.FC = () => {
             )}
           </div>
         </Tab>
-        <Tab label="All Vendors">
+        <Tab label={t('admin.all_vendors')}>
           <div style={{ marginTop: '20px' }}>
             <Grid columns={3}>
               {allVendors.map((vendor) => (
                 <Card key={vendor.id} title={vendor.name}>
                   <p style={{ fontSize: '0.9rem', color: '#666' }}>ID: #{vendor.id}</p>
-                  <p>Status: {getStatusBadge(vendor.status)}</p>
+                  <p>{t('auth.role')}: {getStatusBadge(vendor.status)}</p>
                   <p><strong>{t('auth.vendor_email')}:</strong> {vendor.contactEmail}</p>
                   <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
                     {vendor.status === 'ACTIVE' ? (
-                      <Button variant="outline-danger" onClick={() => handleUpdateStatus(vendor.id, 'SUSPENDED', 'Suspend')}>Suspend</Button>
+                      <Button variant="outline-danger" onClick={() => handleUpdateStatus(vendor.id, 'SUSPENDED', 'Suspend')}>{t('admin.suspend')}</Button>
                     ) : (vendor.status === 'SUSPENDED' || vendor.status === 'INACTIVE') && (
-                      <Button variant="outline-success" onClick={() => handleUpdateStatus(vendor.id, 'ACTIVE', 'Activate')}>Activate</Button>
+                      <Button variant="outline-success" onClick={() => handleUpdateStatus(vendor.id, 'ACTIVE', 'Activate')}>{t('admin.activate')}</Button>
                     )}
                   </div>
                 </Card>

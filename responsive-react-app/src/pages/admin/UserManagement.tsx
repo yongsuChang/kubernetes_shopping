@@ -52,9 +52,10 @@ const UserManagement: React.FC = () => {
 
   const getRoleBadge = (role: string) => {
     switch (role) {
-      case 'ROLE_SUPER_ADMIN': return <Badge variant="danger">{t('common.admin')}</Badge>;
-      case 'ROLE_SHOP_ADMIN': return <Badge variant="success">{t('common.vendor')}</Badge>;
-      default: return <Badge variant="info">User</Badge>;
+      case 'ROLE_SUPER_ADMIN': return <Badge variant="danger">{t('auth.role_super_admin')}</Badge>;
+      case 'ROLE_SHOP_ADMIN': return <Badge variant="success">{t('auth.role_shop_admin')}</Badge>;
+      case 'ROLE_USER': return <Badge variant="info">{t('auth.role_user')}</Badge>;
+      default: return <Badge variant="secondary">{role}</Badge>;
     }
   };
 

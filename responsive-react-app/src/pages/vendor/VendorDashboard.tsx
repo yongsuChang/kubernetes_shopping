@@ -76,7 +76,7 @@ const VendorDashboard: React.FC = () => {
       <Card title={vendor?.name || 'My Shop'}>
         <p>{vendor?.description}</p>
         <p>
-          Current Status: <Badge variant={vendor?.status === 'ACTIVE' ? 'success' : 'warning'}>{vendor?.status}</Badge>
+          {t('vendor.current_status')}: <Badge variant={vendor?.status === 'ACTIVE' ? 'success' : 'warning'}>{vendor?.status}</Badge>
         </p>
       </Card>
 
@@ -84,16 +84,16 @@ const VendorDashboard: React.FC = () => {
         <div style={{ marginTop: '30px' }}>
           <h3>{t('vendor.my_sales')}</h3>
           <Grid columns={4}>
-            <Card title="Total Revenue">
+            <Card title={t('vendor.total_revenue')}>
               <h2 style={{ color: 'var(--color-success)' }}>${(stats.totalRevenue || 0).toFixed(2)}</h2>
             </Card>
-            <Card title="Total Orders">
+            <Card title={t('vendor.total_orders')}>
               <h2>{stats.totalOrders || 0}</h2>
             </Card>
-            <Card title="Pending">
+            <Card title={t('vendor.pending')}>
               <h2 style={{ color: 'var(--color-warning)' }}>{stats.pendingOrders || 0}</h2>
             </Card>
-            <Card title="Delivered">
+            <Card title={t('vendor.delivered')}>
               <h2 style={{ color: 'var(--color-primary)' }}>{stats.deliveredOrders || 0}</h2>
             </Card>
           </Grid>
@@ -101,23 +101,23 @@ const VendorDashboard: React.FC = () => {
       )}
       
       <div style={{ marginTop: '30px' }}>
-        <h3>Management Tools</h3>
+        <h3>{t('vendor.mgmt_tools')}</h3>
         <Grid columns={3}>
           <Card title={t('vendor.product_mgmt')}>
-            <p>Add, edit, or remove your products.</p>
+            <p>{t('vendor.product_mgmt_desc')}</p>
             <Link to="/vendor/products">
-              <Button variant="primary">Manage Products</Button>
+              <Button variant="primary">{t('vendor.product_mgmt')}</Button>
             </Link>
           </Card>
           <Card title={t('vendor.order_mgmt')}>
-            <p>Manage incoming orders and shipping.</p>
+            <p>{t('vendor.order_mgmt_desc')}</p>
             <Link to="/vendor/orders">
-              <Button variant="primary">Manage Orders</Button>
+              <Button variant="primary">{t('vendor.order_mgmt')}</Button>
             </Link>
           </Card>
-          <Card title="Sales Statistics">
-            <p>View your sales reports and trends.</p>
-            <Button variant="secondary" disabled>Detailed Reports (Coming Soon)</Button>
+          <Card title={t('vendor.sales_stats')}>
+            <p>{t('vendor.sales_stats_desc')}</p>
+            <Button variant="secondary" disabled>{t('vendor.coming_soon')}</Button>
           </Card>
         </Grid>
       </div>

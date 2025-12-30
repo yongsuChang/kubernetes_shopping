@@ -10,11 +10,15 @@ import Button from '../../components/common/Button/Button';
 
 interface Order {
   id: number;
-  product: { id: number, name: string };
+  orderNumber: string;
+  customerName: string;
+  customerEmail: string;
+  productName: string;
   quantity: number;
   totalAmount: number;
   status: string;
-  createdAt: string;
+  shippingAddress: string;
+  orderDate: string;
 }
 
 interface OrderHistory {
@@ -106,12 +110,12 @@ const MyOrdersPage: React.FC = () => {
       ) : (
         <Grid columns={1}>
           {orders.map((order) => (
-            <Card key={order.id} title={`${t('vendor.order_id')} #${order.id} - ${order.product.name}`}>
+            <Card key={order.id} title={`${t('vendor.order_id')} #${order.id} - ${order.productName}`}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                   <p>{t('vendor.quantity')}: {order.quantity}</p>
-                  <p>{t('shop.total')}: <strong>${order.totalAmount}</strong></p>
-                  <p>{t('vendor.order_date')}: {new Date(order.createdAt).toLocaleDateString()}</p>
+                  <p>{t('shop.total')}: <strong>${order.totalAmount.toFixed(2)}</strong></p>
+                  <p>{t('vendor.order_date')}: {new Date(order.orderDate).toLocaleDateString()}</p>
                   <Badge variant={getStatusBadgeVariant(order.status)}>{order.status}</Badge>
                 </div>
                 <div style={{ display: 'flex', gap: '10px' }}>
@@ -166,7 +170,7 @@ const MyOrdersPage: React.FC = () => {
         <Modal 
           isOpen={!!reviewOrder} 
           onClose={() => setReviewOrder(null)} 
-          title={`Review for ${reviewOrder.product.name}`}
+          title={`Review for ${reviewOrder.productName}`}
         >
           <form onSubmit={handleSubmitReview} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
             <div>

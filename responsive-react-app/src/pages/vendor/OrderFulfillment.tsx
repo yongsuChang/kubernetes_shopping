@@ -10,12 +10,15 @@ import { Grid } from '../../components/common/Grid/Grid';
 
 interface Order {
   id: number;
-  product: { name: string };
-  member: { name: string, email: string };
+  orderNumber: string;
+  customerName: string;
+  customerEmail: string;
+  productName: string;
   quantity: number;
   totalAmount: number;
   status: string;
-  createdAt: string;
+  shippingAddress: string;
+  orderDate: string;
 }
 
 const OrderFulfillment: React.FC = () => {
@@ -86,14 +89,15 @@ const OrderFulfillment: React.FC = () => {
       ) : (
         <Grid columns={1}>
           {orders.map((order) => (
-            <Card key={order.id} title={`${t('vendor.order_id')} #${order.id} - ${order.product.name}`}>
+            <Card key={order.id} title={`${t('vendor.order_id')} #${order.id} - ${order.productName}`}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
-                  <p><strong>{t('vendor.customer')}:</strong> {order.member.name} ({order.member.email})</p>
+                  <p><strong>{t('vendor.customer')}:</strong> {order.customerName} ({order.customerEmail})</p>
                   <p><strong>{t('vendor.quantity')}:</strong> {order.quantity}</p>
-                  <p><strong>{t('shop.total')}:</strong> ${order.totalAmount}</p>
+                  <p><strong>{t('shop.total')}:</strong> ${order.totalAmount.toFixed(2)}</p>
+                  <p><strong>{t('vendor.address')}:</strong> {order.shippingAddress}</p>
                   <p><strong>{t('vendor.fulfillment_status')}:</strong> <Badge variant={getStatusBadgeVariant(order.status)}>{order.status}</Badge></p>
-                  <p><small>{t('vendor.order_date')}: {new Date(order.createdAt).toLocaleString()}</small></p>
+                  <p><small>{t('vendor.order_date')}: {new Date(order.orderDate).toLocaleString()}</small></p>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   {order.status === 'PENDING' && (

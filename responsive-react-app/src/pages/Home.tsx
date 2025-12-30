@@ -18,7 +18,7 @@ interface Product {
   price: number;
   category: string;
   status: string;
-  vendor?: { id: number };
+  vendorName: string;
 }
 
 const HomePage: React.FC = () => {
@@ -28,6 +28,15 @@ const HomePage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showMsg, setShowMsg] = useState(false);
   const addItem = useCartStore(state => state.addItem);
+
+  const getRoleLabel = (roleStr: string | null) => {
+    if (!roleStr) return '';
+    const r = roleStr.trim().toUpperCase();
+    if (r === 'ROLE_SUPER_ADMIN') return t('auth.role_super_admin');
+    if (r === 'ROLE_SHOP_ADMIN') return t('auth.role_shop_admin');
+    if (r === 'ROLE_USER') return t('auth.role_user');
+    return roleStr;
+  };
 
   useEffect(() => {
     const fetchLatestProducts = async () => {
@@ -48,7 +57,7 @@ const HomePage: React.FC = () => {
       id: product.id,
       name: product.name,
       price: product.price,
-      vendorId: product.vendor?.id || 0
+      vendorId: 0
     });
     setShowMsg(true);
     setTimeout(() => setShowMsg(false), 2000);
@@ -75,7 +84,7 @@ const HomePage: React.FC = () => {
         {email ? (
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <p>{t('common.login')} as: <strong>{email}</strong> <Badge variant="info">{role}</Badge></p>
+              <p>{t('common.login')} as: <strong>{email}</strong> <Badge variant="info">{getRoleLabel(role)}</Badge></p>
               <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                 {role === 'ROLE_USER' && <Link to="/mypage"><Button variant="secondary">{t('common.mypage')}</Button></Link>}
                 {role === 'ROLE_SHOP_ADMIN' && <Link to="/vendor"><Button variant="success">{t('vendor.dashboard')}</Button></Link>}
@@ -103,7 +112,7 @@ const HomePage: React.FC = () => {
               <Card key={product.id} title={product.name}>
                 <p style={{ height: '50px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{product.description}</p>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '15px' }}>
-                  <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>${product.price}</span>
+                  <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>${product.price.toFixed(2)}</span>
                   <div style={{ display: 'flex', gap: '5px' }}>
                     <Button variant="outline-primary" onClick={() => handleAddToCart(product)}>{t('common.cart')}</Button>
                     <Link to={`/products`}><Button variant="outline-secondary">{t('home.details')}</Button></Link>
