@@ -34,6 +34,13 @@ spec:
             secretKeyRef:
               name: shopping-secrets
               key: jwt-secret
+        volumeMounts:
+        - name: image-storage
+          mountPath: /app/uploads/images
+      volumes:
+      - name: image-storage
+        persistentVolumeClaim:
+          claimName: nfs-pvc
 ---
 apiVersion: v1
 kind: Service

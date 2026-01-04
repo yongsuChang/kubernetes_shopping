@@ -1,0 +1,21 @@
+acl "trusted" {
+        127.0.0.0/8;
+        172.100.100.0/24;  # 내부망 대역
+        192.168.0.0/16;    # (옵션) VMware NAT 대역이 다를 경우 대비
+};
+
+options {
+        directory "/var/cache/bind";
+
+        # 외부 인터넷 접속을 위한 Forwarding (Google Public DNS)
+        recursion yes;
+        allow-query { trusted; };
+
+        forwarders {
+                8.8.8.8;
+                8.8.4.4;
+        };
+
+        dnssec-validation auto;
+        listen-on-v6 { any; };
+};
