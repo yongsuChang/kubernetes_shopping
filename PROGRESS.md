@@ -25,8 +25,8 @@
 - **Standalone**: `mysql-master`, `admin-api`를 별도 VM에서 직접 운영
 - **Storage**: NFS를 활용한 상품 이미지 영구 저장소 구축
     - [ ] **1단계: NFS 서버 설정**: `172.100.100.9` 호스트에 nfs-kernel-server 설치 및 익스포트 경로(`/export/images`) 설정
-    - [ ] **2단계: K8s PV/PVC 생성**: NFS 서버와 연결되는 `PersistentVolume` 및 `PersistentVolumeClaim` 매니페스트 작성
-    - [ ] **3단계: 워크로드 마운트**: `shop-api` Deployment에 PVC를 `/app/uploads/images` 경로로 마운트
+    - [x] **2단계: K8s PV/PVC 생성**: NFS 서버와 연결되는 `PersistentVolume` 및 `PersistentVolumeClaim` 매니페스트 작성
+    - [x] **3단계: 워크로드 마운트**: `shop-api` Deployment에 PVC를 `/app/uploads/images` 경로로 마운트
     - [ ] **4단계: 권한 최적화**: NFS 디렉토리와 컨테이너 내부 유저 간의 권한(UID/GID) 정렬
 
 ---
@@ -160,15 +160,17 @@
 
 - [x] **IP 화이트리스트 강제화**: `AdminAccessFilter` 내 실제 차단 로직 활성화 완료
 
-
-
 - [x] **CI/CD 파이프라인**: GitHub Actions를 이용한 자동 빌드/배포 구축 완료 (CI 기본 설정)
 
-
+### 🏢 온프레미스 인프라 구축 (On-Premise Infrastructure)
+- [x] **수동 설정 가이드 작성**: [MANUAL_SETUP.md](./MANUAL_SETUP.md) 생성 완료
+- [x] **DNS 설정 파일 준비**: `dns/named.conf.options`, `dns/db.mall.local` 작성 완료
+- [x] **K8s 스토리지 연동**: NFS용 PV/PVC 매니페스트(`k8s/base/storage.yaml`) 작성 및 `shop-api` 마운트 설정 완료
+- [x] **Ingress 도메인 라우팅**: `shop.mall.local`, `api.mall.local` 기반 라우팅 규칙 정의 (`k8s/base/ingress.yaml`)
+- [ ] **실제 인프라 구축 (사용자 수행)**: Bastion(DNS), Storage(NFS), DB 서버 설정 및 적용
+- [ ] **Frontend 배포 설정**: `frontend-service` 및 Deployment 매니페스트 작성
 
 ---
-
-
 
 ## 📝 별도 TODO (추후 검토)
 
@@ -178,4 +180,4 @@
 
 ---
 
-*최종 업데이트: 2025-12-23*
+*최종 업데이트: 2025-12-30*
