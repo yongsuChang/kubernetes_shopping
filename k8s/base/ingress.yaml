@@ -4,21 +4,30 @@ metadata:
   name: shopping-ingress
   namespace: shopping-mall
   annotations:
-    kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/rewrite-target: /
+    # CORS 설정이 필요할 경우 추가
+    # nginx.ingress.kubernetes.io/enable-cors: "true"
+    # nginx.ingress.kubernetes.io/cors-allow-origin: "http://shop.mall.local"
 spec:
+  ingressClassName: nginx
   rules:
-  - host: api.shopping.local
+  # 1. Frontend (User Interface)
+  - host: shop.mall.local
     http:
       paths:
-      - path: /admin
+      - path: /
         pathType: Prefix
         backend:
           service:
-            name: admin-api-service
+            name: frontend-service  # 프론트엔드 서비스 이름 (추후 배포 필요)
             port:
-              number: 8081
-      - path: /shop
+              number: 80
+  
+  # 2. Shop API (Backend)
+  - host: api.mall.local
+    http:
+      paths:
+      - path: /
         pathType: Prefix
         backend:
           service:
