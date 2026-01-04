@@ -1,6 +1,5 @@
 # 프로젝트 진행 현황 (Project Progress Tracking)
 
-> **⚠️ Urgent**: 현재 입점사 권한 시스템에 간헐적 이슈가 발생하고 있습니다. [TEST.md](./TEST.md)의 **Known Issues**를 최우선으로 처리한 뒤 로드맵을 진행하세요.
 > **Note**: 프로젝트 아키텍처, 데이터 모델, 구현 상세에 대한 심층 분석 내용은 [04_architecture_and_analysis.md](./04_architecture_and_analysis.md) 파일을 참고하세요.
 > **Test**: 상세 통합 테스트 시나리오는 [TEST_SCENARIOS.md](./TEST_SCENARIOS.md)를, 전반적인 테스트 전략은 [TEST.md](./TEST.md)를 참고하세요.
 
@@ -168,7 +167,7 @@
 - [x] **K8s 스토리지 연동**: NFS용 PV/PVC 매니페스트(`k8s/base/storage.yaml`) 작성 및 `shop-api` 마운트 설정 완료
 - [x] **Ingress 도메인 라우팅**: `shop.mall.local`, `api.mall.local` 기반 라우팅 규칙 정의 (`k8s/base/ingress.yaml`)
 - [ ] **실제 인프라 구축 (사용자 수행)**: Bastion(DNS), Storage(NFS), DB 서버 설정 및 적용
-- [ ] **Frontend 배포 설정**: `frontend-service` 및 Deployment 매니페스트 작성
+- [x] **Frontend 배포 설정**: `frontend-service` 및 Deployment 매니페스트 작성 (`k8s/apps/frontend.yaml` 생성 완료)
 
 ---
 
@@ -180,4 +179,5 @@
 
 ---
 
-*최종 업데이트: 2025-12-30*
+*최종 업데이트: 2026-01-05*
+* **Resolved Issue (2026-01-05)**: `VendorAccessFilter`가 모든 `/api/v1/shop-admin/vendors/` 경로를 예외 처리하여 Pending 상태의 업체가 상품/주문 관리에 접근할 수 있었던 보안 취약점 수정. `register`와 `me` 엔드포인트만 예외로 허용하도록 변경.

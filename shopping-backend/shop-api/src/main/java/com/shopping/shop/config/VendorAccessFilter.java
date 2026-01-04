@@ -69,11 +69,19 @@ public class VendorAccessFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        // Skip filter for public paths and all vendor admin management paths
-        // SecurityConfig will handle the ROLE_SHOP_ADMIN check
-        return path.startsWith("/api/v1/auth/") || 
-               path.startsWith("/api/v1/health") ||
-               path.startsWith("/api/v1/shop/products") ||
-               path.startsWith("/api/v1/shop-admin/vendors/");
+        // Skip filter for public paths
+        if (path.startsWith("/api/v1/auth/") || 
+            path.startsWith("/api/v1/health") ||
+            path.startsWith("/api/v1/shop/products")) {
+            return true;
+        }
+
+        // Allow pending vendors to access registration and status check
+        if (path.equals("/api/v1/shop-admin/vendors/register") || 
+            path.equals("/api/v1/shop-admin/vendors/me")) {
+            return true;
+        }
+
+        return false;
     }
 }

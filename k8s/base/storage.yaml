@@ -29,3 +29,36 @@ spec:
   resources:
     requests:
       storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: mysql-nfs
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+    - no_root_squash
+  nfs:
+    path: /export/mysql
+    server: 172.100.100.9
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+  namespace: shopping-mall
+spec:
+  storageClassName: mysql-nfs
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
