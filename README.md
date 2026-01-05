@@ -6,17 +6,29 @@
 
 ## 📂 프로젝트 구조 (Project Structure)
 
+
+
 ```
+
 kubernetes_shopping/
+
 ├── config/             # 로컬 및 서버 공통 설정 템플릿 (.vimrc, netplan, hosts 등)
+
+├── deploy_admin/       # Admin Server 독립 배포 설정 (Docker Compose + Nginx)
+
 ├── docs/               # 프로젝트 문서 (기획, 가이드, 아키텍처)
-│   ├── guides/         # 설치 및 테스트 가이드 (FULL_INSTALLATION.md 등)
-│   └── ideation/       # 초기 기획 및 분석 문서
+
 ├── k8s/                # Kubernetes 배포 매니페스트 (Apps, Base, MySQL 등)
+
 ├── responsive-react-app/ # Frontend (React + TypeScript + Vite)
+
 ├── shopping-backend/     # Backend (Spring Boot Multi-module)
+
 └── docker-compose.yaml   # 로컬 개발용 통합 실행 환경
+
 ```
+
+
 
 ## 🚀 빠른 시작 (Local Development)
 

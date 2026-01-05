@@ -1,6 +1,6 @@
 # 🏗️ Zero-to-Hero: Kubernetes Shopping Infrastructure Setup Guide
 
-이 문서는 운영체제(Ubuntu 24.04 LTS 권장) 설치 직후부터 Kubernetes 클러스터 구축 및 애플리케이션 배포까지의 모든 과정을 다루는 통합 가이드입니다.
+이 문서는 운영체제(Ubuntu 22.04 LTS 권장) 설치 직후부터 Kubernetes 클러스터 구축 및 애플리케이션 배포까지의 모든 과정을 다루는 통합 가이드입니다.
 
 ---
 
@@ -14,7 +14,7 @@
 | **K8s Master** | `k8s-master` | `172.100.100.4` | Kubernetes Control Plane |
 | **K8s Worker 1** | `k8s-node1` | `172.100.100.5` | Worker Node |
 | **K8s Worker 2** | `k8s-node2` | `172.100.100.6` | Worker Node |
-| **K8s Worker 3** | `k8s-node3` | `172.100.100.7` | Worker Node |
+| **Admin Server** | `admin-server` | `172.100.100.7` | Admin API + Nginx (Docker Standalone) |
 | **Database** | `db-server` | `172.100.100.8` | MySQL (Admin API 호스팅 겸용 가능) |
 | **Storage** | `storage` | `172.100.100.9` | NFS Server |
 
@@ -38,33 +38,7 @@ ssh-copy-id user@172.100.100.4
 # ... (모든 IP에 대해 반복) 172.100.100.9 까지
 ```
 
-### 2.2 편의 설정 파일 전송
-`config/local` 디렉토리에 있는 유용한 설정 파일들을 서버로 전송합니다.
-
-```bash
-# vim plugin 사용하여 테마 설치할 것이면 미리 .vimrc_sample 파일 아래 부분 주석 해제 하여야 함(필요시, scp전에 하는 것이 편함)
-# visual 모드로 해당 부분들 선택 후 아래 명령어 입력하여 주석 해제
-# :norm 2x
-
-# 로컬에서 실행 (scp 사용 예시)
-scp config/local/.vimrc_sample user@172.100.100.3:~/.vimrc
-# 각 서버에 대해 반복
-
-# 각 서버 접속 후 vim plugin 설치(필요시)
-# ssh ~~
-# vim plugin 설치 명령어 실행
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-# vim 열기 및 플러그인 설치
-vim +PlugInstall +qall
-
-# root에 심볼릭 링크 생성 (필요 시)
-sudo ln -s /home/user/.vimrc /root/.vimrc
-sudo ln -s /home/user/.vim /root/.vim
-```
-
-### 2.3 SSH Config 설정 (권장)
+### 2.2 SSH Config 설정 (권장)
 매번 IP 주소를 입력하는 대신, 간편한 Hostname(`ssh master`, `ssh node1` 등)으로 접속하고 Bastion을 통한 ProxyJump를 자동화하기 위해 설정을 적용합니다.
 
 ```bash
@@ -81,6 +55,15 @@ chmod 600 ~/.ssh/config
 
 # 접속 테스트
 ssh master  # 172.100.100.4로 자동 접속되어야 함
+```
+
+### 2.3 편의 설정 파일 전송
+`config/local` 디렉토리에 있는 유용한 설정 파일들을 서버로 전송합니다.
+
+```bash
+# 로컬에서 실행 (scp 사용 예시)
+scp config/local/.vimrc_sample user@172.100.100.3:~/.vimrc
+# 각 서버에 대해 반복
 ```
 
 ---
@@ -188,7 +171,8 @@ sudo systemctl restart mysql
 
 ## ☸️ 5. Phase 4: Kubernetes Cluster Setup
 
-**Master(`100.4`) 및 Worker(`100.5~7`)** 노드에서 수행합니다.
+**Master(`100.4`) 및 Worker(`100.5`, `100.6`)** 노드에서 수행합니다.
+**주의**: `172.100.100.7` (Admin Server)는 클러스터에 Join하지 않습니다.
 
 ### 5.1 Container Runtime (Containerd) 설치
 ```bash
@@ -238,31 +222,65 @@ kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/
 ```
 
 ### 5.4 Worker Node Join
-Master 초기화 마지막에 출력된 `kubeadm join ...` 명령어를 각 Worker 노드에서 실행합니다.
+Master 초기화 마지막에 출력된 `kubeadm join ...` 명령어를 각 Worker 노드(`100.5`, `100.6`)에서 실행합니다.
 
 ---
 
 ## 🚀 6. Phase 5: Application Deployment
 
-클러스터가 준비되면 Bastion 혹은 Master 노드에서 애플리케이션을 배포합니다.
+### 6.1 K8s Workload (Frontend & Shop API)
+Bastion 혹은 Master 노드에서 애플리케이션을 배포합니다.
 
-### 6.1 Ingress Controller 설치
 ```bash
+# 0. Namespace 생성
+kubectl create namespace shopping-mall
+
+# 1. Secret 생성 (YAML 기반)
+# 템플릿을 복사하여 실제 값을 입력할 디렉토리 생성 (Git에 커밋되지 않도록 주의)
+mkdir -p k8s/secrets
+cp k8s/templates/secrets/*.yaml k8s/secrets/
+
+# AWS 인증 정보 및 공통 시크릿 수정
+vim k8s/secrets/aws-secret.yaml
+vim k8s/secrets/common-secret.yaml
+
+# Secret 적용
+kubectl apply -f k8s/secrets/
+
+# 2. Ingress Controller
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml
+
+# 앱 배포 (DB, Backend, Frontend)
+kubectl apply -f k8s/base/
+kubectl apply -f k8s/apps/frontend.yaml
+kubectl apply -f k8s/apps/shop-api.yaml
+# 주의: admin-api.yaml은 K8s에 배포하지 않습니다.
 ```
 
-### 6.2 앱 배포
-```bash
-# PV/PVC, Secret 등 기본 리소스
-kubectl apply -f k8s/base/
+### 6.2 Admin Server Standalone Deployment (`172.100.100.7`)
+보안 및 망 분리를 위해 Admin API는 별도 서버에서 Docker Compose로 실행합니다.
 
-# 애플리케이션 (DB, Backend, Frontend)
-kubectl apply -f k8s/apps/
+```bash
+# 1. 코드 배포 (scp 등을 이용해 프로젝트 전체 혹은 deploy_admin 폴더 전송)
+ssh admin
+# (서버 접속 후)
+
+# 2. Docker 설치 (필요 시)
+# sudo apt install docker.io docker-compose-plugin
+
+# 3. 환경 변수 설정 (.env)
+# AWS Parameter Store 연동을 위해 인증 정보를 설정해야 합니다.
+cat <<EOF > .env
+AWS_ACCESS_KEY_ID=YOUR_ACCESS_KEY
+AWS_SECRET_ACCESS_KEY=YOUR_SECRET_KEY
+AWS_REGION=ap-northeast-2
+EOF
+
+# 4. 실행
+cd deploy_admin
+docker compose up -d
 ```
 
 ### 6.3 배포 확인
-```bash
-kubectl get pods,svc,ingress
-```
-
-이제 `http://shop.mall.local` 로 접속하여 쇼핑몰을 이용할 수 있습니다!
+*   **Shop (K8s)**: `http://shop.mall.local`
+*   **Admin (Standalone)**: `http://admin.mall.local` (허용된 IP에서만 접근 가능)

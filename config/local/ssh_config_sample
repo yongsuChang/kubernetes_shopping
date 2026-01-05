@@ -5,7 +5,7 @@ Host bastion
     PubkeyAuthentication no
     IdentitiesOnly yes
 
-Host master node1 node2 node3 mysql nfs
+Host master node1 node2 admin mysql nfs
     User yongsu
     Port 22
     IdentityFile ~/.ssh/id_ed25519
@@ -20,10 +20,9 @@ Host node1
     HostName 172.100.100.5
 Host node2
     HostName 172.100.100.6
-Host node3
+Host admin
     HostName 172.100.100.7
 Host mysql
     HostName 172.100.100.8
 Host nfs
     HostName 172.100.100.9
-

@@ -1,14 +1,5 @@
 127.0.0.1 localhost
-127.0.1.1 Bastion
-
-172.100.100.3 Bastion
-172.100.100.4 k8s-master
-172.100.100.5 k8s-node-1
-172.100.100.6 k8s-node-2
-172.100.100.7 k8s-node-3
-172.100.100.8 mysql-master
-172.100.100.9 nfs
-
+127.0.1.1 ubuntu
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback
@@ -17,3 +8,11 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 
+# Kubernetes Cluster Nodes & Infrastructure
+172.100.100.3 bastion.mall.local bastion
+172.100.100.4 k8s-master.mall.local k8s-master
+172.100.100.5 k8s-node1.mall.local k8s-node1
+172.100.100.6 k8s-node2.mall.local k8s-node2
+172.100.100.7 admin-server.mall.local admin-server
+172.100.100.8 db-server.mall.local db-server
+172.100.100.9 storage.mall.local storage
