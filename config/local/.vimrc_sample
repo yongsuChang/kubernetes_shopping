@@ -34,20 +34,20 @@ syntax enable " setting colors depending on the grammer
 """ sudo ln -s /home/username/.vimrc /root/.vimrc
 """ sudo ln -s /home/username/.vim /root/.vim
 
-call plug#begin()
-
-Plug 'ghifarit53/tokyonight-vim'
-
-call plug#end()
-
-" Color scheme - tokyonight
-set termguicolors
-set t_Co=256
-set background=dark
-
-let g:tokyonight_style = 'night' " available: night, storm
-let g:tokyonight_enable_italic = 1
-
-colorscheme tokyonight
+" call plug#begin()
+"
+" Plug 'ghifarit53/tokyonight-vim'
+"
+" call plug#end()
+"
+" " Color scheme - tokyonight
+" set termguicolors
+" set t_Co=256
+" set background=dark
+"
+" let g:tokyonight_style = 'night' " available: night, storm
+" let g:tokyonight_enable_italic = 1
+"
+" colorscheme tokyonight
 
 

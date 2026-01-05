@@ -1,6 +1,6 @@
 # 🏗️ Zero-to-Hero: Kubernetes Shopping Infrastructure Setup Guide
 
-이 문서는 운영체제(Ubuntu 22.04 LTS 권장) 설치 직후부터 Kubernetes 클러스터 구축 및 애플리케이션 배포까지의 모든 과정을 다루는 통합 가이드입니다.
+이 문서는 운영체제(Ubuntu 24.04 LTS 권장) 설치 직후부터 Kubernetes 클러스터 구축 및 애플리케이션 배포까지의 모든 과정을 다루는 통합 가이드입니다.
 
 ---
 
@@ -42,9 +42,26 @@ ssh-copy-id user@172.100.100.4
 `config/local` 디렉토리에 있는 유용한 설정 파일들을 서버로 전송합니다.
 
 ```bash
+# vim plugin 사용하여 테마 설치할 것이면 미리 .vimrc_sample 파일 아래 부분 주석 해제 하여야 함(필요시, scp전에 하는 것이 편함)
+# visual 모드로 해당 부분들 선택 후 아래 명령어 입력하여 주석 해제
+# :norm 2x
+
 # 로컬에서 실행 (scp 사용 예시)
 scp config/local/.vimrc_sample user@172.100.100.3:~/.vimrc
 # 각 서버에 대해 반복
+
+# 각 서버 접속 후 vim plugin 설치(필요시)
+# ssh ~~
+# vim plugin 설치 명령어 실행
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+# vim 열기 및 플러그인 설치
+vim +PlugInstall +qall
+
+# root에 심볼릭 링크 생성 (필요 시)
+sudo ln -s /home/user/.vimrc /root/.vimrc
+sudo ln -s /home/user/.vim /root/.vim
 ```
 
 ### 2.3 SSH Config 설정 (권장)
