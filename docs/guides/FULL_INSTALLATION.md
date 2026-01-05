@@ -304,27 +304,29 @@ Master 초기화 마지막에 출력된 `kubeadm join ...` 명령어를 각 Work
 
 ## 🚀 6. Phase 5: Application Deployment
 
-### 6.1 K8s Workload (Frontend & Shop API)
-Bastion 혹은 Master 노드에서 애플리케이션을 배포합니다.
+### 6.1 K8s Workload (Frontend, API, DB)
+네임스페이스별로 분리하여 리소스를 배포합니다.
 
 ```bash
-# 0. Namespace 생성
-kubectl create namespace shopping-mall
+# 1. Namespace 및 기본 리소스 생성
+kubectl apply -f k8s/base/00-namespaces.yaml
 
-# 1. Secret 생성 (YAML 기반)
-# 템플릿을 복사하여 실제 값을 입력할 디렉토리 생성 (Git에 커밋되지 않도록 주의)
+# 2. Secret 생성 (각 네임스페이스별로 필요)
 mkdir -p k8s/secrets
 cp k8s/templates/secrets/*.yaml k8s/secrets/
 
-# AWS 인증 정보 및 공통 시크릿 수정
+# 각 파일을 열어 알맞은 Namespace 및 값을 확인/수정 후 적용
 vim k8s/secrets/aws-secret.yaml
-vim k8s/secrets/common-secret.yaml
+kubectl apply -f k8s/secrets/aws-secret.yaml
 
-# Secret 적용
-kubectl apply -f k8s/secrets/
+# 3. 인프라 배포 (MySQL, Storage, Ingress)
+kubectl apply -f k8s/base/01-storage.yaml
+kubectl apply -f k8s/mysql/
+kubectl apply -f k8s/base/02-ingress.yaml
 
-# 2. Ingress Controller
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml
+# 4. 애플리케이션 배포
+kubectl apply -f k8s/apps/
+```
 
 # 앱 배포 (DB, Backend, Frontend)
 kubectl apply -f k8s/base/

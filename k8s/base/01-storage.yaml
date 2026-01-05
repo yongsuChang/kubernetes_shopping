@@ -21,7 +21,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: nfs-pvc
-  namespace: shopping-mall
+  namespace: shopping-backend
 spec:
   storageClassName: nfs
   accessModes:
@@ -54,7 +54,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mysql-pvc
-  namespace: shopping-mall
+  namespace: shopping-backend
 spec:
   storageClassName: mysql-nfs
   accessModes:
