@@ -38,8 +38,8 @@ docker compose up -d frontend
 - `docker-compose.yaml`: 로컬 개발 및 테스트를 위한 환경 설정
 
 ## 🏗️ 온프레미스 클러스터 설정 (On-Premise Cluster Setup)
-VMware 기반의 온프레미스 환경에서 인프라(DNS, NFS, DB)를 구축하고 Kubernetes 클러스터를 운영하기 위한 수동 설정 가이드는 **[MANUAL_SETUP.md](./MANUAL_SETUP.md)**를 참고하세요.
+VMware 기반의 온프레미스 환경에서 인프라(DNS, NFS, DB)를 구축하고 Kubernetes 클러스터를 운영하기 위한 수동 설정 가이드는 **[MANUAL_SETUP.md](./docs/guides/MANUAL_SETUP.md)**를 참고하세요.
 
 ## 🧪 테스트 시나리오
-상세한 통합 테스트 시나리오는 [TEST_SCENARIOS.md](./TEST_SCENARIOS.md)를 참고하세요.
-현재 진행 중인 이슈 및 해결 현황은 [TEST.md](./TEST.md)에서 확인 가능합니다.
+상세한 통합 테스트 시나리오는 [TEST_SCENARIOS.md](./docs/guides/TEST_SCENARIOS.md)를 참고하세요.
+현재 진행 중인 이슈 및 해결 현황은 [TEST.md](./docs/guides/TEST.md)에서 확인 가능합니다.

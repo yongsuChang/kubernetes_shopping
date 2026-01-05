@@ -1,7 +1,7 @@
 # 프로젝트 진행 현황 (Project Progress Tracking)
 
-> **Note**: 프로젝트 아키텍처, 데이터 모델, 구현 상세에 대한 심층 분석 내용은 [04_architecture_and_analysis.md](./04_architecture_and_analysis.md) 파일을 참고하세요.
-> **Test**: 상세 통합 테스트 시나리오는 [TEST_SCENARIOS.md](./TEST_SCENARIOS.md)를, 전반적인 테스트 전략은 [TEST.md](./TEST.md)를 참고하세요.
+> **Note**: 프로젝트 아키텍처, 데이터 모델, 구현 상세에 대한 심층 분석 내용은 [04_architecture_and_analysis.md](./docs/ideation/04_architecture_and_analysis.md) 파일을 참고하세요.
+> **Test**: 상세 통합 테스트 시나리오는 [TEST_SCENARIOS.md](./docs/guides/TEST_SCENARIOS.md)를, 전반적인 테스트 전략은 [TEST.md](./docs/guides/TEST.md)를 참고하세요.
 
 ## 🌿 개발 프로세스 및 브랜치 전략
 - **main**: 프로덕션 배포용 최상위 브랜치.
@@ -57,7 +57,7 @@
     - Swagger (SpringDoc OpenAPI) 통합
     - 전역 예외 처리기(Global Exception Handler) 구현
 - [x] **통합 테스트 시나리오 정의**
-    - ROLE 기반 엔드투엔드 시나리오 구축 ([TEST_SCENARIOS.md](./TEST_SCENARIOS.md))
+    - ROLE 기반 엔드투엔드 시나리오 구축 ([TEST_SCENARIOS.md](./docs/guides/TEST_SCENARIOS.md))
 
 ---
 
@@ -162,7 +162,7 @@
 - [x] **CI/CD 파이프라인**: GitHub Actions를 이용한 자동 빌드/배포 구축 완료 (CI 기본 설정)
 
 ### 🏢 온프레미스 인프라 구축 (On-Premise Infrastructure)
-- [x] **수동 설정 가이드 작성**: [MANUAL_SETUP.md](./MANUAL_SETUP.md) 생성 완료
+- [x] **수동 설정 가이드 작성**: [MANUAL_SETUP.md](./docs/guides/MANUAL_SETUP.md) 생성 완료
 - [x] **DNS 설정 파일 준비**: `dns/named.conf.options`, `dns/db.mall.local` 작성 완료
 - [x] **K8s 스토리지 연동**: NFS용 PV/PVC 매니페스트(`k8s/base/storage.yaml`) 작성 및 `shop-api` 마운트 설정 완료
 - [x] **Ingress 도메인 라우팅**: `shop.mall.local`, `api.mall.local` 기반 라우팅 규칙 정의 (`k8s/base/ingress.yaml`)
