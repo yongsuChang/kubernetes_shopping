@@ -47,6 +47,25 @@ scp config/local/.vimrc_sample user@172.100.100.3:~/.vimrc
 # 각 서버에 대해 반복
 ```
 
+### 2.3 SSH Config 설정 (권장)
+매번 IP 주소를 입력하는 대신, 간편한 Hostname(`ssh master`, `ssh node1` 등)으로 접속하고 Bastion을 통한 ProxyJump를 자동화하기 위해 설정을 적용합니다.
+
+```bash
+# 1. 설정 파일 복사
+mkdir -p ~/.ssh
+cp config/local/ssh_config_sample ~/.ssh/config
+
+# 2. 사용자 계정 및 경로 수정 (필요 시)
+# 파일 내의 'User yongsu' 및 'IdentityFile' 경로를 본인의 환경에 맞게 수정하세요.
+vim ~/.ssh/config
+
+# 3. 권한 설정 (보안상 필수)
+chmod 600 ~/.ssh/config
+
+# 접속 테스트
+ssh master  # 172.100.100.4로 자동 접속되어야 함
+```
+
 ---
 
 ## 🛠️ 3. Phase 2: Server Common Configuration (모든 노드)
@@ -58,7 +77,7 @@ scp config/local/.vimrc_sample user@172.100.100.3:~/.vimrc
 
 ```bash
 # 각 서버에서 실행
-sudo nano /etc/netplan/00-installer-config.yaml # 또는 50-cloud-init.yaml
+sudo vim /etc/netplan/00-installer-config.yaml # 또는 50-cloud-init.yaml
 ```
 
 **설정 예시 (172.100.100.3 Bastion의 경우):**
@@ -87,7 +106,7 @@ sudo hostnamectl set-hostname k8s-master # 예: k8s-master
 
 # 2. Hosts 파일 수정 (모든 서버 공통)
 # config/server/common/hosts.template 내용으로 덮어쓰기
-sudo nano /etc/hosts
+sudo vim /etc/hosts
 ```
 
 ### 3.3 시스템 필수 설정
