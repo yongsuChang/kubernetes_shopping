@@ -30,6 +30,34 @@ kubernetes_shopping/
 
 
 
+## 📜 자동화 스크립트 (Utility Scripts)
+
+
+
+프로젝트 관리를 위한 스크립트들이 `scripts/` 디렉토리에 정리되어 있습니다.
+
+
+
+- **배포 (Deployment)**
+
+    - `./scripts/deploy/deploy_k8s.sh`: Kubernetes 전체 리소스 배포
+
+- **삭제 및 초기화 (Cleanup)**
+
+    - `./scripts/cleanup/cleanup_k8s.sh`: Kubernetes 리소스 전체 삭제
+
+    - `./scripts/cleanup/cleanup_docker.sh`: 로컬 Docker Compose 환경 정리
+
+- **데이터베이스 (DB)**
+
+    - `./scripts/db/seed_full.sh`: 초기 데이터 시딩
+
+    - `./scripts/db/fix_seed.sh`: 시드 데이터 보정
+
+
+
+
+
 ## 🚀 빠른 시작 (Local Development)
 
 Docker Compose를 사용하여 로컬에서 즉시 서비스를 실행해 볼 수 있습니다.
