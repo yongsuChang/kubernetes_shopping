@@ -30,6 +30,9 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: patch
+          tag_prefix: v
+          # develop 브랜치일 경우 -develop.x 형태의 pre-release 태그 생성
+          append_to_tag: ${{ github.ref == 'refs/heads/develop' && 'develop' || '' }}
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -111,22 +114,39 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Set version
-        id: vars
+      - name: Set Docker Tags
+        id: docker_meta
         run: |
-          # 태그가 없으면(PR 등) 기본값 사용
           VERSION=${{ needs.build-and-test-backend.outputs.new_version }}
-          echo "VERSION=${VERSION:-test}" >> $GITHUB_OUTPUT
+          VERSION=${VERSION:-test}
+          
+          # 기본 태그 설정 (항상 버전 태그 포함)
+          ADMIN_TAGS="yongsuchang/shopping-admin-api:${VERSION}"
+          SHOP_TAGS="yongsuchang/shopping-shop-api:${VERSION}"
+          FRONT_TAGS="yongsuchang/shopping-frontend:${VERSION}"
+          
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            # main 브랜치: latest 추가
+            ADMIN_TAGS="${ADMIN_TAGS},yongsuchang/shopping-admin-api:latest"
+            SHOP_TAGS="${SHOP_TAGS},yongsuchang/shopping-shop-api:latest"
+            FRONT_TAGS="${FRONT_TAGS},yongsuchang/shopping-frontend:latest"
+          elif [ "${{ github.ref }}" = "refs/heads/develop" ]; then
+            # develop 브랜치: test 추가
+            ADMIN_TAGS="${ADMIN_TAGS},yongsuchang/shopping-admin-api:test"
+            SHOP_TAGS="${SHOP_TAGS},yongsuchang/shopping-shop-api:test"
+            FRONT_TAGS="${FRONT_TAGS},yongsuchang/shopping-frontend:test"
+          fi
+          
+          echo "ADMIN_TAGS=${ADMIN_TAGS}" >> $GITHUB_OUTPUT
+          echo "SHOP_TAGS=${SHOP_TAGS}" >> $GITHUB_OUTPUT
+          echo "FRONT_TAGS=${FRONT_TAGS}" >> $GITHUB_OUTPUT
 
       - name: Build and Push Admin API
         uses: docker/build-push-action@v5
         with:
           context: ./shopping-backend/admin-api
           push: true
-          tags: |
-            yongsuchang/shopping-admin-api:${{ steps.vars.outputs.VERSION }}
-            yongsuchang/shopping-admin-api:test
-            yongsuchang/shopping-admin-api:latest
+          tags: ${{ steps.docker_meta.outputs.ADMIN_TAGS }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -135,10 +155,7 @@ jobs:
         with:
           context: ./shopping-backend/shop-api
           push: true
-          tags: |
-            yongsuchang/shopping-shop-api:${{ steps.vars.outputs.VERSION }}
-            yongsuchang/shopping-shop-api:test
-            yongsuchang/shopping-shop-api:latest
+          tags: ${{ steps.docker_meta.outputs.SHOP_TAGS }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -147,10 +164,7 @@ jobs:
         with:
           context: ./responsive-react-app
           push: true
-          tags: |
-            yongsuchang/shopping-frontend:${{ steps.vars.outputs.VERSION }}
-            yongsuchang/shopping-frontend:test
-            yongsuchang/shopping-frontend:latest
+          tags: ${{ steps.docker_meta.outputs.FRONT_TAGS }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
