@@ -1,0 +1,27 @@
+network:
+  version: 2
+  ethernets:
+    ens33:
+      addresses:
+      - 172.100.100.X/24
+      nameservers:
+        addresses:
+        - 8.8.8.8
+        search:
+        - 8.8.4.4
+      routes:
+      - to: default
+        via: 172.100.100.3
+# only for Bastion host
+#    ens34:
+#      addresses:
+#      - 10.100.0.3/24
+#      nameservers:
+#        addresses:
+#        - 8.8.8.8
+#        search:
+#        - 8.8.4.4
+#      routes:
+#      - to: default
+#        via: 10.100.0.2
+

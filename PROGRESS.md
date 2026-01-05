@@ -171,6 +171,12 @@
 
 ---
 
+### 📚 문서 및 환경 설정 고도화 (Documentation & Config)
+- [x] **Config 디렉토리 구성**: 로컬 및 서버 공통 설정 템플릿(`config/`) 중앙화
+- [x] **통합 설치 가이드 작성**: `docs/guides/FULL_INSTALLATION.md` (Zero-to-Hero 가이드)
+- [x] **README.md 리팩토링**: 프로젝트 구조, 빠른 시작, 테스트 가이드 중심으로 개편
+- [x] **기존 문서 정리**: `MANUAL_SETUP.md` 통합 및 삭제
+
 ## 📝 별도 TODO (추후 검토)
 
 - [ ] **모니터링 시스템 구축**: 로깅(ELK) 및 메트릭 수집(Prometheus, Grafana) 시스템 통합
