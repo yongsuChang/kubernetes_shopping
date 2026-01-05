@@ -163,9 +163,9 @@
 
 ### 🏢 온프레미스 인프라 구축 (On-Premise Infrastructure)
 - [x] **수동 설정 가이드 작성**: [MANUAL_SETUP.md](./docs/guides/MANUAL_SETUP.md) 생성 완료
-- [x] **DNS 설정 파일 준비**: `dns/named.conf.options`, `dns/db.mall.local` 작성 완료
+- [x] **DNS 설정 파일 준비**: `dns/named.conf.options`, `dns/db.mall.internal` 작성 완료
 - [x] **K8s 스토리지 연동**: NFS용 PV/PVC 매니페스트(`k8s/base/storage.yaml`) 작성 및 `shop-api` 마운트 설정 완료
-- [x] **Ingress 도메인 라우팅**: `shop.mall.local`, `api.mall.local` 기반 라우팅 규칙 정의 (`k8s/base/ingress.yaml`)
+- [x] **Ingress 도메인 라우팅**: `shop.mall.internal`, `api.mall.internal` 기반 라우팅 규칙 정의 (`k8s/base/ingress.yaml`)
 - [ ] **실제 인프라 구축 (사용자 수행)**: Bastion(DNS), Storage(NFS), DB 서버 설정 및 적용
 - [x] **Frontend 배포 설정**: `frontend-service` 및 Deployment 매니페스트 작성 (`k8s/apps/frontend.yaml` 생성 완료)
 

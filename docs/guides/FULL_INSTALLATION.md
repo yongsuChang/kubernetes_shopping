@@ -127,17 +127,17 @@ sudo apt install -y curl git vim net-tools openssh-server
 ## 🏗️ 4. Phase 3: Infrastructure Services Setup
 
 ### 4.1 Bastion (DNS Server) - `172.100.100.3`
-내부 도메인 `*.mall.local`을 처리합니다.
+내부 도메인 `*.mall.internal`을 처리합니다.
 
 ```bash
 sudo apt install bind9 -y
 
 # 설정 파일 복사 (Repository를 해당 서버에 clone 했다고 가정)
 sudo cp dns/named.conf.options /etc/bind/named.conf.options
-sudo cp dns/db.mall.local /etc/bind/db.mall.local
+sudo cp dns/db.mall.internal /etc/bind/db.mall.internal
 
 # Zone 등록 (/etc/bind/named.conf.local)
-# zone "mall.local" { type master; file "/etc/bind/db.mall.local"; }; 추가
+# zone "mall.internal" { type master; file "/etc/bind/db.mall.internal"; }; 추가
 
 sudo systemctl restart bind9
 ```
@@ -282,5 +282,5 @@ docker compose up -d
 ```
 
 ### 6.3 배포 확인
-*   **Shop (K8s)**: `http://shop.mall.local`
-*   **Admin (Standalone)**: `http://admin.mall.local` (허용된 IP에서만 접근 가능)
+*   **Shop (K8s)**: `http://shop.mall.internal`
+*   **Admin (Standalone)**: `http://admin.mall.internal` (허용된 IP에서만 접근 가능)

@@ -1,0 +1,31 @@
+$TTL    604800
+@       IN      SOA     bastion.mall.internal. root.mall.internal. (
+                              3         ; Serial (Incremented)
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      bastion.mall.internal.
+
+; Infrastructure Hosts (A Records)
+bastion      IN      A       172.100.100.3
+k8s-master   IN      A       172.100.100.4
+k8s-node1    IN      A       172.100.100.5
+k8s-node2    IN      A       172.100.100.6
+admin-server IN      A       172.100.100.7
+db-server    IN      A       172.100.100.8
+storage      IN      A       172.100.100.9
+
+; Service Aliases (CNAMEs)
+master       IN      CNAME   k8s-master
+admin        IN      CNAME   admin-server
+db           IN      CNAME   db-server
+nfs          IN      CNAME   storage
+
+; Kubernetes Ingress (Round Robin to Worker Nodes)
+shop         IN      A       172.100.100.5
+shop         IN      A       172.100.100.6
+
+api          IN      A       172.100.100.5
+api          IN      A       172.100.100.6
