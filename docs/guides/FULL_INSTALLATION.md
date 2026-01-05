@@ -120,6 +120,25 @@ sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 # 2. 필수 패키지 설치
 sudo apt update
 sudo apt install -y curl git vim net-tools openssh-server
+
+### 3.4 데이터 디스크 마운트 (Storage, DB 서버 권장)
+운영체제와 데이터를 분리하기 위해 추가 디스크(예: `/dev/sdb`)를 `/DATA` 디렉토리에 마운트합니다.
+
+```bash
+# 1. 디스크 확인
+lsblk  # 추가한 디스크 명칭 확인 (예: sdb)
+
+# 2. 파티션 및 포맷 (ext4)
+sudo mkfs.ext4 /dev/sdb
+
+# 3. 마운트 포인트 생성 및 마운트
+sudo mkdir -p /DATA
+sudo mount /dev/sdb /DATA
+
+# 4. 재부팅 시 자동 마운트 설정 (/etc/fstab)
+sudo blkid /dev/sdb  # UUID 복사
+sudo vim /etc/fstab
+# UUID=복사한-UUID  /DATA  ext4  defaults  0  2  추가
 ```
 
 ---
@@ -143,16 +162,19 @@ sudo systemctl restart bind9
 ```
 
 ### 4.2 Storage (NFS Server) - `172.100.100.9`
-상품 이미지 공유 스토리지입니다.
+상품 이미지 공유 스토리지입니다. (앞선 단계에서 `/DATA` 마운트가 완료되었다고 가정합니다.)
 
 ```bash
 sudo apt install nfs-kernel-server -y
-sudo mkdir -p /export/images
-sudo chown nobody:nogroup /export/images
-sudo chmod 777 /export/images
+
+# 마운트된 데이터 디스크 내에 공유 디렉토리 생성
+sudo mkdir -p /DATA/images
+sudo chown nobody:nogroup /DATA/images
+sudo chmod 777 /DATA/images
 
 # /etc/exports 수정
-# /export/images 172.100.100.0/24(rw,sync,no_subtree_check,no_root_squash) 추가
+sudo vim /etc/exports
+# /DATA/images 172.100.100.0/24(rw,sync,no_subtree_check,no_root_squash) 추가
 
 sudo exportfs -ra
 sudo systemctl restart nfs-kernel-server
@@ -160,11 +182,65 @@ sudo systemctl restart nfs-kernel-server
 
 ### 4.3 Database (MySQL) - `172.100.100.8`
 ```bash
-sudo apt install mysql-server -y
-# /etc/mysql/mysql.conf.d/mysqld.cnf 에서 bind-address = 0.0.0.0 으로 변경
-sudo systemctl restart mysql
+sudo apt update
+sudo apt install -y mysql-server
 
-# MySQL 접속 후 유저 및 DB 생성 (MANUAL_SETUP.md 참조)
+# 1. 초기 보안 설정 (root 비밀번호 설정 및 보안 강화)
+# Ubuntu 24.04에서는 초기 비밀번호가 없으므로 sudo로 먼저 접속합니다.
+sudo mysql
+
+# --- MySQL 콘솔 내부에서 실행 ---
+# root 계정의 인증 방식을 비밀번호 기반으로 변경하고 비밀번호를 설정합니다.
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'YourSecureRootPassword';
+FLUSH PRIVILEGES;
+EXIT;
+
+# 2. 보안 설치 스크립트 실행 (대화형)
+# - 익명 사용자 삭제, root 원격 로그인 차단, 테스트 DB 삭제 등을 진행합니다.
+sudo mysql_secure_installation
+
+# 3. 외부 접속 허용 설정 (바인딩 주소 및 데이터 경로)
+sudo systemctl stop mysql
+sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf
+```
+
+**수정할 내용 (`mysqld.cnf`):**
+```ini
+# 모든 IP로부터의 접속을 허용
+bind-address = 0.0.0.0
+
+# 데이터 저장 경로 변경 (선택 사항이나 권장)
+datadir = /DATA/mysql
+```
+
+```bash
+# 데이터 디렉토리 이동 및 권한 설정
+sudo rsync -av /var/lib/mysql/ /DATA/mysql/
+sudo chown -R mysql:mysql /DATA/mysql
+
+# AppArmor 설정 수정 (경로 허용)
+sudo vim /etc/apparmor.d/tunables/alias
+# alias /var/lib/mysql/ -> /DATA/mysql/, 추가
+
+sudo systemctl restart apparmor
+sudo systemctl start mysql
+```
+
+### 4.4 데이터베이스 및 유저 생성
+MySQL에 접속(`mysql -u root -p`)하여 아래 명령어를 실행합니다. (보안을 위해 root는 localhost 접속만 유지하고, 외부 앱용 계정을 별도로 생성합니다.)
+
+```sql
+-- 데이터베이스 생성
+CREATE DATABASE shopping_admin;
+CREATE DATABASE shopping_shop;
+
+-- 애플리케이션용 유저 생성 및 권한 부여 (특정 대역에서만 접속 허용 권장)
+-- '172.100.100.%'는 내부망 전체에서 접속 가능함을 의미합니다.
+CREATE USER 'admin_user'@'172.100.100.%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON shopping_admin.* TO 'admin_user'@'172.100.100.%';
+GRANT ALL PRIVILEGES ON shopping_shop.* TO 'admin_user'@'172.100.100.%';
+
+FLUSH PRIVILEGES;
 ```
 
 ---

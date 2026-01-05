@@ -162,7 +162,8 @@
 - [x] **CI/CD 파이프라인**: GitHub Actions를 이용한 자동 빌드/배포 구축 완료 (CI 기본 설정)
 
 ### 🏢 온프레미스 인프라 구축 (On-Premise Infrastructure)
-- [x] **수동 설정 가이드 작성**: [MANUAL_SETUP.md](./docs/guides/MANUAL_SETUP.md) 생성 완료
+- [x] **수동 설정 가이드 작성**: [FULL_INSTALLATION.md](./docs/guides/FULL_INSTALLATION.md) 생성 완료
+- [x] **기존 문서 정리**: `MANUAL_SETUP.md` 통합 및 삭제 (-> FULL_INSTALLATION.md)
 - [x] **DNS 설정 파일 준비**: `dns/named.conf.options`, `dns/db.mall.internal` 작성 완료
 - [x] **K8s 스토리지 연동**: NFS용 PV/PVC 매니페스트(`k8s/base/storage.yaml`) 작성 및 `shop-api` 마운트 설정 완료
 - [x] **Ingress 도메인 라우팅**: `shop.mall.internal`, `api.mall.internal` 기반 라우팅 규칙 정의 (`k8s/base/ingress.yaml`)
@@ -179,6 +180,12 @@
 
 ## 📝 별도 TODO (추후 검토)
 
+- [ ] **K8s 장애 대응 고도화**:
+    - [ ] 모든 Deployment에 `LivenessProbe` 및 `ReadinessProbe` 적용 (상태 체크 자동화)
+    - [ ] 노드 장애 시 파드 재배치 전략(Pod Anti-Affinity) 최적화
+- [ ] **데이터 백업 전략**:
+    - [ ] MySQL 데이터베이스 일일 백업 스크립트 작성 및 자동화 (Cron)
+    - [ ] NFS 스토리지 이미지 데이터 백업 방안 마련
 - [ ] **모니터링 시스템 구축**: 로깅(ELK) 및 메트릭 수집(Prometheus, Grafana) 시스템 통합
 
 
