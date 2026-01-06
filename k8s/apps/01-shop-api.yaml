@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: shop-api
-        image: shopping-shop-api:latest
+        image: yongsuchang/shopping-shop-api:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8082
