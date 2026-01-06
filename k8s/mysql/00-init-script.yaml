@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-initdb
+  namespace: shopping-db
+data:
+  init.sql: |
+    CREATE DATABASE IF NOT EXISTS shopping_admin;
+    CREATE DATABASE IF NOT EXISTS shopping_shop;
+    
+    -- Check if user exists before creating to avoid errors on restart
+    CREATE USER IF NOT EXISTS 'admin_user'@'%' IDENTIFIED BY 'password';
+    GRANT ALL PRIVILEGES ON shopping_admin.* TO 'admin_user'@'%';
+    GRANT ALL PRIVILEGES ON shopping_shop.* TO 'admin_user'@'%';
+    FLUSH PRIVILEGES;
