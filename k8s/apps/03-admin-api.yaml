@@ -24,13 +24,6 @@ spec:
           value: "prod"
         - name: SPRING_DATASOURCE_URL
           value: "jdbc:mysql://mysql-service.shopping-db:3306/shopping_admin?createDatabaseIfNotExist=true"
-        - name: SPRING_DATASOURCE_USERNAME
-          value: "admin_user"
-        - name: SPRING_DATASOURCE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: shopping-secrets
-              key: mysql-root-password
         # AWS Parameter Store Configuration
         - name: AWS_ACCESS_KEY_ID
           valueFrom:

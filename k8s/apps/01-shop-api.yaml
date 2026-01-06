@@ -22,13 +22,6 @@ spec:
         env:
         - name: SPRING_DATASOURCE_URL
           value: "jdbc:mysql://mysql-service.shopping-db:3306/shopping_shop?createDatabaseIfNotExist=true"
-        - name: SPRING_DATASOURCE_USERNAME
-          value: "root"
-        - name: SPRING_DATASOURCE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: shopping-secrets
-              key: mysql-root-password
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:
