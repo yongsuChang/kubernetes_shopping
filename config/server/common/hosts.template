@@ -8,11 +8,11 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 
-# Kubernetes Cluster Nodes & Infrastructure
+# Infrastructure & Kubernetes Cluster Nodes
 172.100.100.3 bastion.mall.internal bastion
 172.100.100.4 k8s-master.mall.internal k8s-master
 172.100.100.5 k8s-node1.mall.internal k8s-node1
 172.100.100.6 k8s-node2.mall.internal k8s-node2
-172.100.100.7 admin-server.mall.internal admin-server
+172.100.100.7 k8s-node3.mall.internal k8s-node3
 172.100.100.8 db-server.mall.internal db-server
 172.100.100.9 storage.mall.internal storage
