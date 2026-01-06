@@ -14,8 +14,7 @@
 | **K8s Master** | `k8s-master` | `172.100.100.4` | Kubernetes Control Plane |
 | **K8s Worker 1** | `k8s-node1` | `172.100.100.5` | Worker Node |
 | **K8s Worker 2** | `k8s-node2` | `172.100.100.6` | Worker Node |
-| **Admin Server** | `admin-server` | `172.100.100.7` | Admin API + Nginx (Docker Standalone) |
-| **Database** | `db-server` | `172.100.100.8` | MySQL (Admin API 호스팅 겸용 가능) |
+| **Database** | `db-server` | `172.100.100.8` | MySQL (External Database) |
 | **Storage** | `storage` | `172.100.100.9` | NFS Server |
 
 ---
@@ -198,15 +197,12 @@ sudo systemctl restart nfs-kernel-server
 sudo apt update
 sudo apt install -y mysql-server
 
-# (중략: 보안 설정 및 유저 생성 과정...)
-```
-*참고: K8s 내 앱 접속 시 `k8s/mysql/02-external-mysql.yaml`을 통해 `mysql-master-service`라는 도메인 주소로 접속합니다.*
-
 # 1. 초기 보안 설정 (root 비밀번호 설정 및 보안 강화)
 # Ubuntu 24.04에서는 초기 비밀번호가 없으므로 sudo로 먼저 접속합니다.
 sudo mysql
 
-# --- MySQL 콘솔 내부에서 실행 ---
+# ---
+# MySQL 콘솔 내부에서 실행 ---
 # root 계정의 인증 방식을 비밀번호 기반으로 변경하고 비밀번호를 설정합니다.
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'YourSecureRootPassword';
 FLUSH PRIVILEGES;
@@ -242,6 +238,7 @@ sudo vim /etc/apparmor.d/tunables/alias
 sudo systemctl restart apparmor
 sudo systemctl start mysql
 ```
+*참고: K8s 내 앱 접속 시 `k8s/mysql/02-external-mysql.yaml`을 통해 `mysql-master-service`라는 도메인 주소로 접속합니다.*
 
 ### 4.4 데이터베이스 및 유저 생성
 MySQL에 접속(`mysql -u root -p`)하여 아래 명령어를 실행합니다. (보안을 위해 root는 localhost 접속만 유지하고, 외부 앱용 계정을 별도로 생성합니다.)
@@ -271,7 +268,6 @@ SELECT user, host FROM mysql.user WHERE user = 'admin_user';
 ## ☸️ 5. Phase 4: Kubernetes Cluster Setup
 
 **Master(`100.4`) 및 Worker(`100.5`, `100.6`)** 노드에서 수행합니다.
-**주의**: `172.100.100.7` (Admin Server)는 클러스터에 Join하지 않습니다.
 
 ### 5.1 Container Runtime (Containerd) 설치
 ```bash
@@ -323,6 +319,23 @@ kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/
 ### 5.4 Worker Node Join
 Master 초기화 마지막에 출력된 `kubeadm join ...` 명령어를 각 Worker 노드(`100.5`, `100.6`)에서 실행합니다.
 
+### 5.5 MetalLB (LoadBalancer) 설치 및 설정
+온프레미스 환경에서 `LoadBalancer` 타입의 서비스를 사용하기 위해 MetalLB를 설치합니다.
+
+```bash
+# 1. MetalLB 매니페스트 설치 (공식 가이드 기준)
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.12/config/manifests/metallb-native.yaml
+
+# 2. 설치 완료 대기
+kubectl wait --namespace metallb-system \
+                --for=condition=ready pod \
+                --selector=app=metallb \
+                --timeout=90s
+
+# 3. 가상 IP 주소 풀 및 L2 광고 설정 적용
+kubectl apply -f k8s/base/01-metallb-config.yaml
+```
+
 ---
 
 ## 🚀 6. Phase 5: Application Deployment
@@ -335,75 +348,61 @@ Master 초기화 마지막에 출력된 `kubeadm join ...` 명령어를 각 Work
 kubectl apply -f k8s/base/00-namespaces.yaml
 
 # 2. Secret 생성 (각 네임스페이스별로 필요)
-mkdir -p k8s/secrets
-cp k8s/templates/secrets/*.yaml k8s/secrets/
-
-# 각 파일을 열어 알맞은 Namespace 및 값을 확인/수정 후 적용
-vim k8s/secrets/aws-secret.yaml
-kubectl apply -f k8s/secrets/aws-secret.yaml
+# ... (중략) ...
 
 # 3. 인프라 배포 (MySQL, Storage, Ingress)
-kubectl apply -f k8s/base/01-storage.yaml
+kubectl apply -f k8s/base/02-storage.yaml
 kubectl apply -f k8s/mysql/
-kubectl apply -f k8s/base/02-ingress.yaml
+kubectl apply -f k8s/base/03-ingress.yaml
 
 # 4. 애플리케이션 배포
 kubectl apply -f k8s/apps/
 ```
 
-# 앱 배포 (DB, Backend, Frontend)
-kubectl apply -f k8s/base/
-kubectl apply -f k8s/apps/frontend.yaml
-kubectl apply -f k8s/apps/shop-api.yaml
-# 주의: admin-api.yaml은 K8s에 배포하지 않습니다.
+### 6.2 배포 확인
+*   **Shop (K8s)**: `http://shop.mall.internal` (MetalLB VIP `100.10`으로 연결됨)
+*   **Admin (K8s)**: `http://admin.mall.internal` (MetalLB VIP `100.10`으로 연결됨, 화이트리스트 적용)
+
+---
+
+## 🛡️ 7. Phase 6: Bastion Gateway Setup (Nginx)
+
+보안 강화를 위해 외부 트래픽을 Bastion 서버에서 먼저 받아 K8s 클러스터 내부로 전달합니다.
+
+### 7.1 Bastion Nginx 설치
+```bash
+sudo apt update
+sudo apt install nginx -y
 ```
 
-### 6.2 Admin Server Standalone Deployment (`172.100.100.7`)
-보안 및 망 분리를 위해 Admin API는 별도 서버에서 Docker Compose로 실행합니다.
-
-#### 1. 네트워크 보안 설정 (UFW - 1차 방어선)
-서버 OS 레벨에서 허용된 IP 외의 모든 접근을 원천 차단합니다.
+### 7.2 리버스 프록시 설정
+`shop`, `api`, `admin` 요청을 MetalLB 가상 IP(`172.100.100.10`)로 넘겨줍니다.
 
 ```bash
-# 기본 정책 설정
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-
-# SSH 허용 (반드시 본인 IP나 Bastion IP를 먼저 허용하세요!)
-sudo ufw allow from 172.100.100.3 to any port 22
-
-# HTTP(80) 접근 허용 (Bastion 및 특정 관리자 IP)
-sudo ufw allow from 172.100.100.3 to any port 80
-# sudo ufw allow from <본인_공인_IP> to any port 80
-
-# 방화벽 활성화
-sudo ufw enable
+sudo vim /etc/nginx/sites-available/mall.internal
 ```
 
-#### 2. 코드 배포 및 실행 (Nginx - 2차 방어선)
-Nginx 설정(`deploy_admin/nginx/nginx.conf`)을 통해 정교한 IP 제어 및 Reverse Proxy를 구성합니다.
+**설정 내용:**
+```nginx
+server {
+    listen 80;
+    server_name shop.mall.internal api.mall.internal admin.mall.internal;
+
+    location / {
+        proxy_pass http://172.100.100.10; # MetalLB VIP
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+```
 
 ```bash
-# 1. 코드 배포 (scp 등을 이용해 프로젝트 전체 혹은 deploy_admin 폴더 전송)
-ssh admin
-# (서버 접속 후)
-
-# 2. Docker 설치 (필요 시)
-# sudo apt install docker.io docker-compose-plugin
-
-# 3. 환경 변수 설정 (.env)
-# AWS Parameter Store 연동을 위해 인증 정보를 설정해야 합니다.
-cat <<EOF > .env
-AWS_ACCESS_KEY_ID=YOUR_ACCESS_KEY
-AWS_SECRET_ACCESS_KEY=YOUR_SECRET_KEY
-AWS_REGION=ap-northeast-2
-EOF
-
-# 4. 실행
-cd deploy_admin
-docker compose up -d
+sudo ln -s /etc/nginx/sites-available/mall.internal /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx
 ```
 
-### 6.3 배포 확인
-*   **Shop (K8s)**: `http://shop.mall.internal`
-*   **Admin (Standalone)**: `http://admin.mall.internal` (허용된 IP에서만 접근 가능)
+이제 모든 도메인 기반 요청이 **Bastion(문지기) -> MetalLB(교통정리) -> Ingress(길찾기)**를 거쳐 안전하게 서비스됩니다!
+
+```
