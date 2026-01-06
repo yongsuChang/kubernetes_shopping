@@ -187,16 +187,16 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           TAG: ${{ steps.vars.outputs.VERSION }}
         run: |
-          # docker-compose.test.yml의 이미지를 해당 태그로 변경하여 실행
-          sed -i "s/:test/:$TAG/g" docker-compose.test.yml
-          docker compose -f docker-compose.test.yml pull
-          docker compose -f docker-compose.test.yml up -d
+          # docker-compose.test.yaml의 이미지를 해당 태그로 변경하여 실행
+          sed -i "s/:test/:$TAG/g" docker-compose.test.yaml
+          docker compose -f docker-compose.test.yaml pull
+          docker compose -f docker-compose.test.yaml up -d
 
       - name: Wait for services
         run: |
           echo "Waiting for services to be healthy..."
           sleep 40
-          docker compose -f docker-compose.test.yml ps
+          docker compose -f docker-compose.test.yaml ps
 
       - name: Run E2E Test Script
         run: |
