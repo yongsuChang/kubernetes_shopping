@@ -14,7 +14,7 @@ spec:
     - hard
     - nfsvers=4.1
   nfs:
-    path: /DATA/images
+    path: /mnt/DATA/images
     server: storage.mall.internal
 ---
 apiVersion: v1
@@ -47,7 +47,7 @@ spec:
     - nfsvers=4.1
     - no_root_squash
   nfs:
-    path: /DATA/mysql-slave
+    path: /mnt/DATA/mysql-slave
     server: storage.mall.internal
 ---
 apiVersion: v1

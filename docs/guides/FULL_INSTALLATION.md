@@ -133,7 +133,7 @@ sudo apt update
 sudo apt install -y curl git vim net-tools openssh-server
 
 ### 3.4 데이터 디스크 마운트 (Storage, DB 서버 권장)
-운영체제와 데이터를 분리하기 위해 추가 디스크(예: `/dev/sdb`)를 `/DATA` 디렉토리에 마운트합니다.
+운영체제와 데이터를 분리하기 위해 추가 디스크(예: `/dev/sdb`)를 `/mnt/DATA` 디렉토리에 마운트합니다.
 
 ```bash
 # 1. 디스크 확인
@@ -143,13 +143,13 @@ lsblk  # 추가한 디스크 명칭 확인 (예: sdb)
 sudo mkfs.ext4 /dev/sdb
 
 # 3. 마운트 포인트 생성 및 마운트
-sudo mkdir -p /DATA
-sudo mount /dev/sdb /DATA
+sudo mkdir -p /mnt/DATA
+sudo mount /dev/sdb /mnt/DATA
 
 # 4. 재부팅 시 자동 마운트 설정 (/etc/fstab)
 sudo blkid /dev/sdb  # UUID 복사
 sudo vim /etc/fstab
-# UUID=복사한-UUID  /DATA  ext4  defaults  0  2  추가
+# UUID=복사한-UUID  /mnt/DATA  ext4  defaults  0  2  추가
 ```
 
 ---
@@ -173,19 +173,19 @@ sudo systemctl restart bind9
 ```
 
 ### 4.2 Storage (NFS Server) - `172.100.100.9`
-상품 이미지 공유 스토리지입니다. (앞선 단계에서 `/DATA` 마운트가 완료되었다고 가정합니다.)
+상품 이미지 공유 스토리지입니다. (앞선 단계에서 `/mnt/DATA` 마운트가 완료되었다고 가정합니다.)
 
 ```bash
 sudo apt install nfs-kernel-server -y
 
 # 마운트된 데이터 디스크 내에 공유 디렉토리 생성
-sudo mkdir -p /DATA/images
-sudo chown nobody:nogroup /DATA/images
-sudo chmod 777 /DATA/images
+sudo mkdir -p /mnt/DATA/images
+sudo chown nobody:nogroup /mnt/DATA/images
+sudo chmod 777 /mnt/DATA/images
 
 # /etc/exports 수정
 sudo vim /etc/exports
-# /DATA/images 172.100.100.0/24(rw,sync,no_subtree_check,no_root_squash) 추가
+# /mnt/DATA/images 172.100.100.0/24(rw,sync,no_subtree_check,no_root_squash) 추가
 
 sudo exportfs -ra
 sudo systemctl restart nfs-kernel-server
@@ -223,17 +223,17 @@ sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf
 bind-address = 0.0.0.0
 
 # 데이터 저장 경로 변경 (선택 사항이나 권장)
-datadir = /DATA/mysql
+datadir = /mnt/DATA/mysql
 ```
 
 ```bash
 # 데이터 디렉토리 이동 및 권한 설정
-sudo rsync -av /var/lib/mysql/ /DATA/mysql/
-sudo chown -R mysql:mysql /DATA/mysql
+sudo rsync -av /var/lib/mysql/ /mnt/DATA/mysql/
+sudo chown -R mysql:mysql /mnt/DATA/mysql
 
 # AppArmor 설정 수정 (경로 허용)
 sudo vim /etc/apparmor.d/tunables/alias
-# alias /var/lib/mysql/ -> /DATA/mysql/, 추가
+# alias /var/lib/mysql/ -> /mnt/DATA/mysql/, 추가
 
 sudo systemctl restart apparmor
 sudo systemctl start mysql
