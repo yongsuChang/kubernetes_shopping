@@ -76,6 +76,25 @@ scp config/local/.vimrc_sample db-server:~/.vimrc
 scp config/local/.vimrc_sample storage:~/.vimrc
 ```
 
+### 2.4 Local Client Setup (내 PC 접속 설정)
+브라우저에서 도메인(`shop.mall.internal` 등)으로 접속하기 위해, **작업 중인 로컬 PC**의 hosts 파일을 수정해야 합니다. Bastion 서버가 Gateway 역할을 수행하므로, 모든 도메인을 Bastion IP(`172.100.100.3`)로 매핑합니다.
+
+**Windows:**
+1. 메모장을 **관리자 권한**으로 실행합니다.
+2. `C:\Windows\System32\drivers\etc\hosts` 파일을 엽니다.
+3. 아래 내용을 파일 끝에 추가하고 저장합니다.
+
+**Mac / Linux:**
+터미널에서 아래 명령어를 실행합니다.
+```bash
+sudo vim /etc/hosts
+```
+
+**추가할 내용 (공통):**
+```text
+172.100.100.3  shop.mall.internal api.mall.internal admin.mall.internal
+```
+
 ---
 
 ## 🛠️ 3. Phase 2: Server Common Configuration (모든 노드)
