@@ -16,6 +16,9 @@ services:
       - mysql_data:/var/lib/mysql
 
   admin-api:
+    build:
+      context: ./shopping-backend/admin-api
+      dockerfile: Dockerfile
     image: yongsuchang/shopping-admin-api:test
     container_name: admin-api
     restart: always
@@ -34,6 +37,9 @@ services:
         condition: service_healthy
 
   shop-api:
+    build:
+      context: ./shopping-backend/shop-api
+      dockerfile: Dockerfile
     image: yongsuchang/shopping-shop-api:test
     container_name: shop-api
     restart: always
@@ -54,6 +60,9 @@ services:
         condition: service_healthy
 
   frontend:
+    build:
+      context: ./responsive-react-app
+      dockerfile: Dockerfile
     image: yongsuchang/shopping-frontend:test
     container_name: shopping-frontend
     restart: always

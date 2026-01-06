@@ -60,16 +60,27 @@ kubernetes_shopping/
 
 ## 🚀 빠른 시작 (Local Development)
 
-Docker Compose를 사용하여 로컬에서 즉시 서비스를 실행해 볼 수 있습니다.
+로컬 개발 및 테스트를 위한 두 가지 실행 환경을 제공합니다.
 
-### 전체 시스템 실행
+### 1. 로컬 개발 환경 (작업 중인 코드 즉시 반영)
+현재 PC의 소스 코드를 빌드하여 컨테이너를 실행합니다.
 ```bash
-# 1. 백엔드 빌드
+# 1. 백엔드 빌드 (JAR 생성)
 cd shopping-backend && ./gradlew clean bootJar && cd ..
 
-# 2. Docker 이미지 빌드 및 실행
+# 2. 로컬 빌드 및 실행
 docker compose up -d --build
 ```
+
+### 2. 통합 테스트 환경 (Docker Hub의 :test 이미지 사용)
+`develop` 브랜치에서 CI를 통과하여 Docker Hub에 배포된 최신 `:test` 태그 이미지를 사용하여 실행합니다. (로컬 소스 무시)
+```bash
+# 최신 테스트 이미지로 실행
+docker compose -f docker-compose.test.yaml up -d
+```
+
+---
+
 *   **Frontend**: http://localhost:5173
 *   **Shop API**: http://localhost:8082/swagger-ui/index.html
 *   **Admin API**: http://localhost:8081/swagger-ui/index.html
