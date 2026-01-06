@@ -38,3 +38,4 @@ Thumbs.db
 
 # Local K8s Secrets
 k8s/secrets/
+k8s/mysql/00-init-script.yaml
