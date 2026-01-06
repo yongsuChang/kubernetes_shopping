@@ -167,8 +167,12 @@
 - [x] **DNS 설정 파일 준비**: `dns/named.conf.options`, `dns/db.mall.internal` 작성 완료
 - [x] **K8s 스토리지 연동**: NFS용 PV/PVC 매니페스트(`k8s/base/storage.yaml`) 작성 및 `shop-api` 마운트 설정 완료
 - [x] **Ingress 도메인 라우팅**: `shop.mall.internal`, `api.mall.internal` 기반 라우팅 규칙 정의 (`k8s/base/ingress.yaml`)
-- [ ] **실제 인프라 구축 (사용자 수행)**: Bastion(DNS), Storage(NFS), DB 서버 설정 및 적용
+- [x] **실제 인프라 구축 (사용자 수행)**: Bastion(DNS), Storage(NFS), DB 서버 설정 및 적용 완료
 - [x] **Frontend 배포 설정**: `frontend-service` 및 Deployment 매니페스트 작성 (`k8s/apps/frontend.yaml` 생성 완료)
+- [x] **배포 트러블슈팅 완료**:
+    - `00-init-script.yaml` 템플릿화 및 배포 스크립트 자동 복사 로직 추가
+    - NFS `Retain` 정책으로 인한 DB 초기화 실패 문제 해결 (Cleaner Pod 활용)
+    - AWS Parameter Store 연동을 위한 K8s Manifest 환경변수 우선순위 조정
 
 ---
 
@@ -192,5 +196,5 @@
 
 ---
 
-*최종 업데이트: 2026-01-05*
-* **Resolved Issue (2026-01-05)**: `VendorAccessFilter`가 모든 `/api/v1/shop-admin/vendors/` 경로를 예외 처리하여 Pending 상태의 업체가 상품/주문 관리에 접근할 수 있었던 보안 취약점 수정. `register`와 `me` 엔드포인트만 예외로 허용하도록 변경.
+*최종 업데이트: 2026-01-07*
+* **Resolved Issue (2026-01-07)**: Kubernetes 환경에서 MySQL 초기화 스크립트가 실행되지 않는 문제(NFS 잔여 데이터 원인)를 Cleaner Pod를 통해 해결하고, 배포 스크립트를 개선하여 운영 안정성 확보.
