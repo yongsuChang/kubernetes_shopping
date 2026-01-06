@@ -72,30 +72,42 @@ scp config/local/.vimrc_sample user@172.100.100.3:~/.vimrc
 
 **모든 서버(Bastion ~ Storage)** 에 공통으로 적용해야 하는 설정입니다.
 
-### 3.1 네트워크 설정 (Static IP)
+### 3.1 네트워크 설정 (Static IP & DNS Fix)
 `config/server/common/50-cloud-init.yaml.template` 파일을 참고하여 고정 IP를 할당합니다.
 
 ```bash
-# 각 서버에서 실행
-sudo vim /etc/netplan/00-installer-config.yaml # 또는 50-cloud-init.yaml
+# 1. Netplan 설정 수정
+sudo vim /etc/netplan/00-installer-config.yaml
 ```
 
 **설정 예시 (172.100.100.3 Bastion의 경우):**
 ```yaml
 network:
   ethernets:
-    ens160: # 인터페이스 이름 확인 필요 (ip addr)
+    ens160:
       addresses:
       - 172.100.100.3/24
       nameservers:
         addresses:
+        - 172.100.100.3  # 자기 자신 혹은 Bastion IP
         - 8.8.8.8
       routes:
       - to: default
-        via: 172.100.100.2 # Gateway IP
+        via: 172.100.100.2
   version: 2
 ```
-*Note: 각 서버에 맞는 IP로 변경하여 적용 후 `sudo netplan apply` 실행.*
+
+```bash
+sudo netplan apply
+
+# 2. [중요] DNS 미반영 시 강제 설정 (100.4 ~ 100.7 필수)
+# Ubuntu의 systemd-resolved가 설정을 무시할 경우 아래 명령 실행
+sudo sed -i 's/#DNS=/DNS=172.100.100.3/' /etc/systemd/resolved.conf
+sudo systemctl restart systemd-resolved
+
+# 3. 확인
+nslookup storage.mall.internal  # 172.100.100.9가 나와야 함
+```
 
 ### 3.2 Hostname 및 Hosts 파일 설정
 서버 간 이름으로 통신할 수 있도록 설정합니다.
@@ -179,11 +191,16 @@ sudo vim /etc/exports
 sudo exportfs -ra
 sudo systemctl restart nfs-kernel-server
 ```
+*참고: K8s PV 설정(`k8s/base/01-storage.yaml`) 시 서버 주소를 `storage.mall.internal`로 사용합니다.*
 
 ### 4.3 Database (MySQL) - `172.100.100.8`
 ```bash
 sudo apt update
 sudo apt install -y mysql-server
+
+# (중략: 보안 설정 및 유저 생성 과정...)
+```
+*참고: K8s 내 앱 접속 시 `k8s/mysql/02-external-mysql.yaml`을 통해 `mysql-master-service`라는 도메인 주소로 접속합니다.*
 
 # 1. 초기 보안 설정 (root 비밀번호 설정 및 보안 강화)
 # Ubuntu 24.04에서는 초기 비밀번호가 없으므로 sudo로 먼저 접속합니다.
@@ -230,17 +247,23 @@ sudo systemctl start mysql
 MySQL에 접속(`mysql -u root -p`)하여 아래 명령어를 실행합니다. (보안을 위해 root는 localhost 접속만 유지하고, 외부 앱용 계정을 별도로 생성합니다.)
 
 ```sql
--- 데이터베이스 생성
+-- 1. 데이터베이스 생성
 CREATE DATABASE shopping_admin;
 CREATE DATABASE shopping_shop;
 
--- 애플리케이션용 유저 생성 및 권한 부여 (특정 대역에서만 접속 허용 권장)
--- '172.100.100.%'는 내부망 전체에서 접속 가능함을 의미합니다.
+-- 2. 애플리케이션용 유저 생성 및 권한 부여
+-- '172.100.100.%'는 내부망(K8s 노드들 포함) 전체에서 접속 가능함을 의미합니다.
 CREATE USER 'admin_user'@'172.100.100.%' IDENTIFIED BY 'password';
+
+-- 각 데이터베이스에 대한 권한 할당
 GRANT ALL PRIVILEGES ON shopping_admin.* TO 'admin_user'@'172.100.100.%';
 GRANT ALL PRIVILEGES ON shopping_shop.* TO 'admin_user'@'172.100.100.%';
 
+-- 3. 권한 적용
 FLUSH PRIVILEGES;
+
+-- (선택) 생성된 유저 확인
+SELECT user, host FROM mysql.user WHERE user = 'admin_user';
 ```
 
 ---
