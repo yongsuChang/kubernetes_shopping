@@ -13,6 +13,11 @@ kind: Namespace
 metadata:
   name: shopping-db
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: shopping-admin
+---
 # 각 네임스페이스별로 공통 시크릿 및 설정이 필요할 수 있으므로, 
 # 실제로는 개별 앱 YAML이나 별도 Secret 관리 도구에서 처리하는 것이 좋으나
 # 여기서는 기본 구조를 위해 명시합니다.

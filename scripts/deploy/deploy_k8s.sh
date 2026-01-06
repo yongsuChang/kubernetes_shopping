@@ -23,9 +23,9 @@ fi
 
 # 3. 인프라 배포 (Storage, MySQL, Ingress)
 echo -e "${GREEN}Step 3: 인프라 서비스 배포 (NFS Storage, MySQL, Ingress)${NC}"
-kubectl apply -f k8s/base/01-storage.yaml
+kubectl apply -f k8s/base/02-storage.yaml
 kubectl apply -f k8s/mysql/
-kubectl apply -f k8s/base/02-ingress.yaml
+kubectl apply -f k8s/base/03-ingress.yaml
 
 # 4. 애플리케이션 배포
 echo -e "${GREEN}Step 4: 애플리케이션 배포 (Shop API, Frontend)${NC}"
