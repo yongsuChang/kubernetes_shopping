@@ -23,7 +23,7 @@ spec:
         - name: SPRING_PROFILES_ACTIVE
           value: "prod"
         - name: SPRING_DATASOURCE_URL
-          value: "jdbc:mysql://mysql-master-service.shopping-db:3306/shopping_admin?createDatabaseIfNotExist=true"
+          value: "jdbc:mysql://mysql-service.shopping-db:3306/shopping_admin?createDatabaseIfNotExist=true"
         - name: SPRING_DATASOURCE_USERNAME
           value: "admin_user"
         - name: SPRING_DATASOURCE_PASSWORD
