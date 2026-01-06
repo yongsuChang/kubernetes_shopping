@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+  namespace: shopping-db
+data:
+  my.cnf: |
+    [mysqld]
+    # Server ID must be unique (Master should be 1)
+    server-id=2
+    
+    # Replication Settings
+    relay-log=relay-bin
+    log-bin=mysql-bin
+    binlog_format=ROW
+    
+    # Connectivity
+    bind-address=0.0.0.0

@@ -28,6 +28,11 @@ if [ ! -f "k8s/mysql/00-init-script.yaml" ]; then
     echo -e "❗  주의: k8s/mysql/00-init-script.yaml 파일을 열어 실제 비밀번호로 수정해주세요."
 fi
 
+if [ ! -f "k8s/mysql/01-mysql-config.yaml" ]; then
+    echo -e "⚠️  k8s/mysql/01-mysql-config.yaml 파일이 없습니다. 템플릿에서 복사합니다."
+    cp k8s/templates/mysql/01-mysql-config.yaml k8s/mysql/01-mysql-config.yaml
+fi
+
 # 3. 인프라 배포 (Storage, MySQL, Ingress)
 echo -e "${GREEN}Step 3: 인프라 서비스 배포 (NFS Storage, MySQL, Ingress)${NC}"
 kubectl apply -f k8s/base/02-storage.yaml
