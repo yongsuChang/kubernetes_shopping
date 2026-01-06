@@ -21,7 +21,7 @@ spec:
         - containerPort: 8082
         env:
         - name: SPRING_DATASOURCE_URL
-          value: "jdbc:mysql://mysql-service.shopping-db:3306/shopping_shop?createDatabaseIfNotExist=true"
+          value: "jdbc:mysql://mysql-master-service.shopping-db:3306/shopping_shop?createDatabaseIfNotExist=true"
         - name: SPRING_DATASOURCE_USERNAME
           value: "root"
         - name: SPRING_DATASOURCE_PASSWORD

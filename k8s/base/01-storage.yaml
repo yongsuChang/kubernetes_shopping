@@ -14,8 +14,8 @@ spec:
     - hard
     - nfsvers=4.1
   nfs:
-    path: /export/images
-    server: 172.100.100.9
+    path: /DATA/images
+    server: storage.mall.internal
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -47,8 +47,8 @@ spec:
     - nfsvers=4.1
     - no_root_squash
   nfs:
-    path: /export/mysql
-    server: 172.100.100.9
+    path: /DATA/mysql-slave
+    server: storage.mall.internal
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
