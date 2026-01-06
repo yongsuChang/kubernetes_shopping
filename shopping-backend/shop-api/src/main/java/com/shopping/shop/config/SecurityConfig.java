@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/v1/shop/images/**").permitAll() // 이미지 최우선 허용
                 .requestMatchers(HttpMethod.GET, "/api/v1/shop/products/**").permitAll()
                 .requestMatchers("/api/v1/health/**").permitAll()
-                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").hasAuthority("ROLE_SUPER_ADMIN")
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .requestMatchers("/api/v1/shop-admin/**").hasAuthority("ROLE_SHOP_ADMIN")
                 .requestMatchers("/api/v1/shop/**").hasAnyAuthority("ROLE_USER", "ROLE_SHOP_ADMIN")
                 .anyRequest().authenticated()

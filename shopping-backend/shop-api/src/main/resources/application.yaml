@@ -26,7 +26,7 @@ upload:
   path: /app/uploads/images
  
 jwt:
-  secret: ${jwt.secret}
-  expiration: 86400000 # 24 hours
+  secret: ${jwt.secret:v9y$B&E)H@McQfTjWnZr4u7x!A%C*F-JaNdRgUkXp2s5v8y/B?E(G+KbPeShVmYq}
+  expiration: 3600000 # 1 hour
 cors:
   allowed-origins: "http://localhost,http://localhost:80,http://localhost:5173,http://127.0.0.1:5173"

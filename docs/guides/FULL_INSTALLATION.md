@@ -361,6 +361,28 @@ kubectl apply -f k8s/apps/shop-api.yaml
 ### 6.2 Admin Server Standalone Deployment (`172.100.100.7`)
 보안 및 망 분리를 위해 Admin API는 별도 서버에서 Docker Compose로 실행합니다.
 
+#### 1. 네트워크 보안 설정 (UFW - 1차 방어선)
+서버 OS 레벨에서 허용된 IP 외의 모든 접근을 원천 차단합니다.
+
+```bash
+# 기본 정책 설정
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+# SSH 허용 (반드시 본인 IP나 Bastion IP를 먼저 허용하세요!)
+sudo ufw allow from 172.100.100.3 to any port 22
+
+# HTTP(80) 접근 허용 (Bastion 및 특정 관리자 IP)
+sudo ufw allow from 172.100.100.3 to any port 80
+# sudo ufw allow from <본인_공인_IP> to any port 80
+
+# 방화벽 활성화
+sudo ufw enable
+```
+
+#### 2. 코드 배포 및 실행 (Nginx - 2차 방어선)
+Nginx 설정(`deploy_admin/nginx/nginx.conf`)을 통해 정교한 IP 제어 및 Reverse Proxy를 구성합니다.
+
 ```bash
 # 1. 코드 배포 (scp 등을 이용해 프로젝트 전체 혹은 deploy_admin 폴더 전송)
 ssh admin
