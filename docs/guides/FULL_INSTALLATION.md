@@ -344,6 +344,18 @@ kubectl wait --namespace metallb-system \
 kubectl apply -f ~/k8s/base/01-metallb-config.yaml
 ```
 
+### 5.6 NGINX Ingress Controller 설치 [Master 노드에서 실행]
+```bash
+# 1. 설치 매니페스트 적용 (Bare-metal 용)
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/baremetal/deploy.yaml
+
+# 2. Ingress Controller 서비스를 LoadBalancer 타입으로 변경 (MetalLB와 연동)
+kubectl patch service ingress-nginx-controller -n ingress-nginx -p '{"spec": {"type": "LoadBalancer"}}'
+
+# 3. 설치 확인 (EXTERNAL-IP 할당 대기)
+kubectl get svc -n ingress-nginx
+```
+
 ---
 
 ## 🚀 6. Phase 5: Application Deployment [Master 노드에서 실행]

@@ -4,8 +4,6 @@ kind: Ingress
 metadata:
   name: frontend-ingress
   namespace: shopping-frontend
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: nginx
   rules:
@@ -26,8 +24,6 @@ kind: Ingress
 metadata:
   name: shop-api-ingress
   namespace: shopping-backend
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: nginx
   rules:
@@ -49,7 +45,6 @@ metadata:
   name: admin-api-ingress
   namespace: shopping-admin
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
     # 특정 IP/대역만 허용 (예: "Bastion_IP,사무실_공인_IP,VPN_대역")
     # 예시: "172.100.100.3/32, 211.xxx.xxx.xxx/32, 10.0.0.0/8"
     nginx.ingress.kubernetes.io/whitelist-source-range: "172.100.100.0/24"
