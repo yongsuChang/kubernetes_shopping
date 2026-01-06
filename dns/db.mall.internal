@@ -1,6 +1,6 @@
 $TTL    604800
 @       IN      SOA     bastion.mall.internal. root.mall.internal. (
-                              3         ; Serial (Incremented)
+                              4         ; Serial (Incremented)
                          604800         ; Refresh
                           86400         ; Retry
                         2419200         ; Expire
@@ -17,15 +17,10 @@ admin-server IN      A       172.100.100.7
 db-server    IN      A       172.100.100.8
 storage      IN      A       172.100.100.9
 
-; Service Aliases (CNAMEs)
-master       IN      CNAME   k8s-master
-admin        IN      CNAME   admin-server
-db           IN      CNAME   db-server
-nfs          IN      CNAME   storage
+; Kubernetes Ingress (MetalLB VIP)
 
-; Kubernetes Ingress (Round Robin to Worker Nodes)
-shop         IN      A       172.100.100.5
-shop         IN      A       172.100.100.6
+shop         IN      A       172.100.100.10
 
-api          IN      A       172.100.100.5
-api          IN      A       172.100.100.6
+api          IN      A       172.100.100.10
+
+admin        IN      A       172.100.100.10

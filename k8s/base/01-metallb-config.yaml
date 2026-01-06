@@ -1,0 +1,17 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: mall-ip-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 172.100.100.10-172.100.100.20 # 가상 IP 범위
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: mall-l2-ad
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+  - mall-ip-pool
