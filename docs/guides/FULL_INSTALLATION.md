@@ -276,13 +276,12 @@ sudo systemctl start mysql
 
 ### 4.4 데이터베이스 및 유저 생성 [DB 서버 MySQL 콘솔]
 ```sql
-CREATE DATABASE shopping_admin;
-CREATE DATABASE shopping_shop;
+-- 통합 데이터베이스 생성
+CREATE DATABASE shopping_db;
 
 -- 내부망 전체('172.100.100.%')에서의 접속을 허용하는 유저 생성
 CREATE USER 'admin_user'@'172.100.100.%' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES ON shopping_admin.* TO 'admin_user'@'172.100.100.%';
-GRANT ALL PRIVILEGES ON shopping_shop.* TO 'admin_user'@'172.100.100.%';
+GRANT ALL PRIVILEGES ON shopping_db.* TO 'admin_user'@'172.100.100.%';
 FLUSH PRIVILEGES;
 ```
 
