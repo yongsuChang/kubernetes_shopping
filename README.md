@@ -38,9 +38,11 @@ kubernetes_shopping/
 
 ├── docs/               # 프로젝트 문서 (기획, 가이드, 아키텍처)
 
-├── k8s/                # Kubernetes 배포 매니페스트 (Apps, Base, MySQL 등)
+├── k8s/                # Kubernetes 배포 매니페스트 (상세 설계: [k8s/README.md](./k8s/README.md))
 
 ├── responsive-react-app/ # Frontend (React + TypeScript + Vite)
+
+
 
 ├── shopping-backend/     # Backend (Spring Boot Multi-module)
 
