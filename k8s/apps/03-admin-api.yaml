@@ -23,7 +23,12 @@ spec:
         - name: SPRING_PROFILES_ACTIVE
           value: "prod"
         - name: SPRING_DATASOURCE_URL
-          value: "jdbc:mysql://172.100.100.8:3306/shopping_admin?createDatabaseIfNotExist=true"
+          value: "jdbc:mysql://172.100.100.8:3306/shopping_db?createDatabaseIfNotExist=true"
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: shopping-secrets
+              key: jwt-secret
         # AWS Parameter Store Configuration
         - name: AWS_ACCESS_KEY_ID
           valueFrom:

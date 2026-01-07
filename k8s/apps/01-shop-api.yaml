@@ -21,7 +21,7 @@ spec:
         - containerPort: 8082
         env:
         - name: SPRING_DATASOURCE_URL
-          value: "jdbc:mysql://172.100.100.8:3306/shopping_shop?createDatabaseIfNotExist=true"
+          value: "jdbc:mysql://172.100.100.8:3306/shopping_db?createDatabaseIfNotExist=true"
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:
