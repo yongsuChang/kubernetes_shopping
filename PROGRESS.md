@@ -195,7 +195,13 @@
 - [ ] **데이터 백업 전략**:
     - [ ] MySQL 데이터베이스 일일 백업 스크립트 작성 및 자동화 (Cron)
     - [ ] NFS 스토리지 이미지 데이터 백업 방안 마련
-- [ ] **모니터링 시스템 구축**: 로깅(ELK) 및 메트릭 수집(Prometheus, Grafana) 시스템 통합
+
+### Phase 4: Monitoring & Logging
+- [ ] Resource consumption research
+- [ ] Prometheus + Grafana setup
+- [ ] Loki (PLG Stack) setup (Replaced ELK for resource efficiency)
+- [ ] Alerting rules (Slack/Email)
+- [ ] Dashboarding for business metrics
 
 
 
