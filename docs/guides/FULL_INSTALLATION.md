@@ -329,10 +329,38 @@ FLUSH PRIVILEGES;
 *   상태 확인: `SHOW SLAVE STATUS\G` (IO/SQL Running이 Yes여야 함)
 
 #### 💡 복제 트러블슈팅 (Troubleshooting)
-*   **Authentication Error**: `caching_sha2_password` 관련 에러 발생 시 `CHANGE MASTER` 문에 `GET_MASTER_PUBLIC_KEY=1`을 반드시 추가하세요.
-*   **Server ID Conflict**: Master와 Slave의 ID가 같으면(둘 다 1인 경우) 복제가 중단됩니다. `mysql-config` ConfigMap이 `shopping-db` 네임스페이스에 정상적으로 생성되었는지(`kubectl get cm -n shopping-db`) 확인하세요.
-*   **Metadata Error (1872)**: 복제 설정이 꼬여서 시작되지 않을 경우 `STOP SLAVE; RESET SLAVE ALL;`을 실행하여 설정을 완전히 초기화한 후 다시 `CHANGE MASTER`를 시도하세요.
+... (생략) ...
 *   **데이터 누락**: 특정 시점 이전의 데이터가 보이지 않는다면, `MASTER_LOG_POS`를 테이블 생성 시점의 포지션으로 되돌려(`CHANGE MASTER TO MASTER_LOG_POS=...`) 다시 시작하세요.
+
+### 4.6 데이터 백업 자동화 (Database Backup)
+데이터 유실에 대비하여 Master DB를 매일 자동으로 백업하고 관리합니다.
+
+**1. 인증 정보 설정 (Master DB 서버)**
+비밀번호 입력 없이 백업이 가능하도록 설정합니다.
+```bash
+vim ~/.my.cnf
+# [client]
+# user=root
+# password=YourPassword
+chmod 600 ~/.my.cnf
+```
+
+**2. 백업 스크립트 작성**
+`/usr/local/bin/db-backup.sh` 파일을 생성하고 실행 권한을 부여합니다.
+```bash
+#!/bin/bash
+BACKUP_DIR="/mnt/DATA/backups"
+DATE=$(date +%Y%m%d)
+mysqldump shopping_db | gzip > $BACKUP_DIR/shopping_db_$DATE.sql.gz
+find $BACKUP_DIR -type f -mtime +7 -delete
+```
+
+**3. Cron 작업 등록**
+매일 새벽 2시에 백업을 수행하도록 등록합니다.
+```bash
+sudo crontab -e
+# 0 2 * * * /usr/local/bin/db-backup.sh
+```
 
 > **참고: 파드 재시작 시 설정 유지**
 > Kubernetes의 MySQL은 `/var/lib/mysql` 경로를 PVC(NFS/Local 등)에 저장하므로, 파드가 재시작되거나 노드가 변경되어도 복제 설정(Master 정보 및 현재 진행 포지션)은 자동으로 유지됩니다. 별도의 추가 작업 없이도 파드 가동 시 복제가 자동으로 재개됩니다.
