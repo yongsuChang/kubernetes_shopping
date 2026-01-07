@@ -16,3 +16,6 @@ ff02::2 ip6-allrouters
 172.100.100.7 k8s-node3.mall.internal k8s-node3
 172.100.100.8 db-server.mall.internal db-server
 172.100.100.9 storage.mall.internal storage
+
+# Application Services
+172.100.100.3 shop.mall.internal api.mall.internal admin.mall.internal
