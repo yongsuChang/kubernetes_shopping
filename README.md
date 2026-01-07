@@ -28,27 +28,35 @@
 
 
 
-```
+```text
 
 kubernetes_shopping/
 
-├── config/             # 로컬 및 서버 공통 설정 템플릿 (.vimrc, netplan, hosts 등)
+├── config/             # 로컬 및 서버 공통 설정 템플릿 (.vimrc, ssh_config 등)
 
-├── deploy_admin/       # Admin Server 독립 배포 설정 (Docker Compose + Nginx)
+├── dns/                # 내부 도메인 관리를 위한 BIND9 설정 (db.mall.internal 등)
 
 ├── docs/               # 프로젝트 문서 (기획, 가이드, 아키텍처)
 
 ├── k8s/                # Kubernetes 배포 매니페스트 (상세 설계: [k8s/README.md](./k8s/README.md))
 
+├── logs/               # 애플리케이션 및 시스템 로그 보관
+
 ├── responsive-react-app/ # Frontend (React + TypeScript + Vite)
 
+├── scripts/            # 운영 및 관리를 위한 자동화 스크립트 (deploy, cleanup, db)
 
+├── shopping-backend/     # Backend (Spring Boot Multi-module: admin, shop, common)
 
-├── shopping-backend/     # Backend (Spring Boot Multi-module)
+├── uploads/            # 상품 이미지 등 영구 저장 파일 (NFS 연동)
 
-└── docker-compose.yaml   # 로컬 개발용 통합 실행 환경
+├── docker-compose.yaml   # 로컬 개발용 통합 실행 환경
+
+└── api_test_script.py    # API 기능 테스트 스크립트
 
 ```
+
+
 
 
 
