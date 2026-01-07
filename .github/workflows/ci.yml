@@ -3,12 +3,20 @@ name: CI Pipeline
 on:
   push:
     branches: [ main, develop ]
-    paths-ignore:
-      - '**.md'
+    paths:
+      - 'responsive-react-app/**'
+      - 'shopping-backend/**'
+      - 'api_test_script.py'
+      - 'docker-compose.test.yaml'
+      - '.github/workflows/ci.yml'
   pull_request:
     branches: [ main, develop ]
-    paths-ignore:
-      - '**.md'
+    paths:
+      - 'responsive-react-app/**'
+      - 'shopping-backend/**'
+      - 'api_test_script.py'
+      - 'docker-compose.test.yaml'
+      - '.github/workflows/ci.yml'
 
 permissions:
   contents: write
