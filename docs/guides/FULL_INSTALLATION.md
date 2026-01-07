@@ -277,6 +277,39 @@ GRANT ALL PRIVILEGES ON shopping_shop.* TO 'admin_user'@'172.100.100.%';
 FLUSH PRIVILEGES;
 ```
 
+### 4.5 MySQL Master-Slave 복제 구성 (선택 사항)
+외부 서버(`172.100.100.8`)를 **Master**로, Kubernetes 내부의 MySQL을 **Slave**로 설정하여 데이터 가용성을 확보합니다.
+
+**1. Master 설정 (`172.100.100.8`)**
+*   `/etc/mysql/mysql.conf.d/mysqld.cnf` 수정:
+    ```ini
+    [mysqld]
+    server-id = 1
+    log-bin = mysql-bin
+    binlog_format = ROW
+    ```
+*   `sudo systemctl restart mysql`
+*   복제 계정 생성 및 포지션 확인:
+    ```sql
+    CREATE USER 'repl_user'@'172.100.100.%' IDENTIFIED BY 'repl_password';
+    GRANT REPLICATION SLAVE ON *.* TO 'repl_user'@'172.100.100.%';
+    SHOW MASTER STATUS; -- File과 Position 값 기록
+    ```
+
+**2. Slave 설정 (Kubernetes)**
+*   K8s MySQL 파드 접속: `kubectl exec -it <mysql-pod-name> -n shopping-db -- mysql -u root -p`
+*   복제 시작:
+    ```sql
+    CHANGE MASTER TO
+      MASTER_HOST='172.100.100.8',
+      MASTER_USER='repl_user',
+      MASTER_PASSWORD='repl_password',
+      MASTER_LOG_FILE='[Master에서 확인한 File]',
+      MASTER_LOG_POS=[Master에서 확인한 Position];
+    START SLAVE;
+    ```
+*   상태 확인: `SHOW SLAVE STATUS\G` (IO/SQL Running이 Yes여야 함)
+
 ---
 
 ## ☸️ 5. Phase 4: Kubernetes Cluster Setup
@@ -397,3 +430,48 @@ sudo apt install nginx -y
 
 sudo systemctl restart nginx
 ```
+
+---
+
+## 🔧 8. Phase 7: Cluster Maintenance & Troubleshooting
+
+### 8.1 최신 애플리케이션 이미지 반영
+애플리케이션을 업데이트하고 Docker Hub에 동일한 `latest` 태그로 푸시한 경우, Kubernetes 노드는 기존 캐시된 이미지를 사용할 수 있습니다. 이를 방지하고 항상 최신본을 가져오려면 다음 설정을 확인하세요.
+
+**1. 매니페스트 설정 (`k8s/apps/*.yaml`)**
+`imagePullPolicy`가 `Always`로 설정되어 있어야 합니다.
+```yaml
+spec:
+  containers:
+  - name: my-app
+    image: my-repo/my-app:latest
+    imagePullPolicy: Always
+```
+
+**2. 강제 재시작 (Rollout Restart)**
+설정 변경 후 또는 이미지를 강제로 새로고침하려면 아래 명령어를 사용합니다.
+```bash
+kubectl rollout restart deployment shop-api -n shopping-backend
+kubectl rollout restart deployment frontend -n shopping-frontend
+kubectl rollout restart deployment admin-api -n shopping-admin
+```
+
+### 8.2 노드/VM 재부팅 후 파드 종료 안 됨 (Terminating Stuck)
+VM이나 물리 노드를 재부팅한 후, 특정 파드가 `Terminating` 상태에서 계속 멈춰 있고 `FailedKillPod` 오류가 발생하는 경우가 있습니다. 이는 CNI(Calico)가 API 서버와 일시적으로 통신이 끊겨 네트워크 정리를 완료하지 못했기 때문입니다.
+
+**해결 방법 (강제 삭제):**
+```bash
+# 1. 멈춰 있는 파드 확인
+kubectl get pods -A | grep Terminating
+
+# 2. 강제 삭제 실행 (--grace-period=0 --force)
+kubectl delete pod <POD_NAME> -n <NAMESPACE> --grace-period=0 --force
+```
+
+### 8.3 프론트엔드 API 호출 오류 (localhost 호출 문제)
+브라우저에서 API 호출 시 `http://localhost:8082...`로 요청을 보내며 CORS 에러가 난다면, 이는 프론트엔드 빌드 시점에 환경 변수(`VITE_SHOP_API_URL`)가 제대로 주입되지 않은 것입니다.
+
+*   **체크리스트**:
+    1.  `responsive-react-app/.env` 파일의 URL이 `http://api.mall.internal`인지 확인.
+    2.  `.gitignore`에 의해 `.env`가 Docker 빌드 과정에서 누락되지 않았는지 확인.
+    3.  수정 후에는 반드시 **이미지를 다시 빌드/푸시**하고 `rollout restart`를 수행해야 합니다.
