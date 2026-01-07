@@ -168,6 +168,7 @@
 - [x] **K8s 스토리지 연동**: NFS용 PV/PVC 매니페스트(`k8s/base/storage.yaml`) 작성 및 `shop-api` 마운트 설정 완료
 - [x] **Ingress 도메인 라우팅**: `shop.mall.internal`, `api.mall.internal` 기반 라우팅 규칙 정의 (`k8s/base/ingress.yaml`)
 - [x] **실제 인프라 구축 (사용자 수행)**: Bastion(DNS), Storage(NFS), DB 서버 설정 및 적용 완료
+- [x] **MySQL Master-Slave 복제 구성**: 외부 서버(Master)와 K8s 내부(Slave) 간의 실시간 동기화 구축 완료
 - [x] **Frontend 배포 설정**: `frontend-service` 및 Deployment 매니페스트 작성 (`k8s/apps/frontend.yaml` 생성 완료)
 - [x] **배포 트러블슈팅 완료**:
     - `00-init-script.yaml` 템플릿화 및 배포 스크립트 자동 복사 로직 추가
@@ -184,6 +185,9 @@
 
 ## 📝 별도 TODO (추후 검토)
 
+- [ ] **DB 성능 및 가용성 고도화**:
+    - [ ] **Read/Write Splitting 구현**: `shop-api`에서 MySQL Replication Driver를 사용하여 쓰기는 Master(172.100.100.8), 읽기는 Slave(mysql-service)로 분산 처리
+    - [ ] **GTID 기반 복제 전환**: 파일 포지션 방식에서 GTID 방식으로 전환하여 복제 안정성 강화
 - [ ] **K8s 장애 대응 고도화**:
     - [ ] 모든 Deployment에 `LivenessProbe` 및 `ReadinessProbe` 적용 (상태 체크 자동화)
     - [ ] 노드 장애 시 파드 재배치 전략(Pod Anti-Affinity) 최적화

@@ -16,3 +16,12 @@ data:
     
     # Connectivity
     bind-address=0.0.0.0
+
+
+CHANGE MASTER TO
+  MASTER_HOST='172.100.100.8',
+  MASTER_USER='repl_user',
+  MASTER_PASSWORD='repl12345',
+  MASTER_LOG_FILE='mysql-bin.000031',
+  MASTER_LOG_POS=1281,
+  GET_MASTER_PUBLIC_KEY=1;
