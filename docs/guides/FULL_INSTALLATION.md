@@ -211,12 +211,19 @@ sudo chown nobody:nogroup /mnt/DATA/images /mnt/DATA/mysql-slave
 sudo chmod 777 /mnt/DATA/images /mnt/DATA/mysql-slave
 
 # 2. 공유 설정 (/etc/exports)
-# 아래 내용 추가:
-# /mnt/DATA/images      172.100.100.0/24(rw,sync,no_subtree_check,no_root_squash)
-# /mnt/DATA/mysql-slave 172.100.100.0/24(rw,sync,no_subtree_check,no_root_squash)
+# 아래와 같이 실제 마운트가 필요한 K8s Worker 노드 IP만 명시하는 것을 권장합니다.
+# /mnt/DATA/images      172.100.100.5(rw,sync,no_subtree_check,no_root_squash) 172.100.100.6(rw,sync,no_subtree_check,no_root_squash) 172.100.100.7(rw,sync,no_subtree_check,no_root_squash)
 
 sudo exportfs -ra
 sudo systemctl restart nfs-kernel-server
+
+# 3. 보안 설정 (UFW 방화벽)
+sudo ufw default deny incoming
+sudo ufw allow from 172.100.100.0/24 to any port 22
+sudo ufw allow from 172.100.100.5 to any port 2049
+sudo ufw allow from 172.100.100.6 to any port 2049
+sudo ufw allow from 172.100.100.7 to any port 2049
+sudo ufw enable
 ```
 
 ### 4.3 Database (MySQL) - `172.100.100.8` [DB Server에서 실행]
