@@ -4,7 +4,7 @@ metadata:
   name: admin-api
   namespace: shopping-admin
 spec:
-  replicas: 1 # 관리용이므로 1개로 시작 (필요 시 증설)
+  replicas: 2
   selector:
     matchLabels:
       app: admin-api
@@ -23,7 +23,7 @@ spec:
         - name: SPRING_PROFILES_ACTIVE
           value: "prod"
         - name: SPRING_DATASOURCE_URL
-          value: "jdbc:mysql://172.100.100.8:3306/shopping_db?createDatabaseIfNotExist=true"
+          value: "jdbc:mysql://mysql-master-service.shopping-db:3306/shopping_db?createDatabaseIfNotExist=true"
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:
