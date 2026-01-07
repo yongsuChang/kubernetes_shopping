@@ -163,13 +163,14 @@
 
 ### 🏢 온프레미스 인프라 구축 (On-Premise Infrastructure)
 - [x] **수동 설정 가이드 작성**: [FULL_INSTALLATION.md](./docs/guides/FULL_INSTALLATION.md) 생성 완료
-- [x] **기존 문서 정리**: `MANUAL_SETUP.md` 통합 및 삭제 (-> FULL_INSTALLATION.md)
-- [x] **DNS 설정 파일 준비**: `dns/named.conf.options`, `dns/db.mall.internal` 작성 완료
-- [x] **K8s 스토리지 연동**: NFS용 PV/PVC 매니페스트(`k8s/base/storage.yaml`) 작성 및 `shop-api` 마운트 설정 완료
-- [x] **Ingress 도메인 라우팅**: `shop.mall.internal`, `api.mall.internal` 기반 라우팅 규칙 정의 (`k8s/base/ingress.yaml`)
-- [x] **실제 인프라 구축 (사용자 수행)**: Bastion(DNS), Storage(NFS), DB 서버 설정 및 적용 완료
 - [x] **MySQL Master-Slave 복제 구성**: 외부 서버(Master)와 K8s 내부(Slave) 간의 실시간 동기화 구축 완료
-- [x] **Frontend 배포 설정**: `frontend-service` 및 Deployment 매니페스트 작성 (`k8s/apps/frontend.yaml` 생성 완료)
+- [x] **데이터베이스 통합**: `shopping_shop`, `shopping_admin`을 `shopping_db`로 통합하여 데이터 연동성 확보
+- [x] **NFS 보안 강화**: UFW 및 IP 제한을 통한 스토리지 보호 설정 완료
+- [x] **CI/CD 최적화**: 애플리케이션 변경 시에만 작동하도록 `paths` 필터 적용
+
+### 🛠️ 데이터베이스 및 백엔드
+- [x] **데이터 백업 자동화**: `tar.gz` 기반 일일 백업 스크립트 및 Cron 등록 완료
+- [x] **보안 강화**: Swagger UI 접근 권한 제한 (ROLE_SUPER_ADMIN / Authenticated)
 - [x] **배포 트러블슈팅 완료**:
     - `00-init-script.yaml` 템플릿화 및 배포 스크립트 자동 복사 로직 추가
     - NFS `Retain` 정책으로 인한 DB 초기화 실패 문제 해결 (Cleaner Pod 활용)
