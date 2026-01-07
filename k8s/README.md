@@ -72,5 +72,31 @@ Bastion 서버의 BIND9을 통해 프로젝트 내부 도메인을 관리합니�
 
 ---
 
+## 🛡️ 보안 정책 (Security Hardening)
+
+### 1. 호스트 방화벽 (UFW)
+각 노드는 최소 권한 원칙에 따라 필요한 포트만 개방합니다.
+- **Storage/DB**: K8s 워커 노드 IP에 대해서만 NFS(2049) 및 MySQL(3306) 포트 허용
+- **Bastion**: 외부 포트(80, 443) 개방 및 내부망 SSH 터널링 허용
+
+### 2. 네트워크 제한
+- **NFS Exports**: `/etc/exports` 설정을 통해 지정된 Worker Node IP가 아니면 마운트가 불가능하도록 제한
+- **Ingress Whitelist**: `admin.mall.internal`과 같은 민감한 경로는 특정 대역(172.100.100.0/24)에서만 접근 가능하도록 설정
+
+---
+
+## 🛠️ 유지관리 및 백업 (Maintenance & Backup)
+
+### 1. 자동화된 DB 백업
+Master DB(`172.100.100.8`)에서 매일 새벽 자동으로 백업을 수행합니다.
+- **주기**: 매일 02:00 (Cron 작업)
+- **대상**: `shopping_db` 전체 스키마 및 데이터
+- **보관**: 최신 7일간의 백업을 `.tar.gz` 형태로 보관
+
+### 2. 복제 모니터링
+Slave DB(K8s 내부)는 Master의 바이너리 로그를 실시간 추적합니다. 파드 재시작 시에도 PVC를 통해 복제 포지션이 유지됩니다.
+
+---
+
 ## 🚀 시작하기
 상세한 설치 및 구축 과정은 [FULL_INSTALLATION.md](../docs/guides/FULL_INSTALLATION.md) 가이드를 참고하세요.
