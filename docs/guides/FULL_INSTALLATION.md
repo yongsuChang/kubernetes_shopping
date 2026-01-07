@@ -336,23 +336,34 @@ FLUSH PRIVILEGES;
 데이터 유실에 대비하여 Master DB를 매일 자동으로 백업하고 관리합니다.
 
 **1. 인증 정보 설정 (Master DB 서버)**
-비밀번호 입력 없이 백업이 가능하도록 설정합니다.
+`mysqldump`가 비밀번호 입력 없이 실행될 수 있도록 **MySQL root 계정** 정보를 설정합니다.
 ```bash
 vim ~/.my.cnf
 # [client]
 # user=root
-# password=YourPassword
+# password=Your_MySQL_Root_Password (주의: 시스템 비밀번호가 아님)
 chmod 600 ~/.my.cnf
 ```
 
 **2. 백업 스크립트 작성**
-`/usr/local/bin/db-backup.sh` 파일을 생성하고 실행 권한을 부여합니다.
+`/usr/local/bin/db-backup.sh` 파일을 생성하고 실행 권한을 부여합니다. `tar`를 사용하여 압축률이 높은 `.tar.gz` 아카이브를 생성합니다.
 ```bash
 #!/bin/bash
 BACKUP_DIR="/mnt/DATA/backups"
-DATE=$(date +%Y%m%d)
-mysqldump shopping_db | gzip > $BACKUP_DIR/shopping_db_$DATE.sql.gz
-find $BACKUP_DIR -type f -mtime +7 -delete
+DATE=$(date +%Y%m%d_%H%M%S)
+DB_NAME="shopping_db"
+
+mkdir -p $BACKUP_DIR
+
+# 1. SQL 덤프 생성 후 tar.gz 압축
+mysqldump $DB_NAME > $BACKUP_DIR/${DB_NAME}_$DATE.sql
+tar -czf $BACKUP_DIR/${DB_NAME}_$DATE.tar.gz -C $BACKUP_DIR ${DB_NAME}_$DATE.sql
+
+# 2. 원본 SQL 파일 삭제
+rm $BACKUP_DIR/${DB_NAME}_$DATE.sql
+
+# 3. 7일이 지난 백업 파일 자동 삭제
+find $BACKUP_DIR -type f -name "*.tar.gz" -mtime +7 -delete
 ```
 
 **3. Cron 작업 등록**
