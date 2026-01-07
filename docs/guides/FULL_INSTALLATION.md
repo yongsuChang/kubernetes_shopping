@@ -297,7 +297,17 @@ FLUSH PRIVILEGES;
     ```
 
 **2. Slave 설정 (Kubernetes)**
-*   K8s MySQL 파드 접속: `kubectl exec -it <mysql-pod-name> -n shopping-db -- mysql -u root -p`
+*   ConfigMap 적용 (Server ID=2 설정 포함):
+    ```bash
+    kubectl apply -f k8s/mysql/01-mysql-config.yaml
+    kubectl rollout restart deployment mysql -n shopping-db
+    ```
+*   K8s MySQL 파드 접속 및 설정 상태 확인:
+    ```bash
+    kubectl exec -it <mysql-pod-name> -n shopping-db -- mysql -u root -p
+    # Server ID가 2인지 확인 (1이면 설정 마운트 실패)
+    SHOW VARIABLES LIKE 'server_id';
+    ```
 *   복제 시작:
     ```sql
     CHANGE MASTER TO
@@ -305,12 +315,19 @@ FLUSH PRIVILEGES;
       MASTER_USER='repl_user',
       MASTER_PASSWORD='repl_password',
       MASTER_LOG_FILE='[Master에서 확인한 File]',
-      MASTER_LOG_POS=[Master에서 확인한 Position];
+      MASTER_LOG_POS=[Master에서 확인한 Position],
+      GET_MASTER_PUBLIC_KEY=1; -- MySQL 8.0 인증 오류 방지 필수
     START SLAVE;
     ```
 *   상태 확인: `SHOW SLAVE STATUS\G` (IO/SQL Running이 Yes여야 함)
 
-> **💡 참고: 파드 재시작 시 설정 유지**
+#### 💡 복제 트러블슈팅 (Troubleshooting)
+*   **Authentication Error**: `caching_sha2_password` 관련 에러 발생 시 `CHANGE MASTER` 문에 `GET_MASTER_PUBLIC_KEY=1`을 반드시 추가하세요.
+*   **Server ID Conflict**: Master와 Slave의 ID가 같으면(둘 다 1인 경우) 복제가 중단됩니다. `mysql-config` ConfigMap이 `shopping-db` 네임스페이스에 정상적으로 생성되었는지(`kubectl get cm -n shopping-db`) 확인하세요.
+*   **Metadata Error (1872)**: 복제 설정이 꼬여서 시작되지 않을 경우 `STOP SLAVE; RESET SLAVE ALL;`을 실행하여 설정을 완전히 초기화한 후 다시 `CHANGE MASTER`를 시도하세요.
+*   **데이터 누락**: 특정 시점 이전의 데이터가 보이지 않는다면, `MASTER_LOG_POS`를 테이블 생성 시점의 포지션으로 되돌려(`CHANGE MASTER TO MASTER_LOG_POS=...`) 다시 시작하세요.
+
+> **참고: 파드 재시작 시 설정 유지**
 > Kubernetes의 MySQL은 `/var/lib/mysql` 경로를 PVC(NFS/Local 등)에 저장하므로, 파드가 재시작되거나 노드가 변경되어도 복제 설정(Master 정보 및 현재 진행 포지션)은 자동으로 유지됩니다. 별도의 추가 작업 없이도 파드 가동 시 복제가 자동으로 재개됩니다.
 
 ---
