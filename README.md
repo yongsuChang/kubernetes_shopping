@@ -4,6 +4,26 @@
 
 온프레미스 Kubernetes 클러스터 운영을 목표로 하며, 개발 편의를 위해 Docker Compose 환경도 제공합니다.
 
+---
+
+## 📖 프로젝트 문서 (Documentation)
+
+- **[🏗️ 통합 설치 가이드 (Zero-to-Hero)](./docs/guides/FULL_INSTALLATION.md)**: OS 설치부터 클러스터 구축까지의 전 과정
+- **[☸️ 인프라 아키텍처 상세](./k8s/README.md)**: Kubernetes 클러스터 및 네트워크 구성 상세 설명
+- **[📝 프로젝트 진행 현황](./PROGRESS.md)**: 주요 기능 구현 및 TODO 리스트
+
+---
+
+## 🏗️ 인프라 아키텍처 (Infrastructure Overview)
+
+본 프로젝트는 실무 환경과 유사한 **Hybrid On-premise** 구조로 설계되었습니다.
+- **K8s Cluster**: 1-Master, 3-Worker 노드로 구성된 고가용성 환경
+- **Networking**: MetalLB(L4) 및 NGINX Ingress(L7)를 통한 정교한 트래픽 제어
+- **Database**: Standalone MySQL Master와 K8s 내부 Slave 간의 실시간 복제망
+- **Storage**: NFS Server를 활용한 데이터 영속성 및 공유 저장소 확보
+
+---
+
 ## 📂 프로젝트 구조 (Project Structure)
 
 
