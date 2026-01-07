@@ -23,7 +23,7 @@ spec:
         - name: SPRING_PROFILES_ACTIVE
           value: "prod"
         - name: SPRING_DATASOURCE_URL
-          value: "jdbc:mysql://mysql-service.shopping-db:3306/shopping_admin?createDatabaseIfNotExist=true"
+          value: "jdbc:mysql://172.100.100.8:3306/shopping_admin?createDatabaseIfNotExist=true"
         # AWS Parameter Store Configuration
         - name: AWS_ACCESS_KEY_ID
           valueFrom:
