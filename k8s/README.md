@@ -1,5 +1,7 @@
 # ☸️ Kubernetes Infrastructure Architecture
 
+> **⚠️ 중요 (Sync Note)**: 이 문서는 시스템 아키텍처 및 설계를 설명합니다. 실제 구축 절차나 스크립트 내용이 변경될 경우, 반드시 [FULL_INSTALLATION.md](../docs/guides/FULL_INSTALLATION.md) 가이드도 함께 업데이트해야 합니다.
+
 이 디렉토리는 쇼핑몰 시스템의 Kubernetes 매니페스트와 인프라 설계 구조를 담고 있습니다. 본 프로젝트는 **Hybrid On-premise** 구조로, 클러스터 내부 서비스와 외부 전용 서버가 유기적으로 연결되어 있습니다.
 
 ---
