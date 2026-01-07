@@ -291,7 +291,7 @@ FLUSH PRIVILEGES;
 *   `sudo systemctl restart mysql`
 *   복제 계정 생성 및 포지션 확인:
     ```sql
-    CREATE USER 'repl_user'@'172.100.100.%' IDENTIFIED BY 'repl_password';
+    CREATE USER 'repl_user'@'172.100.100.%' IDENTIFIED BY 'repl12345';
     GRANT REPLICATION SLAVE ON *.* TO 'repl_user'@'172.100.100.%';
     SHOW MASTER STATUS; -- File과 Position 값 기록
     ```
@@ -309,6 +309,9 @@ FLUSH PRIVILEGES;
     START SLAVE;
     ```
 *   상태 확인: `SHOW SLAVE STATUS\G` (IO/SQL Running이 Yes여야 함)
+
+> **💡 참고: 파드 재시작 시 설정 유지**
+> Kubernetes의 MySQL은 `/var/lib/mysql` 경로를 PVC(NFS/Local 등)에 저장하므로, 파드가 재시작되거나 노드가 변경되어도 복제 설정(Master 정보 및 현재 진행 포지션)은 자동으로 유지됩니다. 별도의 추가 작업 없이도 파드 가동 시 복제가 자동으로 재개됩니다.
 
 ---
 
