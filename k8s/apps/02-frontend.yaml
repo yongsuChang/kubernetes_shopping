@@ -16,7 +16,7 @@ spec:
       containers:
       - name: frontend
         image: yongsuchang/shopping-frontend:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
 ---
