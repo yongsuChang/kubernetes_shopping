@@ -52,6 +52,13 @@ spec:
         volumeMounts:
         - name: image-storage
           mountPath: /app/uploads/images
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "200m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
       volumes:
       - name: image-storage
         persistentVolumeClaim:

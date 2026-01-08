@@ -51,6 +51,13 @@ spec:
             secretKeyRef:
               name: aws-param-store-secret
               key: AWS_REGION
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "200m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
 ---
 apiVersion: v1
 kind: Service

@@ -11,26 +11,25 @@ data:
     positions:
       filename: /tmp/positions.yaml
     clients:
-      - url: http://loki:3100/loki/api/v1/push
+      - url: http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push
     scrape_configs:
-      - job_name: kubernetes-pods
+      - job_name: kubernetes-pods-static
+        static_configs:
+          - targets:
+              - localhost
+            labels:
+              __path__: /var/log/pods/*/*/*.log # 모든 로그 파일 타격
         pipeline_stages:
-          - docker: {}
-        kubernetes_sd_configs:
-          - role: pod
-        relabel_configs:
-          - source_labels: [__meta_kubernetes_pod_node_name]
-            target_label: __host__
-          - source_labels: [__meta_kubernetes_namespace]
-            target_label: namespace
-          - source_labels: [__meta_kubernetes_pod_name]
-            target_label: pod
-          - source_labels: [__meta_kubernetes_pod_container_name]
-            target_label: container
-          - replacement: /var/log/pods/*$1*/*/*.log
-            separator: /
-            source_labels: [__meta_kubernetes_pod_uid]
-            target_label: __path__
+          - docker: {} # Docker 로그 포맷 대응
+          - cri: {}    # Containerd 로그 포맷 대응
+          # 경로에서 라벨 추출 (/var/log/pods/<namespace>_<podname>_<uid>/<containername>/*.log)
+          - regex:
+              source: filename
+              expression: ".*/pods/(?P<namespace>[^_]+)_(?P<pod>[^_]+)_(?P<uid>[a-f0-9-]+)/(?P<container>[^/]+)/.*\.log"
+          - labels:
+              namespace: 
+              pod: 
+              container: 
 ---
 apiVersion: apps/v1
 kind: DaemonSet
@@ -47,22 +46,20 @@ spec:
         app: promtail
     spec:
       serviceAccountName: promtail-sa
+      terminationGracePeriodSeconds: 10
       containers:
         - name: promtail
           image: grafana/promtail:2.9.1
           securityContext:
             privileged: true
-            runAsUser: 0
+            runAsUser: 0 # Root 권한으로 실행 (로그 읽기 필수)
           args:
             - "-config.file=/etc/promtail/promtail.yaml"
           volumeMounts:
             - name: config
               mountPath: /etc/promtail
             - name: logs
-              mountPath: /var/log/pods
-              readOnly: true
-            - name: varlog
-              mountPath: /var/log
+              mountPath: /var/log/pods # 호스트 로그 경로 마운트
               readOnly: true
       volumes:
         - name: config
@@ -71,9 +68,6 @@ spec:
         - name: logs
           hostPath:
             path: /var/log/pods
-        - name: varlog
-          hostPath:
-            path: /var/log
 ---
 apiVersion: v1
 kind: ServiceAccount
