@@ -27,6 +27,10 @@ dependencies {
 
     // AWS SSM Parameter Store
     api("io.awspring.cloud:spring-cloud-aws-starter-parameter-store:3.2.0")
+
+    // Monitoring
+    api("org.springframework.boot:spring-boot-starter-actuator")
+    api("io.micrometer:micrometer-registry-prometheus")
 }
 
 java {

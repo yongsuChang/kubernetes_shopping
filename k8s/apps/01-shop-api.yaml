@@ -4,7 +4,7 @@ metadata:
   name: shop-api
   namespace: shopping-backend
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: shop-api
@@ -12,6 +12,10 @@ spec:
     metadata:
       labels:
         app: shop-api
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "8082"
     spec:
       containers:
       - name: shop-api
@@ -20,8 +24,10 @@ spec:
         ports:
         - containerPort: 8082
         env:
+        - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+          value: "prometheus,health"
         - name: SPRING_DATASOURCE_URL
-          value: "jdbc:mysql://mysql-master-service.shopping-db:3306/shopping_db?createDatabaseIfNotExist=true"
+          value: "jdbc:mysql://mysql-master-service.shopping-db.svc.cluster.local:3306/shopping_db?createDatabaseIfNotExist=true"
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:
