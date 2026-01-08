@@ -198,10 +198,10 @@
 
 ### Phase 4: Monitoring & Logging
 - [x] Resource consumption research (Completed: 4GB node optimization)
-- [x] Prometheus + Grafana setup (Lite version implemented)
-- [x] Loki (PLG Stack) setup (Consolidated into /k8s/monitoring)
+- [x] Prometheus + Grafana setup (Lite version with kube-state-metrics)
+- [x] Loki (PLG Stack) setup (Regex-based path discovery implemented)
 - [ ] Alerting rules (Slack/Email)
-- [ ] Dashboarding for business metrics (In-progress: JVM, Node, Pod dashboards)
+- [x] Dashboarding for business metrics (Node, Pod, JVM dashboards imported)
 
 
 
