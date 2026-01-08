@@ -21,60 +21,35 @@
 - **Kubernetes Probes**: 파드(Pod)의 상태를 실시간 모니터링하여 비정상 파드 발생 시 자동 재시작 및 트래픽 차단 (Deployment 내 구성)
 
 ### 2.3. 비기능 요구사항
-#### 2.3.1. 장애 복구 및 보안
-- **IP Whitelisting**: Admin API에 대한 특정 IP 대역 접근 제한 (Nginx Annotations 활용)
-- **데이터 영속성**: NFS 서버를 활용한 상품 이미지 데이터 보존
+#### 2.3.1. 모니터링 및 로깅
+- **PLG Stack 구축 완료**: Prometheus(메트릭), Loki(로그), Grafana(시각화) 기반의 통합 모니터링 체계 가동.
+- **리소스 최적화**: 4GB 메모리 환경에 맞춰 수집 주기 및 보관 정책 최적화 적용.
+
+#### 2.3.2. 장애 복구 및 보안
+- **실시간 알림**: 이메일(SMTP) 연동을 통한 노드 부하 및 포드 이상 상태 자동 통지.
+- **IP Whitelisting**: Admin API에 대한 접근 제어 유지.
+- **데이터 영속성**: NFS 서버를 활용한 로그 및 메트릭 데이터 영구 보존.
 
 ## 3. 프로젝트 목표
-### 3.1. 목표 개요
-#### 3.1.1. 고가용성 시스템 구축
-- 단일 장애점(SPOF) 제거를 위해 애플리케이션 및 DB 복제본(Replica) 운영
-
-#### 3.1.2. 부하 분산을 통한 성능 향상
-- 다중 파드 구성을 통해 사용자 요청을 균등하게 분산하여 응답 속도 최적화
-
-#### 3.1.3. 장애 대응 및 복구 체계 마련
-- 노드 또는 파드 장애 시 서비스 중단 없는 자동 복구(Self-healing) 메커니즘 확인
+... (중략) ...
 
 ### 3.2. 고가용성 구현을 위한 세부 목표
-#### 3.2.1. 로드밸런서 설정
-- Nginx Ingress를 통해 SSL 종단점 처리 및 가용성 확보
-
-#### 3.2.2. 클러스터링 구성
-- 3개의 Worker Node(4GB RAM) 기반의 쿠버네티스 클러스터 운영
-
-#### 3.2.3. 데이터 복제(Replication) 구성
-- **MySQL Master-Slave**: 외부 VM(Master)과 K8s 내부(Slave) 간의 실시간 DB 복제를 통한 데이터 안정성 확보
-
-#### 3.2.4. 헬스체크 구현
-- `Readiness` 및 `Liveness` 프로브를 통한 애플리케이션 상태 기반 트래픽 제어
+#### 3.2.4. 헬스체크 및 통합 모니터링
+- `Readiness` 및 `Liveness` 프로브와 연동된 Grafana 통합 대시보드 구축.
 
 ## 4. 시스템 아키텍처 설계서
-### 4.1. 아키텍처 개요
-#### 4.1.1. 3-Tier 아키텍처 설명
-- **Presentation Tier**: React 기반의 반응형 웹 (Nginx 서빙)
-- **Logic Tier**: Spring Boot 기반의 멀티 모듈 API (Shop/Admin API)
-- **Data Tier**: MySQL 8.0 (Master-Slave) 및 NFS 이미지 저장소
-
-#### 4.1.2. 로드밸런서 역할
-- 외부 트래픽을 MetalLB VIP로 수신 후, Nginx Ingress가 서비스(Service) 단위로 분산 전달
+... (중략) ...
 
 ### 4.2. 세부 서비스별 설계
-#### 4.2.1. 프론트엔드 로드밸런서
-- 도메인: `shop.mall.internal`, 포트: 80
-
-#### 4.2.2. 애플리케이션 서버
-- `shop-api` (Port 8082): 고객 및 입점업체용 (K8s 내 배포)
-- `admin-api` (Port 8081): 플랫폼 관리자 전용 (외부 VM 독립 실행)
-
-#### 4.2.3. 데이터베이스 서버
-- Master(172.100.100.8): 쓰기 작업 전담 (외부 VM)
-- Slave(K8s 내부): 읽기 작업 및 백업용
+#### 4.2.4. 모니터링 서버 (Grafana)
+- 도메인: `grafana.mall.internal`, 포트: 3000
+- 데이터 소스: Prometheus(Internal), Loki(Internal)
 
 ### 4.3. 네트워크 설계
 #### 4.3.1. 서비스 구성
-- 사설 대역: `172.100.100.0/24`
-- MetalLB VIP 범위: `172.100.100.10-20`
+- 외부망 -> Bastion Nginx -> MetalLB VIP -> K8s Ingress -> Grafana/Frontend/API
+- 내부망 포드 간 통신이 불가능한 경우 API Server Proxy를 통한 메트릭 수집 우회로 확보.
+
 
 #### 4.3.2. 방화벽 설정
 - Bastion 호스트를 통한 SSH 터널링 및 UFW 기반의 포트 제한
