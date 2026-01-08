@@ -61,6 +61,7 @@ spec:
   resources:
     requests:
       storage: 10Gi
+---
 # Loki Storage
 apiVersion: v1
 kind: PersistentVolume
@@ -73,7 +74,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs-monitoring
+  storageClassName: nfs-loki
   mountOptions:
     - hard
     - nfsvers=4.1
@@ -87,7 +88,7 @@ metadata:
   name: loki-pvc
   namespace: monitoring
 spec:
-  storageClassName: nfs-monitoring
+  storageClassName: nfs-loki
   accessModes:
     - ReadWriteOnce
   resources:
@@ -106,7 +107,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs-monitoring
+  storageClassName: nfs-grafana
   mountOptions:
     - hard
     - nfsvers=4.1
@@ -120,14 +121,14 @@ metadata:
   name: grafana-pvc
   namespace: monitoring
 spec:
-  storageClassName: nfs-monitoring
+  storageClassName: nfs-grafana
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 2Gi
 ---
-# Prometheus Storage (New)
+# Prometheus Storage
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -139,7 +140,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs-monitoring
+  storageClassName: nfs-prometheus
   mountOptions:
     - hard
     - nfsvers=4.1
@@ -153,7 +154,7 @@ metadata:
   name: prometheus-pvc
   namespace: monitoring
 spec:
-  storageClassName: nfs-monitoring
+  storageClassName: nfs-prometheus
   accessModes:
     - ReadWriteOnce
   resources:

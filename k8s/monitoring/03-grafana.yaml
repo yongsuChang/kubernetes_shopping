@@ -25,6 +25,28 @@ spec:
               value: "true"
             - name: GF_AUTH_ANONYMOUS_ORG_ROLE
               value: "Admin"
+            # SMTP Email Settings (Using Secrets)
+            - name: GF_SMTP_ENABLED
+              value: "true"
+            - name: GF_SMTP_HOST
+              value: "smtp.gmail.com:587"
+            - name: GF_SMTP_USER
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-smtp-secret
+                  key: user
+            - name: GF_SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-smtp-secret
+                  key: password
+            - name: GF_SMTP_FROM_ADDRESS
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-smtp-secret
+                  key: user
+            - name: GF_SMTP_FROM_NAME
+              value: "Grafana Alert"
           volumeMounts:
             - name: storage
               mountPath: /var/lib/grafana
