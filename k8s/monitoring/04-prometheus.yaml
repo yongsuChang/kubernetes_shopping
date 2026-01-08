@@ -8,6 +8,8 @@ data:
     global:
       scrape_interval: 30s
       evaluation_interval: 30s
+      external_labels:
+        cluster: 'kubernetes'
 
     scrape_configs:
       - job_name: 'kubernetes-nodes'
@@ -16,6 +18,12 @@ data:
         relabel_configs:
           - action: labelmap
             regex: __meta_kubernetes_node_label_(.+)
+          - target_label: __address__
+            replacement: kubernetes.default.svc:443
+          - source_labels: [__meta_kubernetes_node_name]
+            regex: (.+)
+            target_label: __metrics_path__
+            replacement: /api/v1/nodes/${1}/proxy/metrics
 
       - job_name: 'kubernetes-cadvisor'
         scheme: https
@@ -34,6 +42,29 @@ data:
             regex: (.+)
             target_label: __metrics_path__
             replacement: /api/v1/nodes/${1}/proxy/metrics/cadvisor
+        metric_relabel_configs:
+          - source_labels: [pod_name]
+            target_label: pod
+          - source_labels: [container_name]
+            target_label: container
+          - source_labels: [namespace]
+            target_label: namespace
+
+      # kube-state-metrics 수집 방식 변경 (Service Discovery)
+      - job_name: 'kube-state-metrics'
+        kubernetes_sd_configs:
+          - role: endpoints
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_name]
+            action: keep
+            regex: kube-state-metrics
+          - target_label: job
+            replacement: kube-state-metrics
+          # 대시보드 호환용 라벨 강제 매핑
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+          - source_labels: [__meta_kubernetes_service_name]
+            target_label: service
 
       - job_name: 'kubernetes-pods'
         kubernetes_sd_configs:
@@ -51,15 +82,12 @@ data:
             target_label: __address__
             regex: ([^:]+)(?::\d+)?;(\d+)
             replacement: $1:$2
-          # 대시보드 호환성을 위한 라벨 추가 (필수)
           - source_labels: [__meta_kubernetes_namespace]
             target_label: namespace
           - source_labels: [__meta_kubernetes_pod_name]
             target_label: pod
           - source_labels: [__meta_kubernetes_pod_container_name]
             target_label: container
-          - action: labelmap
-            regex: __meta_kubernetes_pod_label_(.+)
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -84,6 +112,7 @@ spec:
             - "--config.file=/etc/prometheus/prometheus.yml"
             - "--storage.tsdb.path=/prometheus"
             - "--storage.tsdb.retention.time=7d"
+            - "--storage.tsdb.no-lockfile"
           ports:
             - containerPort: 9090
           volumeMounts:
