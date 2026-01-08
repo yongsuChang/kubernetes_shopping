@@ -4,5 +4,17 @@ metadata:
   name: mysql-master-service
   namespace: shopping-db
 spec:
-  type: ExternalName
-  externalName: db.mall.internal
+  ports:
+    - port: 3306
+      targetPort: 3306
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: mysql-master-service
+  namespace: shopping-db
+subsets:
+  - addresses:
+      - ip: 172.100.100.8
+    ports:
+      - port: 3306
