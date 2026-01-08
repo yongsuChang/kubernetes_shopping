@@ -69,10 +69,18 @@ Bastion 서버의 BIND9을 통해 프로젝트 내부 도메인을 관리합니�
 
 ## 📂 디렉토리 구조
 
-- `/base`: 클러스터 공통 설정 (Namespace, Ingress, StorageClass 등)
-- `/apps`: 애플리케이션 워크로드 (Frontend, Shop-API, Admin-API)
-- `/mysql`: MySQL Slave 배포 및 설정 (ConfigMap, Deployment)
-- `/templates`: 설정 및 비밀번호 템플릿
+├── base/                # 클러스터 공통 기초 리소스
+│   ├── 00-namespaces.yaml    # 모든 네임스페이스 정의 (monitoring 포함)
+│   ├── 01-metallb-config.yaml # L2 로드밸런서 설정
+│   ├── 02-storage.yaml       # 모든 PV/PVC 통합 관리 (NFS 기반)
+│   └── 03-ingress.yaml       # 공통 Ingress 규칙 (L7 로드밸런싱)
+├── monitoring/          # 모니터링 엔진 (PLG Stack)
+│   ├── 01-loki.yaml          # 로그 저장소
+│   ├── 02-promtail.yaml      # 로그 수집기 (DaemonSet)
+│   ├── 03-grafana.yaml       # 시각화 대시보드
+│   └── 04-prometheus.yaml    # 메트릭 수집기 (Lite 버전)
+├── apps/                # 비즈니스 애플리케이션 (Annotations 포함)
+└── mysql/               # MySQL 데이터베이스 구성 (Slave/External)
 
 ---
 

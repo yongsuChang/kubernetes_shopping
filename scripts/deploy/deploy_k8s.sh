@@ -1,47 +1,41 @@
 #!/bin/bash
 
-# 프로젝트 루트 디렉토리로 이동 (스크립트 위치 기준 상위 2단계)
+# 프로젝트 루트 디렉토리로 이동
 cd "$(dirname "$0")/../.."
 
 # 색상 정의
 GREEN='\033[0;32m'
 NC='\033[0m'
 
-echo -e "${GREEN}🚀 Kubernetes Shopping Mall 배포를 시작합니다 (Multi-Namespace 구조)...${NC}"
+echo -e "${GREEN}🚀 Kubernetes Shopping Mall 배포를 시작합니다...${NC}"
 
-# 1. Namespace 생성
+# 1. Namespace 및 기초 인프라 배포
 echo -e "${GREEN}Step 1: 네임스페이스 및 기본 리소스 배포${NC}"
 kubectl apply -f k8s/base/00-namespaces.yaml
+kubectl apply -f k8s/base/01-metallb-config.yaml
+kubectl apply -f k8s/base/02-storage.yaml
 
-# 2. Secret 적용 (존재할 경우)
+# 2. Secret 적용
 if [ -d "k8s/secrets" ]; then
     echo -e "${GREEN}Step 2: 사용자 정의 시크릿 배포${NC}"
     kubectl apply -f k8s/secrets/
-else
-    echo -e "⚠️  k8s/secrets 디렉토리가 없습니다. 템플릿을 사용하여 먼저 생성해 주세요."
 fi
 
-# 2.1 MySQL Init Script 확인
-if [ ! -f "k8s/mysql/00-init-script.yaml" ]; then
-    echo -e "⚠️  k8s/mysql/00-init-script.yaml 파일이 없습니다. 템플릿에서 복사합니다."
-    cp k8s/templates/mysql/00-init-script.yaml k8s/mysql/00-init-script.yaml
-    echo -e "❗  주의: k8s/mysql/00-init-script.yaml 파일을 열어 실제 비밀번호로 수정해주세요."
-fi
+# 3. 모니터링 시스템 배포 (PLG Stack)
+echo -e "${GREEN}Step 3: 모니터링 시스템 배포 (Loki, Prometheus, Grafana, Node Exporter)${NC}"
+kubectl apply -f k8s/monitoring/
 
-if [ ! -f "k8s/mysql/01-mysql-config.yaml" ]; then
-    echo -e "⚠️  k8s/mysql/01-mysql-config.yaml 파일이 없습니다. 템플릿에서 복사합니다."
-    cp k8s/templates/mysql/01-mysql-config.yaml k8s/mysql/01-mysql-config.yaml
-fi
-
-# 3. 인프라 배포 (Storage, MySQL, Ingress)
-echo -e "${GREEN}Step 3: 인프라 서비스 배포 (NFS Storage, MySQL, Ingress)${NC}"
-kubectl apply -f k8s/base/02-storage.yaml
+# 4. 데이터베이스 배포
+echo -e "${GREEN}Step 4: 데이터베이스 배포 및 외부 연결 설정${NC}"
 kubectl apply -f k8s/mysql/
-kubectl apply -f k8s/base/03-ingress.yaml
 
-# 4. 애플리케이션 배포
-echo -e "${GREEN}Step 4: 애플리케이션 배포 (Shop API, Frontend)${NC}"
+# 5. 애플리케이션 배포
+echo -e "${GREEN}Step 5: 애플리케이션 배포 (Shop API, Frontend, Admin API)${NC}"
 kubectl apply -f k8s/apps/
+
+# 6. 트래픽 라우팅 (Ingress)
+echo -e "${GREEN}Step 6: 트래픽 라우팅 설정 (Ingress Controller)${NC}"
+kubectl apply -f k8s/base/03-ingress.yaml
 
 echo -e "${GREEN}✅ 모든 리소스 배포 명령이 실행되었습니다.${NC}"
 echo -e "⏳ 상태 확인: kubectl get pods -A"

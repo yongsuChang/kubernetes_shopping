@@ -19,6 +19,7 @@
 본 프로젝트는 실무 환경과 유사한 **Hybrid On-premise** 구조로 설계되었습니다.
 - **K8s Cluster**: 1-Master, 3-Worker 노드로 구성된 고가용성 환경
 - **Networking**: MetalLB(L4) 및 NGINX Ingress(L7)를 통한 정교한 트래픽 제어
+- **Monitoring**: **PLG Stack** (Prometheus, Loki, Grafana) 기반의 통합 모니터링 (4GB RAM 최적화)
 - **Database**: Standalone MySQL Master와 K8s 내부 Slave 간의 실시간 복제망
 - **Storage**: NFS Server를 활용한 데이터 영속성 및 공유 저장소 확보
 

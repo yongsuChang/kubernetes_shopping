@@ -197,11 +197,11 @@
     - [ ] NFS 스토리지 이미지 데이터 백업 방안 마련
 
 ### Phase 4: Monitoring & Logging
-- [ ] Resource consumption research
-- [ ] Prometheus + Grafana setup
-- [ ] Loki (PLG Stack) setup (Replaced ELK for resource efficiency)
+- [x] Resource consumption research (Completed: 4GB node optimization)
+- [x] Prometheus + Grafana setup (Lite version implemented)
+- [x] Loki (PLG Stack) setup (Consolidated into /k8s/monitoring)
 - [ ] Alerting rules (Slack/Email)
-- [ ] Dashboarding for business metrics
+- [ ] Dashboarding for business metrics (In-progress: JVM, Node, Pod dashboards)
 
 
 

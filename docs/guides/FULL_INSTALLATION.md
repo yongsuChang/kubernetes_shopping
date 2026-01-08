@@ -94,7 +94,7 @@ sudo vim /etc/hosts
 
 **추가할 내용 (공통):**
 ```text
-172.100.100.3  shop.mall.internal api.mall.internal admin.mall.internal
+172.100.100.3  shop.mall.internal api.mall.internal admin.mall.internal grafana.mall.internal
 ```
 
 ---
@@ -208,24 +208,17 @@ sudo systemctl restart bind9
 sudo apt install nfs-kernel-server -y
 
 # 1. 공유 디렉토리 생성 및 권한 설정
-sudo mkdir -p /mnt/DATA/images /mnt/DATA/mysql-slave
-sudo chown nobody:nogroup /mnt/DATA/images /mnt/DATA/mysql-slave
-sudo chmod 777 /mnt/DATA/images /mnt/DATA/mysql-slave
+sudo mkdir -p /mnt/DATA/images /mnt/DATA/mysql-slave /mnt/DATA/logs/loki /mnt/DATA/logs/grafana /mnt/DATA/logs/prometheus
+sudo chmod -R 777 /mnt/DATA/images /mnt/DATA/mysql-slave /mnt/DATA/logs
 
 # 2. 공유 설정 (/etc/exports)
-# 아래와 같이 실제 마운트가 필요한 K8s Worker 노드 IP만 명시하는 것을 권장합니다.
-# /mnt/DATA/images      172.100.100.5(rw,sync,no_subtree_check,no_root_squash) 172.100.100.6(rw,sync,no_subtree_check,no_root_squash) 172.100.100.7(rw,sync,no_subtree_check,no_root_squash)
+# 아래와 같이 실제 마운트가 필요한 K8s Worker 노드 IP 대역을 허용합니다.
+# /mnt/DATA/images      172.100.100.0/24(rw,sync,no_subtree_check,no_root_squash)
+# /mnt/DATA/mysql-slave 172.100.100.0/24(rw,sync,no_subtree_check,no_root_squash)
+# /mnt/DATA/logs        172.100.100.0/24(rw,sync,no_subtree_check,no_root_squash)
 
 sudo exportfs -ra
 sudo systemctl restart nfs-kernel-server
-
-# 3. 보안 설정 (UFW 방화벽)
-sudo ufw default deny incoming
-sudo ufw allow from 172.100.100.0/24 to any port 22
-sudo ufw allow from 172.100.100.5 to any port 2049
-sudo ufw allow from 172.100.100.6 to any port 2049
-sudo ufw allow from 172.100.100.7 to any port 2049
-sudo ufw enable
 ```
 
 ### 4.3 Database (MySQL) - `172.100.100.8` [DB Server에서 실행]
@@ -471,17 +464,38 @@ cp ~/k8s/templates/secrets/*.yaml ~/k8s/secrets/
 # vim으로 시크릿 값 수정 후:
 kubectl apply -f ~/k8s/secrets/
 
-# 3. 인프라 및 애플리케이션 배포
+# 3. 인프라 기초 설정
 kubectl apply -f ~/k8s/base/02-storage.yaml
+```
+
+### 6.2 모니터링 시스템 구축 (PLG Stack)
+가용 리소스를 고려하여 경량화된 Prometheus + Loki + Grafana 스택을 배포합니다.
+
+```bash
+# 모니터링 엔진 및 Ingress 배포
+kubectl apply -f ~/k8s/monitoring/
+
+# 접속 확인
+브라우저에서 http://grafana.mall.internal 접속
+```
+- **Loki**: 로그 영구 저장 (7일 보관)
+- **Prometheus**: 30초 단위 메트릭 수집
+- **Grafana**: `http://grafana.mall.internal` 접속 후 데이터 소스 설정
+    - Prometheus: `http://prometheus.monitoring.svc.cluster.local:9090`
+    - Loki: `http://loki.monitoring.svc.cluster.local:3100`
+
+### 6.3 애플리케이션 및 DB 배포
+```bash
 kubectl apply -f ~/k8s/mysql/
 kubectl apply -f ~/k8s/base/03-ingress.yaml
 kubectl apply -f ~/k8s/apps/
 ```
 
-### 6.2 배포 확인
-*   **Frontend**: `http://shop.mall.internal` (가상 IP `100.10`으로 연결)
+### 6.4 배포 확인
+*   **Frontend**: `http://shop.mall.internal`
 *   **Shop API**: `http://api.mall.internal`
 *   **Admin API**: `http://admin.mall.internal` (IP 화이트리스트 적용됨)
+*   **Grafana**: `http://grafana.mall.internal` (초기 계정: admin/admin)
 
 ---
 
@@ -492,8 +506,14 @@ sudo apt update
 sudo apt install nginx -y
 
 # 1. 리버스 프록시 설정 (/etc/nginx/sites-available/mall.internal)
-# server_name shop.mall.internal api.mall.internal admin.mall.internal;
+# 아래 내용을 파일에 작성합니다.
+# server_name shop.mall.internal api.mall.internal admin.mall.internal grafana.mall.internal;
 # proxy_pass http://172.100.100.10; # MetalLB VIP
+#
+# # Grafana 등 실시간 통신을 위한 WebSocket 설정 추가 필수:
+# proxy_http_version 1.1;
+# proxy_set_header Upgrade $http_upgrade;
+# proxy_set_header Connection "upgrade";
 
 sudo systemctl restart nginx
 ```
