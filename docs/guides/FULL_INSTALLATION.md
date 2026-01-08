@@ -471,18 +471,23 @@ kubectl apply -f ~/k8s/base/02-storage.yaml
 ### 6.2 모니터링 시스템 구축 (PLG Stack)
 가용 리소스를 고려하여 경량화된 Prometheus + Loki + Grafana 스택을 배포합니다.
 
+**1. SMTP 알림 시크릿 생성**
+```bash
+# 이메일과 앱 비밀번호를 Base64로 인코딩하여 k8s/monitoring/08-smtp-secret.yaml 작성 후 실행
+kubectl apply -f ~/k8s/monitoring/08-smtp-secret.yaml
+```
+
+**2. 모니터링 엔진 배포**
 ```bash
 # 모니터링 엔진 및 Ingress 배포
 kubectl apply -f ~/k8s/monitoring/
 
-# 접속 확인
-브라우저에서 http://grafana.mall.internal 접속
+# 접속 확인: http://grafana.mall.internal (admin/admin)
 ```
-- **Loki**: 로그 영구 저장 (7일 보관)
-- **Prometheus**: 30초 단위 메트릭 수집
-- **Grafana**: `http://grafana.mall.internal` 접속 후 데이터 소스 설정
-    - Prometheus: `http://prometheus.monitoring.svc.cluster.local:9090`
-    - Loki: `http://loki.monitoring.svc.cluster.local:3100`
+- **Loki**: 로그 영구 저장 (7일 보관, Regex 라벨링 적용)
+- **Prometheus**: 60초 단위 메트릭 수집 (NFS No-Lock 설정 적용)
+- **알림**: SMTP 연동을 통한 이메일 발송 설정 완료
+
 
 ### 6.3 애플리케이션 및 DB 배포
 ```bash

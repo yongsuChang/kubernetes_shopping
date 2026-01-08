@@ -1,55 +1,59 @@
 # 📊 Kubernetes Monitoring System (PLG Stack)
 
-이 디렉토리는 쇼핑몰 인프라의 가시성을 확보하기 위한 **Prometheus, Loki, Grafana (PLG)** 스택의 매니페스트를 포함합니다. 4GB RAM 노드 환경에 최적화된 경량화 설정을 따릅니다.
+본 디렉토리는 쇼핑몰 시스템의 가시성 확보 및 장애 대응을 위한 통합 모니터링 스택 설정을 담고 있습니다. 4GB RAM의 제한적인 노드 환경을 고려하여 **경량화(Lite)** 및 **NFS 기반 영구 저장** 구조로 설계되었습니다.
 
-## 🏗️ 시스템 구성
-- **Loki**: 로그 영구 저장소 (NFS 기반)
-- **Promtail**: 각 노드의 로그를 수집하여 Loki로 전송 (Regex 기반 라벨 추출)
-- **Prometheus**: 메트릭 수집기 (Lite 버전, 30초 주기, 7일 보관)
-- **Grafana**: 통합 시각화 대시보드
-- **kube-state-metrics**: 쿠버네티스 객체 상태 메트릭 (Pod 상태, Resource Quota 등)
-- **Node Exporter**: 하드웨어 리소스 지표 (CPU, RAM, Disk)
+## 🏗️ 시스템 구성 요소
 
-## 🚀 빠른 시작 (Quick Start)
+| 컴포넌트 | 역할 | 주요 설정 |
+| :--- | :--- | :--- |
+| **Prometheus** | 메트릭 수집 및 시각화 | Lite 버전, 60s 수집 주기, 7일 보관, NFS No-Lock 적용 |
+| **Loki** | 로그 통합 관리 | Regex 기반 라벨 추출, NFS 영구 저장 |
+| **Promtail** | 로그 수집기 | DaemonSet 구성, `/var/log/pods` 직접 타격 |
+| **Grafana** | 통합 대시보드 | SMTP 이메일 알림 연동, Ingress 외 노출 |
+| **kube-state-metrics** | K8s 객체 상태 감시 | Pod 상태, 리소스 제한량(Limits) 지표 제공 |
+| **Node Exporter** | 하드웨어 모니터링 | 노드별 CPU, RAM, Disk, Network 지표 수집 |
 
-### 1. 전제 조건
-- NFS 서버(`storage.mall.internal`)에 `/mnt/DATA/logs/{loki,grafana,prometheus}` 디렉토리가 생성되어 있어야 합니다.
-- 애플리케이션 Deployment에 `resources` (requests/limits) 설정이 되어 있어야 대시보드에서 사용량(%)이 정상 출력됩니다.
+## 🚀 설치 및 배포
 
-### 2. 배포 명령어
+### 1. 전제 조건 (NFS 디렉토리 생성)
+NFS 서버(`172.100.100.9`)에서 각 서비스용 데이터를 저장할 폴더를 수동으로 생성해야 합니다.
 ```bash
-# 네임스페이스 및 스토리지 설정 (base 디렉토리에서 선행 필요)
+sudo mkdir -p /mnt/DATA/logs/{loki,grafana,prometheus}
+sudo chmod -R 777 /mnt/DATA/logs
+```
+
+### 2. 배포 순서
+```bash
+# 1. 시크릿 및 스토리지 설정 (Master 노드)
+kubectl apply -f k8s/monitoring/08-smtp-secret.yaml
+kubectl apply -f k8s/base/02-storage.yaml
+
+# 2. 모니터링 엔진 배포
 kubectl apply -f k8s/monitoring/
 ```
 
-## 🛠️ 트러블슈팅 (Troubleshooting)
+## ⚙️ 주요 설정 및 기능
 
-### 대시보드에 데이터가 보이지 않을 때
-1. **Cluster 변수**: 대시보드 상단 Cluster 변수에 `kubernetes`가 선택되어 있는지 확인합니다.
-2. **Resource Metrics**: `shop-api` 등 각 앱의 YAML에 `resources.limits`가 설정되지 않으면 `No Data`가 뜰 수 있습니다.
-3. **Loki 라벨**: `Select label`이 비어있다면 Promtail 로그에서 `/var/log/pods` 경로 접근 권한을 확인하세요.
+### 1. 리소스 최적화 (4GB Node 대응)
+- **Prometheus**: 수집 주기(`scrape_interval`)를 1분으로 조정하고, `resources.limits.memory`를 512Mi로 제한하여 시스템 안정성 확보.
+- **Loki**: 전체 인덱싱 대신 라벨 기반 압축 저장을 통해 메모리 사용량 최소화.
 
+### 2. 알림 시스템 (Alerting)
+- **SMTP 연동**: Google 앱 비밀번호를 Kubernetes Secret으로 관리하여 보안 강화.
+- **주요 알림 규칙**:
+    - `Node-Memory-Warning`: 노드 메모리 사용율 90% 이상 5분 지속 시 발송.
+    - `Pod-Restart-Alert`: 특정 포드의 재시작 횟수가 증가할 때 즉시 알림.
 
-### 3. 접속 방법
-내 PC에서 Grafana 화면을 보기 위해 포트 포워딩을 수행합니다.
-```bash
-kubectl port-forward svc/grafana -n monitoring 3000:3000
-```
-브라우저 주소: `http://localhost:3000`
+## 🛠️ 트러블슈팅 (Troubleshooting History)
 
-## ⚙️ Grafana 설정 가이드
+### 1. Prometheus NFS Lock 이슈
+- **현상**: Prometheus 포드가 `opening storage failed: lock DB directory` 에러와 함께 CrashLoopBackOff 발생.
+- **해결**: `--storage.tsdb.no-lockfile` 인자를 추가하여 NFS 환경에서의 파일 잠금 충돌 해결.
 
-### Data Sources 연결
-Grafana 접속 후 아래 주소를 입력하여 데이터 소스를 추가합니다.
-- **Prometheus**: `http://prometheus.monitoring.svc.cluster.local:9090`
-- **Loki**: `http://loki.monitoring.svc.cluster.local:3100`
+### 2. Loki Label Browser 비어있음
+- **현상**: 로그는 쌓이나 `pod`, `namespace` 등의 라벨이 보이지 않음.
+- **해결**: Promtail 설정에서 `/var/log/pods` 경로의 정규식(Regex)을 현재 환경의 CRI(Containerd) 구조에 맞춰 수정하여 해결.
 
-### 추천 대시보드 ID (Import)
-- **Node Exporter**: `1860` (서버 리소스 현황)
-- **Kubernetes View**: `15760` (포드 상태 및 네트워크)
-- **JVM Micrometer**: `4701` (Java 애플리케이션 상세 메트릭)
-
-## 📌 운영 정책 (Resource Optimization)
-- **수집 주기**: 30초 (scrape_interval)
-- **데이터 보관**: 7일 (retention_time)
-- **저장소**: NFS 외부 마운트를 통한 영구 보존
+### 3. 대시보드 No Data (Label Mismatch)
+- **현상**: Explore에서는 데이터가 보이나 임포트한 대시보드에 그래프가 안 나옴.
+- **해결**: 모든 지표에 `cluster="kubernetes"` 전역 라벨을 주입하고, 대시보드 변수(Variables)의 쿼리를 실제 수집 중인 지표 이름으로 보정.
