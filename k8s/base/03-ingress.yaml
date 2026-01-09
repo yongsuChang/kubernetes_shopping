@@ -67,6 +67,9 @@ kind: Ingress
 metadata:
   name: grafana-ingress
   namespace: monitoring
+  annotations:
+    # 모니터링 대시보드 접근 제한 (Admin API와 동일)
+    nginx.ingress.kubernetes.io/whitelist-source-range: "172.100.100.0/24, 10.0.0.0/8, 192.168.0.0/16"
 spec:
   ingressClassName: nginx
   rules:

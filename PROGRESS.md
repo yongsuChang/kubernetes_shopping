@@ -161,12 +161,20 @@
 
 - [x] **CI/CD 파이프라인**: GitHub Actions를 이용한 자동 빌드/배포 구축 완료 (CI 기본 설정)
 
+### 🚨 핵심 인프라 SPOF 제거 (Critical Infrastructure HA)
+Kubernetes 외부의 단일 장애 지점(Single Point of Failure)을 제거하여 전체 시스템 안정성 확보
+- [ ] **Bastion Host HA (Keepalived)**: Active-Standby 구성 및 VIP(Virtual IP) 기반 자동 절체(Failover) 구현
+- [ ] **NFS Storage HA**: 스토리지 서버 이중화(DRBD+Pacemaker) 또는 분산 파일 시스템(GlusterFS) 도입 검토
+- [ ] **MySQL Master HA**: MHA(Master High Availability) 또는 Orchestrator를 도입하여 Master 장애 시 Slave 자동 승격 시스템 구축
+
 ### 🏢 온프레미스 인프라 구축 (On-Premise Infrastructure)
 - [x] **수동 설정 가이드 작성**: [FULL_INSTALLATION.md](./docs/guides/FULL_INSTALLATION.md) 생성 완료
 - [x] **MySQL Master-Slave 복제 구성**: 외부 서버(Master)와 K8s 내부(Slave) 간의 실시간 동기화 구축 완료
 - [x] **데이터베이스 통합**: `shopping_shop`, `shopping_admin`을 `shopping_db`로 통합하여 데이터 연동성 확보
 - [x] **NFS 보안 강화**: UFW 및 IP 제한을 통한 스토리지 보호 설정 완료
 - [x] **CI/CD 최적화**: 애플리케이션 변경 시에만 작동하도록 `paths` 필터 적용
+- [x] **장애 복구 가이드 작성**: [DISASTER_RECOVERY.md](./docs/guides/DISASTER_RECOVERY.md) 생성 (Master 노드 복구, Loki 권한 문제 해결 등)
+- [x] **고가용성(HA) 전략 문서화**: 인프라, 앱, DB 계층별 HA 전략을 [k8s/README.md](./k8s/README.md)에 정리
 
 ### 🛠️ 데이터베이스 및 백엔드
 - [x] **데이터 백업 자동화**: `tar.gz` 기반 일일 백업 스크립트 및 Cron 등록 완료
@@ -190,6 +198,7 @@
     - [ ] **Read/Write Splitting 구현**: `shop-api`에서 MySQL Replication Driver를 사용하여 쓰기는 Master(172.100.100.8), 읽기는 Slave(mysql-service)로 분산 처리
     - [ ] **GTID 기반 복제 전환**: 파일 포지션 방식에서 GTID 방식으로 전환하여 복제 안정성 강화
 - [ ] **K8s 장애 대응 고도화**:
+    - [ ] **HPA (Horizontal Pod Autoscaler) 구현**: 트래픽 증가에 따른 파드 자동 확장 구성 (metrics-server 연동 필수)
     - [ ] 모든 Deployment에 `LivenessProbe` 및 `ReadinessProbe` 적용 (상태 체크 자동화)
     - [ ] 노드 장애 시 파드 재배치 전략(Pod Anti-Affinity) 최적화
 - [ ] **데이터 백업 전략**:
@@ -202,10 +211,11 @@
 - [x] Loki (PLG Stack) setup (Regex-based stable log extraction implemented)
 - [x] Alerting rules (Slack/Email) (SMTP integration via K8s Secrets completed)
 - [x] Dashboarding for business metrics (Node, Pod, JVM, Loki Explore integration)
+- [x] **Troubleshooting**: Promtail 정규식(Regex) 파싱 오류 수정 및 안정화
 
 
 
 ---
 
-*최종 업데이트: 2026-01-07*
-* **Resolved Issue (2026-01-07)**: Kubernetes 환경에서 MySQL 초기화 스크립트가 실행되지 않는 문제(NFS 잔여 데이터 원인)를 Cleaner Pod를 통해 해결하고, 배포 스크립트를 개선하여 운영 안정성 확보.
+*최종 업데이트: 2026-01-09*
+* **Resolved Issue (2026-01-09)**: 마스터 노드 장애 발생에 따른 클러스터 재구축 및 etcd/Loki 데이터 충돌 문제를 해결하고, 이를 위한 [장애 복구 가이드](./docs/guides/DISASTER_RECOVERY.md)를 수립함.
