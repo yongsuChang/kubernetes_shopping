@@ -25,7 +25,7 @@ data:
           # 경로에서 라벨 추출 (/var/log/pods/<namespace>_<podname>_<uid>/<containername>/*.log)
           - regex:
               source: filename
-              expression: ".*/pods/(?P<namespace>[^_]+)_(?P<pod>[^_]+)_(?P<uid>[a-f0-9-]+)/(?P<container>[^/]+)/.*\.log"
+              expression: '^.*/pods/(?P<namespace>[^_]+)_(?P<pod>[^_]+)_(?P<uid>[a-f0-9-]+)/(?P<container>[^/]+)/.*\.log$'
           - labels:
               namespace: 
               pod: 

@@ -112,3 +112,23 @@ Slave DB(K8s 내부)는 Master의 바이너리 로그를 실시간 추적합니�
 
 ## 🚀 시작하기
 상세한 설치 및 구축 과정은 [FULL_INSTALLATION.md](../docs/guides/FULL_INSTALLATION.md) 가이드를 참고하세요.
+
+---
+
+## ⚡ 고가용성 전략 (High Availability Strategy)
+
+본 프로젝트는 **단일 장애 지점(SPOF) 최소화**를 목표로, 인프라, 애플리케이션, 데이터베이스 전 계층에 걸쳐 장애 대응 전략을 수립하였습니다.
+
+### 1. 인프라 계층 (Infrastructure)
+*   **다중 워커 노드 구성**: 1개의 마스터 노드 외에 **3개의 워커 노드**를 운영하여 단일 노드 장애 시에도 클러스터 전체 서비스가 유지되도록 설계했습니다.
+*   **Load Balancing**: MetalLB(L4)와 NGINX Ingress(L7)를 통해 트래픽을 분산하고, 특정 노드 다운 시에도 즉각적인 경로 변경(Failover)을 지원합니다.
+
+### 2. 애플리케이션 계층 (Application)
+*   **Self-Healing (자동 복구)**: Kubernetes의 컨트롤러가 파드 상태를 지속적으로 감시하며, 비정상 종료 시 즉시 새로운 파드를 생성하여 서비스 가용성을 보장합니다.
+*   **Rolling Updates**: 무중단 배포 전략을 기본 적용하여, 서비스 중단 없이 새로운 기능을 배포하고 문제 발생 시 즉시 롤백할 수 있습니다.
+
+### 3. 데이터베이스 계층 (Data Persistence)
+*   **Master-Slave Replication**:
+    *   **Master (External)**: 고성능 단독 서버를 Master로 배치하여 쓰기 안정성을 확보했습니다.
+    *   **Slave (Internal)**: K8s 내부에 Slave를 두어 실시간 복제를 수행하며, Master 장애 시 승격(Promotion) 가능한 예비 자원으로 활용합니다.
+*   **데이터 영속성 보장**: 데이터베이스 파일을 로컬이 아닌 **NFS 외부 스토리지**에 저장하여, 파드가 어느 노드로 이동하더라도 데이터 정합성이 유지됩니다.

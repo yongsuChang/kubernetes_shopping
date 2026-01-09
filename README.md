@@ -9,6 +9,7 @@
 ## 📖 프로젝트 문서 (Documentation)
 
 - **[🏗️ 통합 설치 가이드 (Zero-to-Hero)](./docs/guides/FULL_INSTALLATION.md)**: OS 설치부터 클러스터 구축까지의 전 과정
+- **[🚑 장애 복구 가이드 (Disaster Recovery)](./docs/guides/DISASTER_RECOVERY.md)**: 마스터 노드 장애 및 데이터 손상 시 복구 절차
 - **[☸️ 인프라 아키텍처 상세](./k8s/README.md)**: Kubernetes 클러스터 및 네트워크 구성 상세 설명
 - **[📝 프로젝트 진행 현황](./PROGRESS.md)**: 주요 기능 구현 및 TODO 리스트
 
