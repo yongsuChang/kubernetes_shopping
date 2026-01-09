@@ -339,25 +339,16 @@ vim ~/.my.cnf
 chmod 600 ~/.my.cnf
 ```
 
-**2. 백업 스크립트 작성**
-`/usr/local/bin/db-backup.sh` 파일을 생성하고 실행 권한을 부여합니다. `tar`를 사용하여 압축률이 높은 `.tar.gz` 아카이브를 생성합니다.
+**2. 백업 스크립트 배포**
+프로젝트에 포함된 백업 스크립트를 DB 서버로 전송하고 설정합니다. (로컬 PC에서 실행)
 ```bash
-#!/bin/bash
-BACKUP_DIR="/mnt/DATA/backups"
-DATE=$(date +%Y%m%d_%H%M%S)
-DB_NAME="shopping_db"
+# 1. 스크립트 전송
+scp scripts/db/backup_master.sh db-server:~/
 
-mkdir -p $BACKUP_DIR
-
-# 1. SQL 덤프 생성 후 tar.gz 압축
-mysqldump $DB_NAME > $BACKUP_DIR/${DB_NAME}_$DATE.sql
-tar -czf $BACKUP_DIR/${DB_NAME}_$DATE.tar.gz -C $BACKUP_DIR ${DB_NAME}_$DATE.sql
-
-# 2. 원본 SQL 파일 삭제
-rm $BACKUP_DIR/${DB_NAME}_$DATE.sql
-
-# 3. 7일이 지난 백업 파일 자동 삭제
-find $BACKUP_DIR -type f -name "*.tar.gz" -mtime +7 -delete
+# 2. DB 서버 접속 후 이동 및 권한 설정
+ssh db-server
+sudo mv ~/backup_master.sh /usr/local/bin/db-backup.sh
+sudo chmod +x /usr/local/bin/db-backup.sh
 ```
 
 **3. Cron 작업 등록**
